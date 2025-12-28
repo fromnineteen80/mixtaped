@@ -1,0 +1,2859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mixtaped">
+    <meta name="theme-color" id="meta-theme" content="#F5F5F4">
+    <title>Mixtaped</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=drag_indicator,edit,first_page,format_image_left,grid_view,headphones,history,info,local_cafe,lock,mail,menu,music_note_2,play_arrow,share,star,thumbnail_bar,tooltip_2">
+    
+    <style>
+        /* ============================================
+           MIXTAPED - Spotify Playlist Collector PWA
+           © 2025 fromnineteen80. All rights reserved.
+           ============================================ */
+
+        /* --------------------------------------------
+           RESET & ROOT VARIABLES
+           -------------------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            /* Safe areas */
+            --safe-t: env(safe-area-inset-top, 0px);
+            --safe-b: env(safe-area-inset-bottom, 0px);
+            --safe-l: env(safe-area-inset-left, 0px);
+            --safe-r: env(safe-area-inset-right, 0px);
+        }
+
+        /* --------------------------------------------
+           THEME: LIGHT (Default)
+           -------------------------------------------- */
+        body {
+            --bg: #F5F5F4;
+            --card: #FEFEFE;
+            --input: #F0F0EF;
+            --text: #1DB954;
+            --text2: #6B6B6B;
+            --text3: #A3A3A3;
+            --accent: #1DB954;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --placeholder-bg: var(--card);
+            --sidebar-bg: #ECECEB;
+            
+            /* Spacing */
+            --gap: 16px;
+            --padding: 20px;
+            
+            /* Typography */
+            --font-size-body: 13px;
+            --font-size-input: 16px;
+            --font-size-small: 11px;
+            --font-size-icon: 13px;
+            
+            /* Radius */
+            --radius-lg: 14px;
+            --radius-md: 12px;
+            --radius-sm: 10px;
+            --radius-xs: 8px;
+            
+            /* Layout - Universal widths */
+            --min-width: 320px;
+            --max-width: 600px;
+        }
+
+        /* --------------------------------------------
+           THEME: DARK
+           -------------------------------------------- */
+        body[data-theme="dark"] {
+            --bg: #1E1E1E;
+            --card: #222222;
+            --input: #2E2E2E;
+            --text: #E8E8E8;
+            --text2: #8C8C8C;
+            --text3: #4A4A4A;
+            --accent: #E8E8E8;
+            --shadow: 0 4px 16px rgba(0,0,0,0.25);
+            --placeholder-bg: var(--card);
+            --sidebar-bg: #1C1C1C;
+        }
+
+        /* THEME: LIGHT (Explicit) */
+        body[data-theme="light"] {
+            --bg: #F5F5F4;
+            --card: #FEFEFE;
+            --input: #F0F0EF;
+            --text: #1DB954;
+            --text2: #6B6B6B;
+            --text3: #A3A3A3;
+            --accent: #1DB954;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --placeholder-bg: var(--card);
+            --sidebar-bg: #ECECEB;
+        }
+
+        /* THEME: SPOTIFY (Green sidebar) */
+        body[data-theme="spotify"] {
+            --bg: #ECECEB;
+            --card: #FEFEFE;
+            --input: #F0F0EF;
+            --text: #1DB954;
+            --text2: #6B6B6B;
+            --text3: #A3A3A3;
+            --accent: #1DB954;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --placeholder-bg: var(--card);
+            --sidebar-bg: #1DB954;
+        }
+
+        /* --------------------------------------------
+           BASE STYLES
+           -------------------------------------------- */
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: fixed;
+            width: 100%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        .material-symbols-outlined {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* App container - handles safe areas */
+        .app {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--gap);
+            padding-top: calc(var(--safe-t) + var(--gap));
+            padding-bottom: calc(var(--safe-b) + var(--gap));
+            padding-left: calc(var(--safe-l) + var(--gap));
+            padding-right: calc(var(--safe-r) + var(--gap));
+        }
+
+        /* --------------------------------------------
+           LAYOUT: WRAPPER & HEADER
+           -------------------------------------------- */
+        .wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header - matches grid width, centered */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 44px;
+            margin-bottom: var(--gap);
+            flex-shrink: 0;
+            width: var(--grid-width, 100%);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .title {
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            color: var(--text2);
+            cursor: pointer;
+        }
+
+        /* --------------------------------------------
+           MOBILE MENU (Dropdown)
+           -------------------------------------------- */
+        .dropdown {
+            position: relative;
+        }
+        
+        /* Hamburger menu button */
+        .menu-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            color: var(--text2);
+            display: flex;
+            align-items: center;
+        }
+        .menu-btn .material-symbols-outlined {
+            font-size: 20px;
+        }
+        .menu-btn:active { opacity: 0.5; }
+        
+        /* Dropdown content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow), 0 4px 20px rgba(0,0,0,0.15);
+            padding: 4px 0;
+            min-width: 140px;
+            z-index: 100;
+        }
+        .dropdown-content.open { display: block; }
+        
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 6px 16px;
+            text-align: left;
+            font-size: var(--font-size-body);
+            font-family: inherit;
+            color: var(--text2);
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .menu-item:active { background: var(--input); }
+        
+        .menu-divider {
+            height: 1px;
+            background: var(--input);
+            margin: 4px 0;
+        }
+        
+        .menu-label {
+            padding: 4px 16px 2px;
+            font-size: var(--font-size-small);
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .dropdown-content .themes {
+            padding: 2px 16px 6px;
+        }
+
+        /* Theme buttons */
+        .themes {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .theme-btn:active { opacity: 0.6; }
+        .theme-btn.on { border-color: var(--accent); }
+        .theme-btn[data-t="dark"] { background: #161616; }
+        .theme-btn[data-t="light"] { background: #F5F5F4; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); }
+        .theme-btn[data-t="spotify"] { background: #1DB954; }
+
+        /* --------------------------------------------
+           CONTENT AREA & VIEWS
+           -------------------------------------------- */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .view { display: none; }
+        .view.on { display: block; }
+
+        /* --------------------------------------------
+           GRID VIEW (Main)
+           -------------------------------------------- */
+        .grid {
+            display: grid;
+            gap: var(--gap);
+            width: 100%;
+        }
+
+        /* Tiles */
+        .tile {
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+        .tile:active { 
+            opacity: 0.8;
+            transform: scale(0.97);
+        }
+
+        .tile-img {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+
+        .tile-img > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .tile-ph {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text3);
+        }
+        
+        .tile-ph .material-symbols-outlined {
+            font-size: 48px;
+        }
+
+        .tile-title {
+            margin-top: 8px;
+            font-size: var(--font-size-body);
+            font-weight: 600;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text2);
+        }
+
+        .tile-desc {
+            font-size: var(--font-size-small);
+            color: var(--text2);
+            margin-top: 2px;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* --------------------------------------------
+           DEEP DIVE VIEW
+           -------------------------------------------- */
+        .dive-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap);
+            width: var(--grid-width, 100%);
+            margin: 0 auto;
+        }
+        
+        .dive-item {
+            display: flex;
+            gap: var(--gap);
+            align-items: flex-start;
+            cursor: pointer;
+            width: 100%;
+        }
+        .dive-item:active { opacity: 0.8; }
+        
+        .dive-img {
+            width: 40%;
+            aspect-ratio: 1;
+            flex-shrink: 0;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+        
+        .dive-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .dive-ph {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text3);
+        }
+        
+        .dive-ph .material-symbols-outlined {
+            font-size: 48px;
+        }
+        
+        .dive-info {
+            flex: 1;
+            min-width: 0;
+            padding-top: 4px;
+        }
+        
+        .dive-title {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text2);
+            margin-bottom: 8px;
+        }
+        
+        .dive-desc {
+            font-size: 15px;
+            color: var(--text2);
+            line-height: 1.5;
+        }
+        
+        .dive-back {
+            padding: var(--gap) 0;
+            text-align: center;
+        }
+
+        /* --------------------------------------------
+           EDIT VIEW
+           -------------------------------------------- */
+        .edit-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .edit-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            font-size: var(--font-size-body);
+            font-family: inherit;
+            color: var(--text2);
+            background: var(--card);
+            border: none;
+            border-radius: var(--radius-xs);
+            padding: 8px 16px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: transform 0.1s ease, opacity 0.1s ease, box-shadow 0.1s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .action-btn:active { 
+            opacity: 0.7; 
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+        .action-btn.completed {
+            opacity: 0.7;
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+        .action-btn.square {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        .txt-btn {
+            font-size: var(--font-size-body);
+            color: var(--text2);
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .txt-btn:active { opacity: 0.5; }
+
+        .section { margin-bottom: var(--gap); }
+        .section-hd {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .section-desc {
+            font-size: var(--font-size-body);
+            color: var(--text2);
+            line-height: 1.5;
+            margin: 8px 0 12px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        /* --------------------------------------------
+           HELP PAGE
+           -------------------------------------------- */
+        .help-section {
+            margin-bottom: 32px;
+        }
+        .help-title {
+            font-size: var(--font-size-body);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--input);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .help-q {
+            font-size: var(--font-size-body);
+            font-weight: 600;
+            color: var(--text2);
+            margin-top: 16px;
+            margin-bottom: 6px;
+        }
+        .help-a {
+            font-size: var(--font-size-body);
+            color: var(--text2);
+            line-height: 1.5;
+            margin: 0;
+        }
+        
+        /* --------------------------------------------
+           ABOUT PAGE
+           -------------------------------------------- */
+        .about-hero {
+            position: relative;
+            width: 100%;
+            height: 385px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 24px;
+            transform: translateZ(0);
+        }
+        .about-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 75%;
+        }
+        @media (max-width: 700px) {
+            .about-hero {
+                height: 280px;
+            }
+            .about-hero-title {
+                font-size: 24px;
+            }
+        }
+        @media (max-width: 500px) {
+            .about-hero {
+                height: 200px;
+            }
+            .about-hero-title {
+                font-size: 18px;
+            }
+        }
+        .about-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%);
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 24px;
+        }
+        .about-hero-title {
+            font-size: 28px;
+            font-weight: 400;
+            color: #fff;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .about-hero-title span {
+            font-weight: 700;
+            letter-spacing: 0.3em;
+        }
+        
+        .brand {
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .about-intro {
+            margin-bottom: 24px;
+        }
+        .about-intro p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text2);
+            margin: 0;
+        }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 500px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .about-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transform: translateZ(0);
+        }
+        .about-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--input);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .about-card-icon .material-symbols-outlined {
+            font-size: 22px;
+        }
+        .about-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 8px;
+        }
+        .about-card-desc {
+            font-size: var(--font-size-body);
+            line-height: 1.5;
+            color: var(--text2);
+            margin: 0;
+        }
+        
+        .about-footer {
+            text-align: center;
+            padding: 8px 0 24px;
+        }
+        .about-footer p {
+            font-size: var(--font-size-body);
+            color: var(--text2);
+            line-height: 1.6;
+            margin: 0 0 2px;
+        }
+        .about-footer p:last-child {
+            margin-bottom: 0;
+        }
+        .about-footer a {
+            color: var(--text);
+            text-decoration: none;
+        }
+        .about-footer a:active {
+            opacity: 0.6;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px var(--padding);
+            min-height: 44px;
+            font-size: var(--font-size-body);
+        }
+
+        /* Segmented control */
+        .seg {
+            display: flex;
+            background: var(--input);
+            border-radius: var(--radius-xs);
+            padding: 2px;
+        }
+
+        .seg-btn {
+            padding: 6px 16px;
+            font-size: var(--font-size-body);
+            font-weight: 500;
+            color: var(--text);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .seg-btn.on { background: var(--card); }
+        [data-theme="spotify"] .seg-btn.on { background: var(--card); }
+        [data-theme="spotify"] .sidebar { color: #fff; }
+        [data-theme="spotify"] .sidebar-title { color: rgba(255,255,255,0.85); }
+        [data-theme="spotify"] .sidebar-toggle { color: rgba(255,255,255,0.85); }
+        [data-theme="spotify"] .sidebar-item { color: rgba(255,255,255,0.85); }
+        [data-theme="spotify"] .sidebar-item .material-symbols-outlined { color: rgba(255,255,255,0.85); }
+        [data-theme="spotify"] .sidebar-item:hover { background: rgba(255,255,255,0.1); }
+        [data-theme="spotify"] .sidebar-item:active { background: rgba(255,255,255,0.15); }
+        [data-theme="spotify"] .sidebar-item.active { color: #fff; background: rgba(255,255,255,0.1); }
+        [data-theme="spotify"] .sidebar.collapsed .sidebar-item .material-symbols-outlined { color: #1DB954; }
+        [data-theme="spotify"] .sidebar.collapsed .sidebar-toggle { color: #1DB954; }
+        [data-theme="spotify"] .sidebar.collapsed .sidebar-divider { background: #1DB954; opacity: 0.35; }
+        [data-theme="spotify"] .sidebar.collapsed .sidebar-footer::before { background: #1DB954 !important; opacity: 0.35 !important; }
+        [data-theme="spotify"] .sidebar-label { color: rgba(255,255,255,0.6); }
+        [data-theme="spotify"] .sidebar-divider { background: rgba(255,255,255,0.35); opacity: 1; }
+        [data-theme="spotify"] .sidebar-footer::before { background: rgba(255,255,255,0.35) !important; opacity: 1 !important; }
+        [data-theme="spotify"] .sidebar-mixtapes-label { color: rgba(255,255,255,0.85); }
+        [data-theme="spotify"] .sidebar-mixtape-item { color: rgba(255,255,255,0.85); }
+        [data-theme="spotify"] .no-mixtapes { color: rgba(255,255,255,0.5); }
+        [data-theme="spotify"] .sidebar-themes .theme-btn { border-color: rgba(255,255,255,0.3); }
+
+        /* --------------------------------------------
+           PLAYLIST FORM (Edit View)
+           -------------------------------------------- */
+        .pl-item { 
+            padding: var(--padding);
+            border-bottom: 1px solid var(--input);
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .pl-item:last-child {
+            border-bottom: none;
+        }
+        .pl-item.dragging {
+            opacity: 0.5;
+        }
+        
+        .pl-preview-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pl-preview {
+            width: 80px;
+            height: 80px;
+            min-width: 80px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--input);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pl-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .pl-preview.empty {
+            color: var(--text3);
+        }
+        .pl-preview .material-symbols-outlined {
+            font-size: 32px;
+        }
+        
+        .pl-delete {
+            font-size: var(--font-size-small);
+            font-family: inherit;
+            color: var(--text3);
+            background: none;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        .pl-delete:active {
+            opacity: 0.5;
+        }
+        
+        .pl-fields {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .pl-url-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pl-input {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            background: var(--input);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text2);
+            margin-bottom: 10px;
+            transition: background 0.2s ease;
+        }
+        
+        textarea.pl-input {
+            resize: none;
+            min-height: 48px;
+            line-height: 1.4;
+            overflow: hidden;
+        }
+        
+        .pl-url-row .pl-input {
+            margin-bottom: 0;
+            flex: 1;
+        }
+        .pl-input.url {
+            color: var(--accent);
+        }
+        .pl-input::placeholder { color: var(--text2); }
+        .pl-input:focus { outline: none; }
+        
+        .pl-reorder {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+        .pl-move-up, .pl-move-down {
+            width: 28px;
+            height: 22px;
+            background: var(--input);
+            border: none;
+            border-radius: 4px;
+            color: var(--text3);
+            font-size: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pl-move-up:active, .pl-move-down:active {
+            background: var(--text3);
+            color: var(--card);
+        }
+        
+        .pl-title {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            background: var(--input);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text3);
+            margin-bottom: 10px;
+        }
+
+        .pl-meta {
+            font-size: var(--font-size-small);
+            color: var(--text2);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: var(--gap);
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .footer-txt {
+            font-size: var(--font-size-small);
+            color: var(--text3);
+        }
+        
+        /* Add button */
+        .add-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin-top: var(--gap);
+            font-size: 24px;
+            font-weight: 300;
+            color: var(--text3);
+            background: var(--card);
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        .add-btn:active { opacity: 0.6; }
+        .add-btn:disabled { opacity: 0.3; cursor: default; }
+
+        /* --------------------------------------------
+           SHARE VIEW
+           -------------------------------------------- */
+        .action-btn.full {
+            width: 100%;
+            margin-top: 8px;
+        }
+        
+        .share-output {
+            margin-top: var(--gap);
+        }
+        
+        .share-success {
+            font-size: var(--font-size-body);
+            font-weight: 600;
+            color: var(--accent);
+            text-align: center;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .share-label {
+            font-size: var(--font-size-small);
+            font-weight: 600;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .share-string {
+            background: var(--card);
+            border-radius: var(--radius-md);
+            padding: var(--padding);
+            word-break: break-all;
+            font-size: var(--font-size-small);
+            color: var(--text2);
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .share-code {
+            word-break: break-all;
+            font-size: var(--font-size-small);
+            color: var(--text2);
+            padding: 8px 0;
+            line-height: 1.4;
+        }
+        
+        .share-back {
+            padding: var(--gap) 0;
+            text-align: center;
+        }
+        
+        /* Filter controls */
+        .filter-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .custom-select {
+            position: relative;
+        }
+        
+        .custom-select-btn {
+            font-size: var(--font-size-body);
+            font-family: inherit;
+            color: var(--text2);
+            background: var(--card);
+            border: none;
+            border-radius: var(--radius-xs);
+            padding: 8px 16px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .custom-select-btn:active { opacity: 0.7; }
+        .custom-select-btn svg { flex-shrink: 0; }
+        
+        .custom-select-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: var(--card);
+            border-radius: var(--radius-xs);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            z-index: 100;
+            min-width: 100%;
+        }
+        .custom-select-options.open { display: block; }
+        
+        .custom-select-option {
+            font-size: var(--font-size-body);
+            color: var(--text2);
+            padding: 10px 16px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .custom-select-option:active { background: var(--input); }
+        .custom-select-option.selected { font-weight: 600; }
+        
+        /* Collected mixtapes */
+        .collected-list {
+            margin-top: 12px;
+        }
+        
+        .collected-empty {
+            font-size: var(--font-size-body);
+            color: var(--text3);
+            text-align: center;
+            padding: 24px;
+        }
+        
+        .collected-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--card);
+            border-radius: var(--radius-md);
+            padding: 14px var(--padding);
+            margin-bottom: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .collected-star {
+            font-size: 18px;
+            color: var(--text3);
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .collected-star.starred {
+            color: var(--accent);
+        }
+        
+        .collected-info {
+            flex: 1;
+            min-width: 0;
+            cursor: pointer;
+        }
+        
+        .collected-title {
+            font-size: var(--font-size-body);
+            font-weight: 500;
+            color: var(--text2);
+        }
+        
+        .collected-delete {
+            font-size: 16px;
+            color: var(--text3);
+            cursor: pointer;
+            padding: 10px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .collected-delete:active {
+            color: var(--text2);
+        }
+        
+        .collected-meta {
+            font-size: var(--font-size-small);
+            color: var(--text3);
+            margin-top: 2px;
+        }
+        
+        /* Mixtapes list in menu */
+        .mixtapes-list {
+            padding: 0 16px 8px;
+        }
+        
+        .mixtape-item {
+            display: block;
+            width: 100%;
+            padding: 6px 0;
+            text-align: left;
+            font-size: var(--font-size-body);
+            color: var(--text2);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .mixtape-item:active { opacity: 0.6; }
+        
+        .no-mixtapes {
+            font-size: var(--font-size-small);
+            color: var(--text3);
+            font-style: italic;
+        }
+        
+        /* Friend view */
+        .friend-header {
+            font-size: var(--font-size-body);
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: var(--gap);
+        }
+
+        /* Responsive */
+        @media (min-width: 600px) {
+            .section { max-width: 560px; margin-left: auto; margin-right: auto; }
+        }
+        
+        /* Safari recommendation banner */
+        .safari-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            color: var(--text2);
+            font-size: var(--font-size-small);
+            padding: 12px 16px;
+            padding-top: calc(12px + var(--safe-t));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+        .safari-close {
+            background: none;
+            border: none;
+            color: var(--text3);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        /* --------------------------------------------
+           SIDEBAR (Desktop/Tablet - 768px+)
+           -------------------------------------------- */
+        @media (min-width: 768px) {
+            .app {
+                display: flex;
+                flex-direction: row;
+            }
+            
+            .sidebar {
+                display: flex;
+                flex-direction: column;
+                width: 260px;
+                min-width: 260px;
+                height: 100vh;
+                background: var(--sidebar-bg);
+                position: fixed;
+                left: 0;
+                top: 0;
+                z-index: 100;
+                transition: width 0.2s ease, min-width 0.2s ease;
+            }
+            
+            .sidebar.collapsed {
+                width: 60px;
+                min-width: 60px;
+                background: var(--bg);
+            }
+            
+            .sidebar .icon-collapsed {
+                display: none;
+            }
+            
+            .sidebar.collapsed .icon-expanded {
+                display: none;
+            }
+            
+            .sidebar.collapsed .icon-collapsed {
+                display: block;
+            }
+            
+            .sidebar.collapsed .sidebar-title,
+            .sidebar.collapsed .sidebar-text,
+            .sidebar.collapsed .sidebar-mixtapes,
+            .sidebar.collapsed .sidebar-label,
+            .sidebar.collapsed .sidebar-footer {
+                display: none;
+            }
+            
+            .sidebar.collapsed .sidebar-header {
+                justify-content: center;
+                padding: 0;
+            }
+            
+            .sidebar.collapsed .sidebar-item {
+                justify-content: center;
+                padding: 7px 0;
+            }
+            
+            .sidebar.collapsed .sidebar-mixtapes-label {
+                justify-content: center;
+                padding: 7px 0;
+                cursor: pointer;
+            }
+            
+            .sidebar.collapsed .sidebar-mixtapes-label:active {
+                background: var(--input);
+            }
+            
+            .sidebar.collapsed .sidebar-footer {
+                display: flex;
+                justify-content: center;
+                padding: 16px 0;
+            }
+            
+            .sidebar.collapsed .sidebar-themes {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .sidebar.collapsed .sidebar-divider {
+                margin: 16px 10px;
+            }
+            
+            .sidebar-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 44px;
+                padding: 0 20px;
+                margin-top: calc(var(--gap) + 1px);
+                flex-shrink: 0;
+            }
+            
+            .sidebar-title {
+                font-size: 15px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.4em;
+                color: var(--text2);
+                cursor: pointer;
+            }
+            
+            .sidebar-toggle {
+                background: none;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+                color: var(--text2);
+                display: flex;
+                align-items: center;
+            }
+            .sidebar-toggle .material-symbols-outlined {
+                font-size: 20px;
+            }
+            .sidebar-toggle:active { opacity: 0.5; }
+            
+            .sidebar-nav {
+                flex: 1;
+                overflow-y: auto;
+                padding: 8px 0;
+                -webkit-overflow-scrolling: touch;
+            }
+            .sidebar-nav::-webkit-scrollbar { display: none; }
+            
+            .sidebar-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                width: 100%;
+                padding: 7px 20px;
+                text-align: left;
+                font-size: var(--font-size-body);
+                font-family: inherit;
+                color: var(--text2);
+                background: none;
+                border: none;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            .sidebar-item .material-symbols-outlined {
+                font-size: 18px;
+            }
+            .sidebar-item:hover { background: #E6E6E5; }
+            .sidebar-item:active { background: #E2E2E1; }
+            .sidebar-item.active { font-weight: 600; background: #E6E6E5; }
+            [data-theme="dark"] .sidebar-item:hover { background: #222222; }
+            [data-theme="dark"] .sidebar-item:active { background: #252525; }
+            [data-theme="dark"] .sidebar-item.active { background: #222222; }
+            
+            .sidebar-divider {
+                height: 1px;
+                background: var(--text3);
+                opacity: 0.3;
+                margin: 16px 20px;
+            }
+            
+            .sidebar-label {
+                padding: 12px 20px 6px;
+                font-size: var(--font-size-small);
+                color: var(--text2);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .sidebar-mixtapes-label {
+                cursor: default;
+            }
+            .sidebar-mixtapes-label:active {
+                background: none;
+            }
+            
+            .sidebar-mixtapes {
+                padding: 0;
+            }
+            
+            .no-mixtapes {
+                font-size: var(--font-size-body);
+                color: var(--text3);
+                font-style: italic;
+                padding: 0 20px 7px 50px;
+                margin-top: -4px;
+            }
+            
+            .sidebar-mixtape-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                width: 100%;
+                padding: 7px 20px;
+                text-align: left;
+                font-size: var(--font-size-body);
+                color: var(--text2);
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-family: inherit;
+            }
+            .sidebar-mixtape-item .material-symbols-outlined {
+                font-size: 18px;
+            }
+            .sidebar-mixtape-item:active { opacity: 0.6; }
+            
+            .sidebar-footer {
+                padding: 16px 20px;
+                flex-shrink: 0;
+                position: relative;
+            }
+            
+            .sidebar-footer::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 20px;
+                right: 20px;
+                height: 1px;
+                background: var(--text3);
+                opacity: 0.3;
+            }
+            
+            .sidebar-themes {
+                display: flex;
+                gap: 8px;
+            }
+            
+            /* Hide mobile header on large screens when sidebar expanded */
+            .header {
+                display: none;
+            }
+            
+            /* Allow normal scrolling on large screens */
+            html, body {
+                height: auto;
+                overflow: auto;
+                position: static;
+            }
+            
+            /* Reset app container for sidebar layout */
+            .app {
+                height: auto;
+                min-height: 100vh;
+                display: block;
+                padding: 0;
+            }
+            
+            /* Adjust wrapper for sidebar - normal block layout */
+            .wrapper {
+                display: block;
+                margin-left: 260px;
+                width: calc(100% - 260px);
+                max-width: none;
+                padding: calc(var(--gap) + 1px + 14px) 40px var(--gap);
+                transition: margin-left 0.3s ease, width 0.3s ease;
+                height: auto;
+            }
+            
+            .wrapper .content {
+                overflow: visible;
+            }
+            
+            /* When sidebar is collapsed */
+            .sidebar.collapsed + .wrapper {
+                margin-left: 60px;
+                width: calc(100% - 60px);
+                padding-left: 40px;
+            }
+            
+            /* Floating toggle no longer needed - icons always visible */
+            .sidebar-open-btn {
+                display: none !important;
+            }
+            
+            /* Hide back buttons on large screens */
+            .share-back,
+            .dive-back {
+                display: none;
+            }
+        }
+        
+        /* Hide sidebar on mobile */
+        @media (max-width: 767px) {
+            .sidebar {
+                display: none;
+            }
+            .sidebar-open-btn {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar for larger screens -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title" id="sidebar-title">MIXTAPED</div>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <span class="material-symbols-outlined icon-expanded">first_page</span>
+                    <span class="material-symbols-outlined icon-collapsed">thumbnail_bar</span>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="sidebar-item active" id="sidebar-grid-btn"><span class="material-symbols-outlined">grid_view</span><span class="sidebar-text">Grid Layout</span></button>
+                <button class="sidebar-item" id="sidebar-dive-btn"><span class="material-symbols-outlined">format_image_left</span><span class="sidebar-text">Deep Dive</span></button>
+                <div class="sidebar-divider"></div>
+                <button class="sidebar-item" id="sidebar-edit-btn"><span class="material-symbols-outlined">edit</span><span class="sidebar-text">Edit</span></button>
+                <button class="sidebar-item" id="sidebar-share-btn"><span class="material-symbols-outlined">share</span><span class="sidebar-text">Share</span></button>
+                <button class="sidebar-item" id="sidebar-recover-btn"><span class="material-symbols-outlined">history</span><span class="sidebar-text">Recover</span></button>
+                <div class="sidebar-divider"></div>
+                <button class="sidebar-item" id="sidebar-about-btn"><span class="material-symbols-outlined">info</span><span class="sidebar-text">About</span></button>
+                <button class="sidebar-item" id="sidebar-help-btn"><span class="material-symbols-outlined">tooltip_2</span><span class="sidebar-text">Help</span></button>
+                <a class="sidebar-item" href="/cdn-cgi/l/email-protection#690a06050007290a0605000704081007081b0d47070c1d561a1c0b030c0a1d542420313d28392c2d4c5b59381c0c1a1d000607"><span class="material-symbols-outlined">mail</span><span class="sidebar-text">Email</span></a>
+                <a class="sidebar-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank"><span class="material-symbols-outlined">local_cafe</span><span class="sidebar-text">Donate</span></a>
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-item sidebar-mixtapes-label"><span class="material-symbols-outlined">headphones</span><span class="sidebar-text">Mixtapes</span></div>
+                <div class="sidebar-mixtapes" id="sidebar-mixtapes"></div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-label" style="padding: 0 0 8px;">Theme</div>
+                <div class="sidebar-themes" id="sidebar-themes"></div>
+            </div>
+        </aside>
+        <div class="wrapper">
+            <!-- Floating button to open sidebar when collapsed -->
+            <button class="sidebar-open-btn" id="sidebar-open-btn">
+                <span class="material-symbols-outlined">thumbnail_bar</span>
+            </button>
+            <!-- Universal Header -->
+            <header class="header">
+                <span class="title" id="title-btn">MIXTAPED</span>
+                <div class="dropdown">
+                    <button class="menu-btn" id="menu-btn"><span class="material-symbols-outlined">menu</span></button>
+                    <div class="dropdown-content" id="menu">
+                        <button class="menu-item" id="grid-btn">Grid Layout</button>
+                        <button class="menu-item" id="dive-btn">Deep Dive</button>
+                        <div class="menu-divider"></div>
+                        <button class="menu-item" id="edit-btn">Edit</button>
+                        <button class="menu-item" id="share-btn">Share</button>
+                        <button class="menu-item" id="recover-btn">Recover</button>
+                        <div class="menu-divider"></div>
+                        <button class="menu-item" id="about-btn">About</button>
+                        <button class="menu-item" id="help-btn">Help</button>
+                        <a class="menu-item" href="/cdn-cgi/l/email-protection#fb9894979295bb9894979295969a82959a899fd5959e8fc4888e99919e988fc6b6b2a3afbaabbebfdec9cbaa8e9e888f929495">Email</a>
+                        <a class="menu-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank">Donate</a>
+                        <div class="menu-divider"></div>
+                        <div class="menu-label">Mixtapes</div>
+                        <div class="mixtapes-list" id="mixtapes-list"></div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-label">Theme</div>
+                        <div class="themes" id="themes"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- Main View -->
+                <div class="view on" id="main">
+                    <div class="grid" id="grid"></div>
+                </div>
+
+                <!-- Deep Dive View -->
+                <div class="view" id="dive">
+                    <div class="dive-list" id="dive-list"></div>
+                </div>
+
+                <!-- Share View -->
+                <div class="view" id="share">
+                    <div class="section">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Share Your Mixtape</div>
+                        </div>
+                        <p class="section-desc">Remember making mixtapes for your friends? Here we are in the future sharing Spotify playlists. But the vibe is so much more than one playlist. It can be a season, a theme, your favorite genres. Whatever you want it to be or say about you. Generate a code and share your favorite playlists with someone who needs to hear what you've been listening to. They will see your mixtape in the Deep Dive format so adding descriptions to each of your playlists will add helpful context.</p>
+                        <p class="section-desc" style="margin-top: 12px;"><span style="font-weight: 600;">Tip:</span> Save your share code in your Notes app or email it to yourself. If you ever lose your data, you can restore everything by clicking on Recover in the menu.</p>
+                        <div class="card">
+                            <div class="pl-item">
+                                <input class="pl-input" type="text" id="share-name" placeholder="Your name">
+                                <input class="pl-input" type="text" id="share-title" placeholder="Mixtape title">
+                                <button class="action-btn full" id="generate-btn">Generate Share Code</button>
+                            </div>
+                        </div>
+                        <div class="share-output" id="share-output"></div>
+                    </div>
+                    <div class="section" style="margin-top: 48px;">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Add a Friend's Mixtape</div>
+                        </div>
+                        <p class="section-desc">Got the hookup from a friend? Paste it here and start listening to their favorite tunes. Perfect for road trips, parties, or when you just need someone else to be the DJ. The latest five mixtapes you save, along with your favorites, will be available in your menu. And every mixtape you collect is available below.</p>
+                        <div class="card">
+                            <div class="pl-item">
+                                <input class="pl-input" type="text" id="import-string" placeholder="Paste mixtape code here">
+                                <button class="action-btn full" id="import-btn">Add Mixtape</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section" style="margin-top: 48px;">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Collected Mixtapes</div>
+                            <div class="filter-controls">
+                                <div class="custom-select" id="mixtape-filter-wrap">
+                                    <div class="custom-select-btn" id="mixtape-filter-btn">
+                                        <span id="mixtape-filter-label">Newest</span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                                    </div>
+                                    <div class="custom-select-options" id="mixtape-filter-options">
+                                        <div class="custom-select-option selected" data-value="newest">Newest</div>
+                                        <div class="custom-select-option" data-value="oldest">Oldest</div>
+                                        <div class="custom-select-option" data-value="friend">Friend A-Z</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collected-list" id="collected-list"></div>
+                    </div>
+                    <div class="share-back">
+                        <button class="txt-btn" id="share-back-btn">Back</button>
+                    </div>
+                </div>
+
+                <!-- Recover View -->
+                <div class="view" id="recover">
+                    <div class="section">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Recover</div>
+                        </div>
+                        <p class="section-desc">Lost your playlists? If you saved your share code in your Notes app or emailed it to yourself, paste it here to restore your mixtape.</p>
+                        <div class="card">
+                            <div class="pl-item">
+                                <input class="pl-input" type="text" id="recovery-string" placeholder="Paste your share code here">
+                                <button class="action-btn full" id="recovery-btn">Restore My Mixtape</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="share-back">
+                        <button class="txt-btn" id="recover-back-btn">Back</button>
+                    </div>
+                </div>
+
+                <!-- About View -->
+                <div class="view" id="about">
+                    <div class="about-hero">
+                        <img src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?q=80&w=1200&auto=format&fit=crop" alt="Woman laying on bed near radio">
+                        <div class="about-hero-overlay">
+                            <h1 class="about-hero-title">About &nbsp;<span>MIXTAPED</span></h1>
+                        </div>
+                    </div>
+                    
+                    <div class="about-intro">
+                        <p>Remember making mixtapes? Carefully selecting songs, writing out the tracklist, and handing it to someone who needed to hear what you'd been listening to. <span class="brand">Mixtaped</span> brings that feeling back for the streaming age thanks to the Spotify Web API.</p>
+                    </div>
+                    
+                    <div class="about-grid">
+                        <div class="about-card">
+                            <div class="about-card-icon"><span class="material-symbols-outlined">grid_view</span></div>
+                            <div class="about-card-title">Your Favorite Playlists</div>
+                            <p class="about-card-desc">Spotify buries your carefully tuned playlists deep in menus. <span class="brand">Mixtaped</span> puts them front and center. One tap to open your favorite playlist. No digging, no searching. Just your music, ready to play.</p>
+                        </div>
+                        
+                        <div class="about-card">
+                            <div class="about-card-icon"><span class="material-symbols-outlined">share</span></div>
+                            <div class="about-card-title">Sharing Made Easy</div>
+                            <p class="about-card-desc">Generate a single link that contains your entire collection. Send it to a friend, post it anywhere. They don't need an account or an app. Just click and discover what you've been listening to.</p>
+                        </div>
+                        
+                        <div class="about-card">
+                            <div class="about-card-icon"><span class="material-symbols-outlined">headphones</span></div>
+                            <div class="about-card-title">Collect Good Vibes</div>
+                            <p class="about-card-desc">When someone shares their mixtape with you, save it. Build a library of collections from friends with great taste. Perfect for road trips, dinner parties, or when you need someone else to DJ.</p>
+                        </div>
+                        
+                        <div class="about-card">
+                            <div class="about-card-icon"><span class="material-symbols-outlined">lock</span></div>
+                            <div class="about-card-title">Privacy First</div>
+                            <p class="about-card-desc">Your data stays on your device. No accounts, no tracking, no servers storing your listening habits. Share what you want, when you want, with who you want. That's it.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="about-footer">
+                        <p>For questions or help setting up your <span class="brand">Mixtaped</span> app, <a href="/cdn-cgi/l/email-protection#8deee2e1e4e3cdeee2e1e4e3e0ecf4e3ecffe9a3e3e8f9b2fef8efe7e8eef9b0c0c4d5d9ccddc8c9a8bfbddcf8e8fef9e4e2e3">email here</a>.</p>
+                        <p>If you love using this tool, feel free to <a href="https://buymeacoffee.com/fromnineteen80" target="_blank">donate here</a>.</p>
+                    </div>
+                    
+                    <div class="share-back">
+                        <button class="txt-btn" id="about-back-btn">Back</button>
+                    </div>
+                </div>
+
+                <!-- Help View -->
+                <div class="view" id="help">
+                    <div class="section">
+                        <div class="about-hero">
+                            <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=2969&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Help">
+                            <div class="about-hero-overlay">
+                                <h1 class="about-hero-title">Help With &nbsp;<span>MIXTAPED</span></h1>
+                            </div>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-title">Getting Started</div>
+                            <div class="help-q">What is Mixtaped?</div>
+                            <p class="help-a"><span class="brand">Mixtaped</span> is a way to collect and share your favorite Spotify playlists. Think of it like making a mixtape for a friend, but with playlists instead of songs. Add your playlists, write descriptions for each one, and share the collection with anyone. It's also a quick way to access your favorite playlists on mobile since Spotify buries user-created playlists deep within the app interface.</p>
+                            
+                            <div class="help-q">How do I add a playlist?</div>
+                            <p class="help-a">Go to Edit, paste a Spotify playlist URL into an empty slot, and the artwork and title will load automatically. Add an optional description to give context about the playlist. You must add at least three playlists to view on Grid Layout or Deep Dive.</p>
+                            
+                            <div class="help-q">Where do I get a playlist URL?</div>
+                            <p class="help-a">In Spotify, open a playlist, tap the three dots menu, then "Share" and "Copy link". Paste that link into Mixtaped.</p>
+                            
+                            <div class="help-q">Save your share code</div>
+                            <p class="help-a">Once you've added playlists, go to Share and generate a code. Save this code in your Notes app, on notepad.cc, or email it to yourself. This is your backup. If you ever lose your data, you can restore everything from this code.</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-title">Limitations</div>
+                            <div class="help-q">Playlists must be public</div>
+                            <p class="help-a"><span class="brand">Mixtaped</span> can only load artwork and titles for public playlists. If a playlist shows a music note placeholder, make sure it's set to Public in Spotify: open the playlist, tap the three dots, and select "Make public".</p>
+                            
+                            <div class="help-q">Comparing Spotify's APIs: oEmbed vs OAuth</div>
+                            <p class="help-a"><span class="brand">Mixtaped</span> uses Spotify's oEmbed API, which is public and doesn't require you to log in. oEmbed provides basic info: playlist title, cover art, and an embed player. Spotify's full Web API uses OAuth authentication, which requires logging into your Spotify account. OAuth unlocks much more: your private playlists, playlist descriptions, track listings, playback control, and user data. A future version of <span class="brand">Mixtaped</span> may include OAuth login for deeper integration.</p>
+                            
+                            <div class="help-q">Ad blockers may interfere</div>
+                            <p class="help-a">Privacy extensions and ad blockers can block requests to Spotify's servers, preventing playlist data from loading. If you're having trouble, try disabling your ad blocker for this site.</p>
+                            
+                            <div class="help-q">Data is stored locally</div>
+                            <p class="help-a">All your data is stored on your device, not on a server. This keeps it private, but means clearing your browser data or switching devices will reset the app. Always keep a saved share code as backup.</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-title">Tips</div>
+                            <div class="help-q">Add descriptions to your playlists</div>
+                            <p class="help-a">When someone views your mixtape in Deep Dive, they'll see your descriptions. Use them to explain why you love a playlist, what mood it's for, or any story behind it.</p>
+                            
+                            <div class="help-q">Install as an app</div>
+                            <p class="help-a">On iPhone, tap the Share button in Safari and "Add to Home Screen". On Android, tap the menu and "Install app" or "Add to Home Screen". This gives you a full-screen experience and quick access from your home screen.</p>
+                            
+                            <div class="help-q">Reorder your playlists</div>
+                            <p class="help-a">In Edit, use the arrow buttons next to each playlist to change the order. The order you set is how they'll appear in Grid Layout and Deep Dive.</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-title">Views</div>
+                            <div class="help-q">What's the difference between Grid Layout and Deep Dive?</div>
+                            <p class="help-a">Grid Layout shows your playlists as album art tiles. Tap any tile to open it in Spotify. Deep Dive shows each playlist with its full artwork and description, perfect for browsing or sharing with friends.</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-title">Sharing</div>
+                            <div class="help-q">How do I share my mixtape?</div>
+                            <p class="help-a">Go to Share, enter your name and a title for your mixtape, then tap "Generate Share Code". You'll get a short URL and a backup code. Send either one to a friend.</p>
+                            
+                            <div class="help-q">What's the difference between the short URL and backup code?</div>
+                            <p class="help-a">The short URL is easier to share and opens directly in a browser. The backup code is longer but works even if the URL shortener is unavailable. Both contain the same data.</p>
+                            
+                            <div class="help-q">How does my friend view my mixtape?</div>
+                            <p class="help-a">They can open the short URL in a browser, or paste either the URL or backup code into the "Add a Friend's Mixtape" section on the Share page.</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-title">Collecting Mixtapes</div>
+                            <div class="help-q">How do I save a friend's mixtape?</div>
+                            <p class="help-a">On the Share page, scroll down to "Add a Friend's Mixtape" and paste their share code or URL. Their mixtape will appear in your sidebar and menu under Mixtapes.</p>
+                            
+                            <div class="help-q">What does starring a mixtape do?</div>
+                            <p class="help-a">Starred mixtapes always appear in your menu, even if you collect more than five. Unstarred mixtapes rotate out as you add new ones, but they're always available in the full list on the Share page.</p>
+                            
+                            <div class="help-q">How do I delete a collected mixtape?</div>
+                            <p class="help-a">On the Share page, scroll to "Collected Mixtapes" at the bottom. Tap the trash icon next to any mixtape to remove it.</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-title">Recovery</div>
+                            <div class="help-q">I lost my playlists. How do I get them back?</div>
+                            <p class="help-a">If you previously generated a share code, you can use it to restore your mixtape. Go to Recover and paste your code.</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-title">Troubleshooting</div>
+                            <div class="help-q">My playlist artwork won't load</div>
+                            <p class="help-a">Make sure the playlist is set to Public in Spotify. Private playlists can't be loaded by Mixtaped. Also check that ad blockers or privacy extensions aren't blocking requests to Spotify.</p>
+                            
+                            <div class="help-q">The app looks broken or isn't working</div>
+                            <p class="help-a">Try refreshing the page. If problems persist, clear your browser cache and reload. You can restore your data afterward using a saved share code.</p>
+                            
+                            <div class="help-q">Playlists open in the browser instead of Spotify</div>
+                            <p class="help-a">Make sure you have the Spotify app installed. On mobile, playlists should open directly in the app. On desktop, you may need to allow your browser to open Spotify links in the app.</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-title">Known Issues</div>
+                            <div class="help-q">Short URL not working</div>
+                            <p class="help-a">The short URL feature uses a third-party service (is.gd) that may occasionally be unavailable or blocked by some networks. If the short URL doesn't work, use the full share code instead. The code contains all your data and will always work.</p>
+                        </div>
+                    </div>
+                    <div class="share-back">
+                        <button class="txt-btn" id="help-back-btn">Back</button>
+                    </div>
+                </div>
+
+                <!-- Friend's Mixtape View -->
+                <div class="view" id="friend">
+                    <div class="friend-header" id="friend-header"></div>
+                    <div class="dive-list" id="friend-list"></div>
+                    <div class="dive-back">
+                        <button class="txt-btn" id="friend-back-btn">Back</button>
+                    </div>
+                </div>
+
+                <!-- Edit View -->
+                <div class="view" id="edit">
+                    <div class="section">
+                        <div class="edit-toolbar">
+                            <div></div>
+                            <div class="edit-actions">
+                                <button class="action-btn" id="cancel-btn">Cancel</button>
+                                <button class="action-btn" id="save-btn">Save</button>
+                                <button class="action-btn square" id="add-btn">+</button>
+                            </div>
+                        </div>
+                        <div class="card" id="form"></div>
+                    </div>
+                    <div class="footer">
+                        <a href="https://buymeacoffee.com/fromnineteen80" target="_blank" style="color: #1DB954; text-decoration: none;">Donate to the developer here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        /* ============================================
+           JAVASCRIPT
+           ============================================ */
+
+        /* --------------------------------------------
+           STATE & STORAGE
+           -------------------------------------------- */
+        const K = { i: 'mixtaped_items', s: 'mixtaped_settings', t: 'mixtaped_theme', m: 'mixtaped_mixtapes' };
+        let items = [], cfg = { cols: 2 }, work = [], mixtapes = [];
+        let sysDark = matchMedia('(prefers-color-scheme:dark)').matches;
+
+        function load() {
+            try { let d = localStorage.getItem(K.i); if (d) items = JSON.parse(d); } catch(e) {}
+            try { let d = localStorage.getItem(K.s); if (d) cfg = JSON.parse(d); } catch(e) {}
+            try { let d = localStorage.getItem(K.m); if (d) mixtapes = JSON.parse(d); } catch(e) {}
+            try {
+                let t = localStorage.getItem(K.t);
+                if (t) {
+                    if (sysDark && t === 'light') t = 'dark';
+                    setTheme(t);
+                } else {
+                    setTheme(sysDark ? 'dark' : 'light');
+                }
+            } catch(e) { setTheme(sysDark ? 'dark' : 'light'); }
+            fix();
+            renderThemes();
+            renderMixtapesList();
+        }
+
+        // Save to localStorage
+        function save() {
+            try {
+                localStorage.setItem(K.i, JSON.stringify(items));
+                localStorage.setItem(K.s, JSON.stringify(cfg));
+            } catch(e) {}
+        }
+        
+        function saveMixtapes() {
+            try {
+                localStorage.setItem(K.m, JSON.stringify(mixtapes));
+            } catch(e) {}
+        }
+
+        // Ensure items array exists (min 3, max 14, start with 9)
+        function fix() {
+            if (!items.length) {
+                for (let i = 0; i < 9; i++) items.push({ url: '', title: '', img: '', desc: '' });
+            }
+            // Enforce min 3
+            while (items.length < 3) {
+                items.push({ url: '', title: '', img: '', desc: '' });
+            }
+            // Enforce max 14
+            if (items.length > 14) {
+                items = items.slice(0, 14);
+            }
+            save();
+        }
+
+        /* --------------------------------------------
+           THEME MANAGEMENT
+           -------------------------------------------- */
+        function renderThemes() {
+            const el = document.getElementById('themes');
+            if (!el) return;
+            const cur = document.body.dataset.theme || 'light';
+            const opts = sysDark ? ['dark', 'spotify'] : ['light', 'dark', 'spotify'];
+            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'active':''}" data-t="${t}"></div>`).join('');
+            el.querySelectorAll('.theme-btn').forEach(b => b.onclick = () => setTheme(b.dataset.t));
+        }
+
+        function setTheme(t) {
+            if (sysDark && t === 'light') t = 'dark';
+            document.body.dataset.theme = t;
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
+            document.getElementById('meta-theme').content = { light: '#F5F5F4', dark: '#161616', spotify: '#1DB954' }[t];
+            try { localStorage.setItem(K.t, t); } catch(e) {}
+        }
+
+        /* --------------------------------------------
+           SPOTIFY API (oEmbed)
+           -------------------------------------------- */
+        async function fetchSpotify(url) {
+            const r = await fetch('https://open.spotify.com/oembed?url=' + encodeURIComponent(url));
+            if (!r.ok) throw new Error();
+            const data = await r.json();
+            
+            // Get highest res image available
+            // Spotify CDN supports: 64, 300, 640 standard
+            // Try removing size to get original, fallback to 640
+            if (data.thumbnail_url) {
+                // Replace any size with 640 (highest standard)
+                data.thumbnail_url = data.thumbnail_url
+                    .replace('/64/', '/640/')
+                    .replace('/300/', '/640/');
+            }
+            
+            return data;
+        }
+
+        function getID(url) {
+            try {
+                const u = new URL(url);
+                if (!u.host.includes('spotify.com')) return null;
+                const p = u.pathname.split('/').filter(Boolean);
+                return p[0] === 'playlist' ? p[1] : null;
+            } catch(e) { return null; }
+        }
+
+        // Escape HTML
+        function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+        // Calculate optimal grid layout
+        function calcGrid(itemCount) {
+            const gap = 16;
+            const wrapper = document.querySelector('.wrapper');
+            const wrapperW = wrapper.offsetWidth;
+            const headerH = 44 + gap;
+            const labelH = 24;
+            
+            const availW = wrapperW;
+            const availH = window.innerHeight - headerH - (gap * 2);
+            
+            const n = itemCount;
+            
+            // Device-aware scroll thresholds based on viewport height
+            let maxTilesNoScroll;
+            if (availH < 600) {
+                maxTilesNoScroll = 4;
+            } else if (availH < 750) {
+                maxTilesNoScroll = 6;
+            } else if (availH < 900) {
+                maxTilesNoScroll = 8;
+            } else if (availH < 1100) {
+                maxTilesNoScroll = 10;
+            } else {
+                maxTilesNoScroll = 12;
+            }
+            
+            const allowScroll = n > maxTilesNoScroll;
+            
+            // Max tile size (prevents giant tiles on large screens)
+            const maxTileSize = 200;
+            
+            // Columns based on item count AND screen size
+            let cols;
+            
+            // Large screens (iPads, laptops, desktops) - over 600px
+            if (availW > 600) {
+                // Gradual breakpoints for larger screens
+                // Stay at each column count longer before jumping
+                // Max 5 columns
+                let maxCols;
+                if (availW < 800) {
+                    maxCols = 3;
+                } else if (availW < 1000) {
+                    maxCols = 4;
+                } else {
+                    maxCols = 5;
+                }
+                
+                if (n === 3) {
+                    cols = 3;
+                } else if (n === 4) {
+                    cols = Math.min(4, maxCols);
+                } else if (n >= 5 && n <= 6) {
+                    cols = Math.min(n, maxCols);
+                } else if (n >= 7 && n <= 9) {
+                    cols = Math.min(n, maxCols);
+                } else {
+                    // 10-14: use maxCols
+                    cols = maxCols;
+                }
+            } else if (availW < 500) {
+                // Narrow screens - max 2 columns
+                cols = n === 3 ? 3 : 2;
+            } else {
+                // Medium screens (phones) - original rules
+                if (n === 3) {
+                    cols = 3;
+                } else if (n >= 4 && n <= 6) {
+                    cols = 2;
+                } else {
+                    cols = 3;
+                }
+            }
+            
+            const rows = Math.ceil(n / cols);
+            const tileW = (availW - (gap * (cols - 1))) / cols;
+            
+            let tileH;
+            if (allowScroll) {
+                tileH = tileW;
+            } else {
+                tileH = (availH - (gap * (rows - 1)) - (labelH * rows)) / rows;
+            }
+            
+            const size = Math.min(tileW, tileH);
+            
+            return { cols: cols, size: Math.floor(size) };
+        }
+
+        /* --------------------------------------------
+           GRID RENDERING
+           -------------------------------------------- */
+        function renderGrid() {
+            // Only show items with URLs
+            const filled = items.filter(it => it.url && getID(it.url));
+            
+            // If less than 3 filled, show all slots (with placeholders)
+            // If 3+ filled, only show the filled ones
+            const displayItems = filled.length >= 3 ? filled : items;
+            
+            const { cols, size } = calcGrid(displayItems.length);
+            const g = document.getElementById('grid');
+            
+            document.documentElement.style.setProperty('--tile-size', size + 'px');
+            g.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            
+            g.innerHTML = displayItems.map((it, i) => `
+                <div class="tile" data-i="${i}">
+                    <div class="tile-img">
+                        ${it.img ? `<img src="${esc(it.img)}" alt="">` : `<div class="tile-ph"><span class="material-symbols-outlined">music_note_2</span></div>`}
+                    </div>
+                    <div class="tile-title">${esc(it.title) || 'Add playlist'}</div>
+                </div>
+            `).join('');
+            
+            g.querySelectorAll('.tile').forEach(t => {
+                t.onclick = () => {
+                    const it = displayItems[t.dataset.i];
+                    const id = getID(it.url);
+                    if (id) {
+                        // Try deep link first, fallback to web URL
+                        window.location.href = 'spotify:playlist:' + id;
+                    }
+                };
+            });
+        }
+
+        // Render form
+        function renderForm() {
+            const f = document.getElementById('form');
+            const filledCount = work.filter(it => it.url && getID(it.url)).length;
+            const showHandles = filledCount >= 2;
+            
+            f.innerHTML = work.map((it, i) => {
+                const hasUrl = it.url && getID(it.url);
+                const showHandle = showHandles && hasUrl;
+                const imgSrc = it.img || '';
+                return `
+                <div class="pl-item" data-i="${i}">
+                    ${hasUrl ? `<div class="pl-preview-wrap">
+                        <div class="pl-preview ${imgSrc ? '' : 'empty'}">
+                            ${imgSrc ? `<img src="${esc(imgSrc)}" alt="">` : '<span class="material-symbols-outlined">music_note_2</span>'}
+                        </div>
+                        <button class="pl-delete" data-i="${i}">Delete</button>
+                    </div>` : ''}
+                    <div class="pl-fields">
+                        <div class="pl-url-row">
+                            <input class="pl-input url" type="url" placeholder="Add Spotify playlist URL" value="${esc(it.url)}" data-i="${i}" data-f="url" autocapitalize="off" autocorrect="off">
+                            ${showHandle ? `<div class="pl-reorder">
+                                <button class="pl-move-up" data-i="${i}">▲</button>
+                                <button class="pl-move-down" data-i="${i}">▼</button>
+                            </div>` : ''}
+                        </div>
+                        <div class="pl-title">${esc(it.title) || 'Name will fill via Spotify API when you paste share link'}</div>
+                        <textarea class="pl-input pl-desc" placeholder="Add description" data-i="${i}" data-f="desc" rows="1">${esc(it.desc)}</textarea>
+                    </div>
+                </div>
+            `}).join('');
+            
+            f.querySelectorAll('.pl-input').forEach(inp => {
+                inp.oninput = async () => {
+                    const idx = inp.dataset.i;
+                    const field = inp.dataset.f;
+                    work[idx][field] = inp.value;
+                    
+                    // Auto-expand textareas
+                    if (inp.tagName === 'TEXTAREA') {
+                        inp.style.height = 'auto';
+                        inp.style.height = inp.scrollHeight + 'px';
+                    }
+                    
+                    // If URL field and valid Spotify URL, fetch data
+                    if (field === 'url' && getID(inp.value)) {
+                        try {
+                            const data = await fetchSpotify(inp.value);
+                            work[idx].title = data.title || '';
+                            work[idx].img = data.thumbnail_url || '';
+                            renderForm();
+                        } catch(e) {
+                            // Invalid URL or fetch failed
+                        }
+                    }
+                };
+            });
+            
+            // Delete buttons
+            f.querySelectorAll('.pl-delete').forEach(btn => {
+                btn.onclick = () => {
+                    const idx = parseInt(btn.dataset.i);
+                    // Clear this item
+                    work[idx] = { url: '', title: '', img: '', desc: '' };
+                    // Sort: filled items first, empty items last
+                    work.sort((a, b) => {
+                        const aFilled = a.url.trim() ? 0 : 1;
+                        const bFilled = b.url.trim() ? 0 : 1;
+                        return aFilled - bFilled;
+                    });
+                    renderForm();
+                };
+            });
+            
+            // Auto-expand textareas on initial render
+            f.querySelectorAll('textarea.pl-input').forEach(ta => {
+                ta.style.height = 'auto';
+                ta.style.height = ta.scrollHeight + 'px';
+            });
+            
+            // Reorder buttons (desktop)
+            f.querySelectorAll('.pl-move-up').forEach(btn => {
+                btn.onclick = () => {
+                    const idx = parseInt(btn.dataset.i);
+                    if (idx > 0) {
+                        const temp = work[idx];
+                        work[idx] = work[idx - 1];
+                        work[idx - 1] = temp;
+                        renderForm();
+                    }
+                };
+            });
+            
+            f.querySelectorAll('.pl-move-down').forEach(btn => {
+                btn.onclick = () => {
+                    const idx = parseInt(btn.dataset.i);
+                    if (idx < work.length - 1) {
+                        const temp = work[idx];
+                        work[idx] = work[idx + 1];
+                        work[idx + 1] = temp;
+                        renderForm();
+                    }
+                };
+            });
+            
+            // Touch drag for mobile
+            f.querySelectorAll('.pl-reorder').forEach(handle => {
+                const item = handle.closest('.pl-item');
+                let startY = 0;
+                let currentY = 0;
+                let isDragging = false;
+                
+                handle.addEventListener('touchstart', (e) => {
+                    isDragging = true;
+                    startY = e.touches[0].clientY;
+                    item.style.zIndex = '100';
+                    item.style.opacity = '0.8';
+                    item.style.background = 'var(--input)';
+                }, { passive: true });
+                
+                handle.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    currentY = e.touches[0].clientY;
+                    const diff = currentY - startY;
+                    item.style.transform = `translateY(${diff}px)`;
+                }, { passive: false });
+                
+                handle.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    
+                    const diff = currentY - startY;
+                    const idx = parseInt(item.dataset.i);
+                    
+                    item.style.zIndex = '';
+                    item.style.opacity = '';
+                    item.style.background = '';
+                    item.style.transform = '';
+                    
+                    // Threshold of 50px to swap
+                    if (diff < -50 && idx > 0) {
+                        const temp = work[idx];
+                        work[idx] = work[idx - 1];
+                        work[idx - 1] = temp;
+                        renderForm();
+                    } else if (diff > 50 && idx < work.length - 1) {
+                        const temp = work[idx];
+                        work[idx] = work[idx + 1];
+                        work[idx + 1] = temp;
+                        renderForm();
+                    }
+                });
+            });
+        }
+
+        function updateCols() {
+            document.querySelectorAll('#cols .seg-btn').forEach(b => {
+                b.classList.toggle('on', +b.dataset.c === cfg.cols);
+            });
+        }
+
+        /* --------------------------------------------
+           VIEW NAVIGATION
+           -------------------------------------------- */
+        function showMain() {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+            document.getElementById('main').classList.add('on');
+            renderGrid();
+        }
+
+        function showEdit() {
+            work = JSON.parse(JSON.stringify(items));
+            // Clean up orphaned items (have title/img but no valid URL)
+            work.forEach((it, i) => {
+                if (!it.url || !getID(it.url)) {
+                    work[i] = { url: '', title: '', img: '', desc: '' };
+                }
+            });
+            // Sort filled items to top
+            work.sort((a, b) => {
+                const aFilled = a.url.trim() ? 0 : 1;
+                const bFilled = b.url.trim() ? 0 : 1;
+                return aFilled - bFilled;
+            });
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+            document.getElementById('edit').classList.add('on');
+            renderForm();
+            updateCols();
+        }
+
+        function showDive() {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+            document.getElementById('dive').classList.add('on');
+            renderDive();
+        }
+
+        function renderDive() {
+            const filled = items.filter(it => it.url && getID(it.url));
+            const displayItems = filled.length >= 3 ? filled : items;
+            
+            const list = document.getElementById('dive-list');
+            list.innerHTML = displayItems.map((it, i) => `
+                <div class="dive-item" data-i="${i}">
+                    <div class="dive-img">
+                        ${it.img ? `<img src="${esc(it.img)}" alt="">` : `<div class="dive-ph"><span class="material-symbols-outlined">music_note_2</span></div>`}
+                    </div>
+                    <div class="dive-info">
+                        <div class="dive-title">${esc(it.title) || 'Add playlist'}</div>
+                        ${it.desc ? `<div class="dive-desc">${esc(it.desc)}</div>` : ''}
+                    </div>
+                </div>
+            `).join('') + `<div class="dive-back"><button class="txt-btn" id="back-grid-btn">Back to Grid</button></div>`;
+            
+            list.querySelectorAll('.dive-item').forEach(item => {
+                item.onclick = () => {
+                    const idx = item.dataset.i;
+                    const id = getID(displayItems[idx].url);
+                    if (id) {
+                        window.location.href = 'spotify:playlist:' + id;
+                    }
+                };
+            });
+            
+            document.getElementById('back-grid-btn').onclick = showMain;
+        }
+
+        /* --------------------------------------------
+           MIXTAPE SHARING & IMPORT
+           -------------------------------------------- */
+        function generateMixtapeString(name, title) {
+            const filled = items.filter(it => it.url && getID(it.url));
+            const data = {
+                n: name,
+                t: title || '',
+                p: filled.map(it => ({
+                    u: it.url,
+                    t: it.title,
+                    i: it.img,
+                    d: it.desc
+                }))
+            };
+            return btoa(encodeURIComponent(JSON.stringify(data)));
+        }
+        
+        function parseMixtapeString(str) {
+            try {
+                const data = JSON.parse(decodeURIComponent(atob(str)));
+                return {
+                    name: data.n,
+                    title: data.t || '',
+                    playlists: data.p.map(p => ({
+                        url: p.u,
+                        title: p.t,
+                        img: p.i,
+                        desc: p.d
+                    }))
+                };
+            } catch(e) {
+                return null;
+            }
+        }
+        
+        function renderMixtapesList() {
+            const el = document.getElementById('mixtapes-list');
+            if (!el) return;
+            
+            // Show all starred + latest unstarred (up to 5 unstarred)
+            const starred = mixtapes.filter(m => m.starred).sort((a, b) => 
+                new Date(b.added) - new Date(a.added)
+            );
+            const unstarred = mixtapes.filter(m => !m.starred).sort((a, b) => 
+                new Date(b.added) - new Date(a.added)
+            ).slice(0, 5);
+            
+            const toShow = [...starred, ...unstarred];
+            
+            if (toShow.length === 0) {
+                el.innerHTML = '<div class="no-mixtapes">Ask a friend</div>';
+            } else {
+                el.innerHTML = toShow.map((m) => {
+                    const idx = mixtapes.indexOf(m);
+                    const label = m.title ? `${m.name}: ${m.title}` : m.name;
+                    return `<button class="mixtape-item" data-i="${idx}">${esc(label)}</button>`;
+                }).join('');
+                el.querySelectorAll('.mixtape-item').forEach(btn => {
+                    btn.onclick = () => {
+                        document.getElementById('menu').classList.remove('open');
+                        showFriend(parseInt(btn.dataset.i));
+                    };
+                });
+            }
+            
+            // Also update sidebar mixtapes
+            renderSidebarMixtapes();
+        }
+        
+        function updateSidebarActive(activeId) {
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.getElementById(activeId)?.classList.add('active');
+        }
+        
+        function renderSidebarThemes() {
+            const el = document.getElementById('sidebar-themes');
+            if (!el) return;
+            
+            const cur = document.body.dataset.theme || 'light';
+            const opts = sysDark ? ['dark', 'spotify'] : ['light', 'dark', 'spotify'];
+            
+            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'on':''}" data-t="${t}"></div>`).join('');
+            
+            el.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.onclick = () => {
+                    setTheme(btn.dataset.t);
+                    // Update both menu and sidebar theme buttons
+                    document.querySelectorAll('.theme-btn').forEach(b => {
+                        b.classList.toggle('on', b.dataset.t === btn.dataset.t);
+                        b.classList.toggle('active', b.dataset.t === btn.dataset.t);
+                    });
+                };
+            });
+        }
+        
+        function renderSidebarMixtapes() {
+            const el = document.getElementById('sidebar-mixtapes');
+            if (!el) return;
+            
+            const starred = mixtapes.filter(m => m.starred).sort((a, b) => new Date(b.added) - new Date(a.added));
+            const unstarred = mixtapes.filter(m => !m.starred).sort((a, b) => new Date(b.added) - new Date(a.added)).slice(0, 5);
+            const toShow = [...starred, ...unstarred];
+            
+            if (toShow.length === 0) {
+                el.innerHTML = '<div class="no-mixtapes">Ask a friend</div>';
+            } else {
+                el.innerHTML = toShow.map((m) => {
+                    const idx = mixtapes.indexOf(m);
+                    const label = m.title ? `${m.name}: ${m.title}` : m.name;
+                    const icon = m.starred ? 'star' : 'play_arrow';
+                    return `<button class="sidebar-mixtape-item" data-i="${idx}"><span class="material-symbols-outlined">${icon}</span>${esc(label)}</button>`;
+                }).join('');
+                el.querySelectorAll('.sidebar-mixtape-item').forEach(btn => {
+                    btn.onclick = () => {
+                        updateSidebarActive(null);
+                        showFriend(parseInt(btn.dataset.i));
+                    };
+                });
+            }
+        }
+        
+        /* --------------------------------------------
+           COLLECTED MIXTAPES HANDLERS
+           -------------------------------------------- */
+        function toggleStar(idx) {
+            mixtapes[idx].starred = !mixtapes[idx].starred;
+            saveMixtapes();
+            renderMixtapesList();
+            renderCollectedList();
+        }
+        
+        function removeItem(idx) {
+            const m = mixtapes[idx];
+            if (confirm(`Delete "${m.title}" from ${m.name}?`)) {
+                mixtapes.splice(idx, 1);
+                saveMixtapes();
+                renderMixtapesList();
+                renderCollectedList();
+            }
+        }
+        
+        function renderCollectedList() {
+            const el = document.getElementById('collected-list');
+            if (!el) return;
+            
+            if (mixtapes.length === 0) {
+                el.innerHTML = '<div class="collected-empty">No mixtapes collected yet</div>';
+                return;
+            }
+            
+            const filterEl = document.querySelector('#mixtape-filter-options .selected');
+            const filter = filterEl ? filterEl.dataset.value : 'newest';
+            let sorted = [...mixtapes];
+            
+            // Starred always at top
+            sorted.sort((a, b) => {
+                if (a.starred && !b.starred) return -1;
+                if (!a.starred && b.starred) return 1;
+                
+                if (filter === 'newest') {
+                    return new Date(b.added) - new Date(a.added);
+                } else if (filter === 'oldest') {
+                    return new Date(a.added) - new Date(b.added);
+                } else if (filter === 'friend') {
+                    return a.name.localeCompare(b.name);
+                }
+                return 0;
+            });
+            
+            el.innerHTML = sorted.map((m, sortedIdx) => {
+                const idx = mixtapes.indexOf(m);
+                const date = new Date(m.added).toLocaleDateString();
+                return `
+                    <div class="collected-item">
+                        <div class="collected-star ${m.starred ? 'starred' : ''}" data-idx="${idx}">★</div>
+                        <div class="collected-info" data-idx="${idx}">
+                            <div class="collected-title">${esc(m.title)}</div>
+                            <div class="collected-meta">Shared: ${date}</div>
+                            <div class="collected-meta">From: ${esc(m.name)}</div>
+                        </div>
+                        <div class="collected-delete" data-idx="${idx}">✕</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Attach events after render
+            const stars = el.querySelectorAll('.collected-star');
+            const infos = el.querySelectorAll('.collected-info');
+            const dels = el.querySelectorAll('.collected-delete');
+            
+            alert('Found: ' + stars.length + ' stars, ' + infos.length + ' infos, ' + dels.length + ' deletes');
+            
+            stars.forEach(star => {
+                star.onclick = function() { toggleStar(parseInt(this.dataset.idx)); };
+            });
+            infos.forEach(info => {
+                info.onclick = function() { showFriend(parseInt(this.dataset.idx)); };
+            });
+            dels.forEach(del => {
+                del.onclick = function() { removeItem(parseInt(this.dataset.idx)); };
+            });
+        }
+        
+        function showShare() {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+            document.getElementById('share').classList.add('on');
+            document.getElementById('share-name').value = '';
+            document.getElementById('share-title').value = '';
+            document.getElementById('share-output').innerHTML = '';
+            document.getElementById('import-string').value = '';
+            renderCollectedList();
+        }
+        
+        function showRecover() {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+            document.getElementById('recover').classList.add('on');
+            document.getElementById('recovery-string').value = '';
+            document.getElementById('recovery-btn').textContent = 'Restore My Mixtape';
+        }
+        
+        function showAbout() {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+            document.getElementById('about').classList.add('on');
+        }
+        
+        function showHelp() {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+            document.getElementById('help').classList.add('on');
+        }
+        
+        function showFriend(idx) {
+            const mixtape = mixtapes[idx];
+            if (!mixtape) return;
+            
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+            document.getElementById('friend').classList.add('on');
+            
+            const headerText = mixtape.title 
+                ? `${mixtape.name}: ${mixtape.title}` 
+                : `${mixtape.name}'s Mixtape`;
+            document.getElementById('friend-header').textContent = headerText;
+            
+            const list = document.getElementById('friend-list');
+            list.innerHTML = mixtape.playlists.map((it, i) => `
+                <div class="dive-item" data-i="${i}">
+                    <div class="dive-img">
+                        ${it.img ? `<img src="${esc(it.img)}" alt="">` : `<div class="dive-ph"><span class="material-symbols-outlined">music_note_2</span></div>`}
+                    </div>
+                    <div class="dive-info">
+                        <div class="dive-title">${esc(it.title) || 'Playlist'}</div>
+                        ${it.desc ? `<div class="dive-desc">${esc(it.desc)}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            list.querySelectorAll('.dive-item').forEach(item => {
+                item.onclick = () => {
+                    const pl = mixtape.playlists[item.dataset.i];
+                    const id = getID(pl.url);
+                    if (id) {
+                        window.location.href = 'spotify:playlist:' + id;
+                    }
+                };
+            });
+        }
+
+        /* --------------------------------------------
+           EVENT HANDLERS & SETUP
+           -------------------------------------------- */
+        function setup() {
+            const menu = document.getElementById('menu');
+            const menuBtn = document.getElementById('menu-btn');
+            
+            // Title click goes home
+            document.getElementById('title-btn').onclick = showMain;
+            
+            // Toggle menu
+            menuBtn.onclick = (e) => {
+                e.stopPropagation();
+                menu.classList.toggle('open');
+            };
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', () => menu.classList.remove('open'));
+            menu.onclick = (e) => e.stopPropagation();
+            
+            // Menu items
+            document.getElementById('grid-btn').onclick = () => { menu.classList.remove('open'); showMain(); };
+            document.getElementById('edit-btn').onclick = () => { menu.classList.remove('open'); showEdit(); };
+            document.getElementById('share-btn').onclick = () => { menu.classList.remove('open'); showShare(); };
+            document.getElementById('dive-btn').onclick = () => { menu.classList.remove('open'); showDive(); };
+            document.getElementById('recover-btn').onclick = () => { menu.classList.remove('open'); showRecover(); };
+            document.getElementById('about-btn').onclick = () => { menu.classList.remove('open'); showAbout(); };
+            document.getElementById('help-btn').onclick = () => { menu.classList.remove('open'); showHelp(); };
+            
+            // Sidebar items (for larger screens)
+            document.getElementById('sidebar-title').onclick = () => { updateSidebarActive('sidebar-grid-btn'); showMain(); };
+            document.getElementById('sidebar-grid-btn').onclick = () => { updateSidebarActive('sidebar-grid-btn'); showMain(); };
+            document.getElementById('sidebar-dive-btn').onclick = () => { updateSidebarActive('sidebar-dive-btn'); showDive(); };
+            document.getElementById('sidebar-edit-btn').onclick = () => { updateSidebarActive('sidebar-edit-btn'); showEdit(); };
+            document.getElementById('sidebar-share-btn').onclick = () => { updateSidebarActive('sidebar-share-btn'); showShare(); };
+            document.getElementById('sidebar-recover-btn').onclick = () => { updateSidebarActive('sidebar-recover-btn'); showRecover(); };
+            document.getElementById('sidebar-about-btn').onclick = () => { updateSidebarActive('sidebar-about-btn'); showAbout(); };
+            document.getElementById('sidebar-help-btn').onclick = () => { updateSidebarActive('sidebar-help-btn'); showHelp(); };
+            
+            // Sidebar toggle (collapse/expand)
+            document.getElementById('sidebar-toggle').onclick = () => {
+                document.getElementById('sidebar').classList.toggle('collapsed');
+            };
+            
+            // Mixtapes label opens sidebar when collapsed
+            document.querySelector('.sidebar-mixtapes-label').onclick = () => {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.remove('collapsed');
+                }
+            };
+            
+            // Render sidebar themes
+            renderSidebarThemes();
+            
+            // Share view buttons
+            document.getElementById('generate-btn').onclick = async () => {
+                const name = document.getElementById('share-name').value.trim();
+                if (!name) {
+                    alert('Please enter your name');
+                    return;
+                }
+                const title = document.getElementById('share-title').value.trim();
+                if (!title) {
+                    alert('Please enter a mixtape title');
+                    return;
+                }
+                const filled = items.filter(it => it.url && getID(it.url));
+                if (filled.length < 3) {
+                    alert('You need at least 3 playlists to share');
+                    return;
+                }
+                const str = generateMixtapeString(name, title);
+                
+                // Build full URL with mixtape data
+                const fullUrl = window.location.origin + window.location.pathname + '?m=' + encodeURIComponent(str);
+                
+                // Show loading state
+                document.getElementById('share-output').innerHTML = `
+                    <div class="share-success">Generating short URL...</div>
+                `;
+                
+                // Try to get short URL using JSONP
+                const callbackName = 'tinyurlCallback' + Date.now();
+                window[callbackName] = async (data) => {
+                    delete window[callbackName];
+                    
+                    if (data && data.shorturl) {
+                        // Success - show both short URL and backup code
+                        document.getElementById('share-output').innerHTML = `
+                            <div class="share-success">Short URL ready!</div>
+                            <div class="share-label">Short URL</div>
+                            <div class="card">
+                                <div class="pl-item">
+                                    <div class="share-code" id="short-link">${data.shorturl}</div>
+                                    <button class="action-btn full" id="copy-short-btn">Copy Short URL</button>
+                                </div>
+                            </div>
+                            <div class="share-label" style="margin-top: 16px;">Backup Code</div>
+                            <div class="card">
+                                <div class="pl-item">
+                                    <div class="share-code">${str}</div>
+                                    <button class="action-btn full" id="copy-btn">Copy Code</button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Auto-copy short URL
+                        try {
+                            await navigator.clipboard.writeText(data.shorturl);
+                            document.querySelector('.share-success').textContent = 'Short URL copied to clipboard!';
+                            document.getElementById('copy-short-btn').innerHTML = '✓ Short URL Copied';
+                            document.getElementById('copy-short-btn').classList.add('completed');
+                        } catch(e) {}
+                        
+                        document.getElementById('copy-short-btn').onclick = () => {
+                            navigator.clipboard.writeText(data.shorturl).then(() => {
+                                document.getElementById('copy-short-btn').innerHTML = '✓ Short URL Copied';
+                                document.getElementById('copy-short-btn').classList.add('completed');
+                            });
+                        };
+                        
+                        document.getElementById('copy-btn').onclick = () => {
+                            navigator.clipboard.writeText(str).then(() => {
+                                document.getElementById('copy-btn').innerHTML = '✓ Code Copied';
+                                document.getElementById('copy-btn').classList.add('completed');
+                            });
+                        };
+                    } else {
+                        showBackupCodeOnly();
+                    }
+                };
+                
+                const showBackupCodeOnly = () => {
+                    document.getElementById('share-output').innerHTML = `
+                        <div class="share-success">Full URL ready (shortener unavailable)</div>
+                        <div class="share-label">Backup Code</div>
+                        <div class="card">
+                            <div class="pl-item">
+                                <div class="share-code">${str}</div>
+                                <button class="action-btn full" id="copy-btn">Copy Code</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('copy-btn').onclick = () => {
+                        navigator.clipboard.writeText(str).then(() => {
+                            document.getElementById('copy-btn').innerHTML = '✓ Code Copied';
+                            document.getElementById('copy-btn').classList.add('completed');
+                        });
+                    };
+                };
+                
+                // Try is.gd first
+                const script = document.createElement('script');
+                script.src = 'https://is.gd/create.php?format=json&callback=' + callbackName + '&url=' + encodeURIComponent(fullUrl);
+                
+                // Timeout fallback - if no response in 5 seconds, show backup only
+                const timeout = setTimeout(() => {
+                    if (window[callbackName]) {
+                        delete window[callbackName];
+                        showBackupCodeOnly();
+                    }
+                }, 5000);
+                
+                script.onerror = () => {
+                    clearTimeout(timeout);
+                    delete window[callbackName];
+                    showBackupCodeOnly();
+                };
+                document.body.appendChild(script);
+            };
+            
+            document.getElementById('import-btn').onclick = () => {
+                const str = document.getElementById('import-string').value.trim();
+                if (!str) {
+                    alert('Please paste a mixtape code');
+                    return;
+                }
+                const data = parseMixtapeString(str);
+                if (!data) {
+                    alert('Invalid mixtape code');
+                    return;
+                }
+                // Add with metadata
+                mixtapes.push({
+                    name: data.name,
+                    title: data.title || '',
+                    playlists: data.playlists,
+                    added: new Date().toISOString(),
+                    starred: false
+                });
+                saveMixtapes();
+                renderMixtapesList();
+                renderCollectedList();
+                document.getElementById('import-string').value = '';
+                const label = data.title ? `${data.name}: ${data.title}` : data.name;
+                alert('Added ' + label + '!');
+            };
+            
+            // Custom dropdown for filter
+            const filterBtn = document.getElementById('mixtape-filter-btn');
+            const filterOptions = document.getElementById('mixtape-filter-options');
+            
+            filterBtn.onclick = (e) => {
+                e.stopPropagation();
+                filterOptions.classList.toggle('open');
+            };
+            
+            filterOptions.querySelectorAll('.custom-select-option').forEach(opt => {
+                opt.onclick = (e) => {
+                    e.stopPropagation();
+                    filterOptions.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    document.getElementById('mixtape-filter-label').textContent = opt.textContent;
+                    filterOptions.classList.remove('open');
+                    renderCollectedList();
+                };
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                filterOptions.classList.remove('open');
+            });
+            
+            // Recovery
+            document.getElementById('recovery-btn').onclick = () => {
+                const str = document.getElementById('recovery-string').value.trim();
+                if (!str) {
+                    alert('Please paste your share code');
+                    return;
+                }
+                const data = parseMixtapeString(str);
+                if (!data) {
+                    alert('Invalid share code');
+                    return;
+                }
+                if (confirm(`Restore "${data.title}" by ${data.name}? This will replace your current playlists.`)) {
+                    // Convert parsed data back to items format
+                    items = data.playlists.map(p => ({
+                        url: p.url,
+                        title: p.title,
+                        img: p.img,
+                        desc: p.desc
+                    }));
+                    save();
+                    document.getElementById('recovery-string').value = '';
+                    document.getElementById('recovery-btn').textContent = '✓ Success! Your Mixtape Has Been Recovered';
+                    document.getElementById('recovery-btn').classList.add('completed');
+                    setTimeout(() => showMain(), 2000);
+                }
+            };
+            
+            document.getElementById('share-back-btn').onclick = showMain;
+            document.getElementById('friend-back-btn').onclick = showMain;
+            document.getElementById('recover-back-btn').onclick = showMain;
+            document.getElementById('about-back-btn').onclick = showMain;
+            document.getElementById('help-back-btn').onclick = showMain;
+
+            // Edit view buttons
+            document.getElementById('cancel-btn').onclick = () => {
+                const filledItems = work.filter(it => it.url && getID(it.url));
+                if (filledItems.length < 3) {
+                    alert('You need at least 3 playlists to save. Your changes won\'t be saved.');
+                }
+                showMain();
+            };
+            
+            document.getElementById('save-btn').onclick = () => {
+                const filledItems = work.filter(it => it.url && getID(it.url));
+                if (filledItems.length < 3) {
+                    alert('You need at least 3 playlists to save. Add more playlists or your changes won\'t be saved.');
+                    return;
+                }
+                items = JSON.parse(JSON.stringify(work));
+                save();
+                showMain();
+            };
+            
+            document.getElementById('add-btn').onclick = () => {
+                if (work.length < 14) {
+                    work.push({ url: '', title: '', img: '', desc: '' });
+                    renderForm();
+                }
+            };
+
+            document.querySelectorAll('#cols .seg-btn').forEach(b => {
+                b.onclick = () => {
+                    cfg.cols = +b.dataset.c;
+                    fix();
+                    work = JSON.parse(JSON.stringify(items));
+                    updateCols();
+                    renderForm();
+                };
+            });
+
+            // Recalculate on resize
+            window.addEventListener('resize', () => {
+                if (document.getElementById('main').classList.contains('on')) {
+                    renderGrid();
+                }
+            });
+        }
+        
+        /* --------------------------------------------
+           BROWSER CHECKS & URL IMPORT
+           -------------------------------------------- */
+        function checkBrowser() {
+            const ua = navigator.userAgent;
+            const isIOS = /iPad|iPhone|iPod/.test(ua);
+            const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/.test(ua);
+            const isStandalone = window.navigator.standalone === true;
+            
+            if (isIOS && !isSafari && !isStandalone) {
+                // Show Safari recommendation
+                const banner = document.createElement('div');
+                banner.className = 'safari-banner';
+                banner.innerHTML = `
+                    <span>For the best experience, open in Safari and add to your home screen.</span>
+                    <button class="safari-close">✕</button>
+                `;
+                document.body.prepend(banner);
+                banner.querySelector('.safari-close').onclick = () => banner.remove();
+            }
+        }
+
+        // Check for shared mixtape in URL
+        function checkUrlImport() {
+            const params = new URLSearchParams(window.location.search);
+            const mixtapeData = params.get('m');
+            if (mixtapeData) {
+                const data = parseMixtapeString(decodeURIComponent(mixtapeData));
+                if (data) {
+                    // Clear the URL parameter
+                    window.history.replaceState({}, '', window.location.pathname);
+                    
+                    // Show import dialog
+                    const label = data.title ? `${data.name}: ${data.title}` : data.name;
+                    if (confirm(`Add "${label}" to your mixtapes?`)) {
+                        mixtapes.push({
+                            name: data.name,
+                            title: data.title || '',
+                            playlists: data.playlists,
+                            added: new Date().toISOString(),
+                            starred: false
+                        });
+                        saveMixtapes();
+                        renderMixtapesList();
+                        alert('Added ' + label + '!');
+             
