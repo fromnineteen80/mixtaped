@@ -1504,6 +1504,11 @@
             .dive-back {
                 display: none;
             }
+            
+            /* Align friend toolbar with sidebar title */
+            .friend-toolbar {
+                margin-top: -14px;
+            }
         }
         
         /* Hide sidebar on mobile */
@@ -1602,10 +1607,10 @@
                         <p class="section-desc">Remember making mixtapes for your friends? Here we are in the future sharing Spotify playlists. But the vibe is so much more than one playlist. It can be a season, a theme, your favorite genres. Whatever you want it to be or say about you. Generate a code and share your favorite playlists with someone who needs to hear what you've been listening to. They will see your mixtape in the Deep Dive format so adding descriptions to each of your playlists will add helpful context.</p>
                         <p class="section-desc" style="margin-top: 12px;"><span style="font-weight: 600;">Tip:</span> Save your share code in your Notes app or email it to yourself. If you ever lose your data, you can restore everything by clicking on Recover in the menu.</p>
                         <div class="card">
-                            <div class="pl-item">
-                                <input class="pl-input" type="text" id="share-name" placeholder="Your name">
-                                <input class="pl-input" type="text" id="share-title" placeholder="Mixtape title">
-                                <button class="action-btn full" id="generate-btn">Generate Share Code</button>
+                            <div class="pl-item" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                <input class="pl-input" type="text" id="share-name" placeholder="Your name" style="flex: 1; min-width: 100px; margin-bottom: 0;">
+                                <input class="pl-input" type="text" id="share-title" placeholder="Mixtape title" style="flex: 1; min-width: 100px; margin-bottom: 0;">
+                                <button class="action-btn" id="generate-btn">Generate</button>
                             </div>
                         </div>
                         <div class="share-output" id="share-output"></div>
@@ -1616,9 +1621,9 @@
                         </div>
                         <p class="section-desc">Got the hookup from a friend? Paste it here and start listening to their favorite tunes. Perfect for road trips, parties, or when you just need someone else to be the DJ. The latest five mixtapes you save, along with your favorites, will be available in your menu. And every mixtape you collect is available below.</p>
                         <div class="card">
-                            <div class="pl-item">
-                                <input class="pl-input" type="text" id="import-string" placeholder="Paste mixtape code here">
-                                <button class="action-btn full" id="import-btn">Add Mixtape</button>
+                            <div class="pl-item" style="display: flex; gap: 8px; align-items: center;">
+                                <input class="pl-input" type="text" id="import-string" placeholder="Paste code here" style="flex: 1; margin-bottom: 0;">
+                                <button class="action-btn" id="import-btn">Add</button>
                             </div>
                         </div>
                     </div>
@@ -1830,12 +1835,12 @@
                     <div class="friend-toolbar">
                         <span class="toggle-label">Toggle Mixtape</span>
                         <div class="view-toggle" id="friend-view-toggle">
-                            <button class="view-toggle-btn" data-view="grid"><span class="material-symbols-outlined">grid_view</span></button>
-                            <button class="view-toggle-btn active" data-view="list"><span class="material-symbols-outlined">format_image_left</span></button>
+                            <button class="view-toggle-btn active" data-view="grid"><span class="material-symbols-outlined">grid_view</span></button>
+                            <button class="view-toggle-btn" data-view="list"><span class="material-symbols-outlined">format_image_left</span></button>
                         </div>
                     </div>
-                    <div class="dive-list" id="friend-list"></div>
-                    <div class="friend-grid" id="friend-grid" style="display: none;"></div>
+                    <div class="dive-list" id="friend-list" style="display: none;"></div>
+                    <div class="friend-grid" id="friend-grid"></div>
                     <div class="dive-back">
                         <button class="txt-btn" id="friend-back-btn">Back</button>
                     </div>
