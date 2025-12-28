@@ -2,6 +2,8 @@
 
 Remember making mixtapes? Carefully selecting songs, writing out the tracklist, and handing it to someone who needed to hear what you'd been listening to. Mixtaped brings that feeling back for the streaming age thanks to the Spotify Web API.
 
+**[Try the demo →](https://fromnineteen80.github.io/mixtaped)**
+
 ## Features
 
 - **Grid & Deep Dive views** — See your playlists as album art tiles or detailed cards with descriptions
