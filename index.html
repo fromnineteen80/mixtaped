@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=drag_indicator,edit,first_page,format_image_left,grid_view,headphones,history,info,local_cafe,lock,mail,menu,music_note_2,play_arrow,share,star,thumbnail_bar,tooltip_2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
     
     <style>
         /* ============================================
@@ -632,7 +632,10 @@
         
         .brand {
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+        }
+        .brand-header {
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
         }
         
         .about-intro {
@@ -693,7 +696,7 @@
         
         .about-footer {
             text-align: center;
-            padding: 8px 0 24px;
+            padding: 8px 0 0;
         }
         .about-footer p {
             font-size: var(--font-card);
@@ -710,6 +713,98 @@
         }
         .about-footer a:active {
             opacity: 0.6;
+        }
+        
+        .about-divider {
+            width: 30%;
+            height: 1px;
+            background: var(--text3);
+            opacity: 0.3;
+            margin: 32px auto;
+        }
+        
+        .about-story {
+            padding: 0 0 24px;
+        }
+        .about-story p {
+            font-size: var(--font-card);
+            color: var(--text2);
+            line-height: var(--line-height);
+            margin: 0 0 16px;
+        }
+        .about-story p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .about-section-title {
+            font-size: var(--font-small);
+            font-weight: 600;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 500px) {
+            .use-case-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .use-case-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: box-shadow 0.2s ease;
+        }
+        .use-case-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            right: 10%;
+            height: 10px;
+            border-radius: 0 0 50% 50% / 0 0 100% 100%;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+            transition: box-shadow 0.2s ease;
+        }
+        .use-case-card:hover::after {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+        [data-theme="dark"] .use-case-card:hover::after {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+        }
+        .use-case-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--input);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .use-case-icon .material-symbols-outlined {
+            font-size: 22px;
+        }
+        .use-case-title {
+            font-size: var(--font-card);
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 6px;
+        }
+        .use-case-desc {
+            font-size: var(--font-card);
+            color: var(--text2);
+            line-height: var(--line-height);
         }
 
         .row {
@@ -1700,7 +1795,7 @@
                         <div class="about-card">
                             <div class="about-card-icon"><span class="material-symbols-outlined">headphones</span></div>
                             <div class="about-card-title">Collect Good Vibes</div>
-                            <p class="about-card-desc">When someone shares their mixtape with you, save it. Build a library of collections from friends with great taste. Perfect for road trips, dinner parties, or when you need someone else to DJ.</p>
+                            <p class="about-card-desc">Save mixtapes from friends with great taste, or create your own for road trips, dinner parties, and podcast deep dives. Build a library of collections that's always one tap away.</p>
                         </div>
                         
                         <div class="about-card">
@@ -1713,6 +1808,57 @@
                     <div class="about-footer">
                         <p>For questions or help setting up your <span class="brand">Mixtaped</span> app, <a href="/cdn-cgi/l/email-protection#9bf8f4f7f2f5dbf8f4f7f2f5f6fae2f5fae9ffb5f5feefa4e8eef9f1fef8efa6d6d2c3cfdacbdedfbea9abcaeefee8eff2f4f5">email here</a>.</p>
                         <p>If you love using this tool, feel free to <a href="https://buymeacoffee.com/fromnineteen80" target="_blank">donate here</a>.</p>
+                    </div>
+                    
+                    <div class="about-divider"></div>
+                    
+                    <div class="about-story">
+                        <p>I built <span class="brand">Mixtaped</span> because I love music. Discovering new music and sharing it with friends is one of my favorite things to do when I have some downtime. I also love Spotify and it is always one of my most used apps. However, Spotify has become highly complex and buries playlists deep in menus, making it frustrating to access the collections I've spent time building. I can't tell you how frustrating it is to have to click "By You" after already diving levels deep to get to playlists.</p>
+                        
+                        <p>I think the design complexity discourages the old mixtape vibe, and that's a shame. With vinyl making a comeback among Gen Z, we shouldn't overlook the cassette mixtapes and burned CDs eras that meant so much to us music lovers. Those mixes were personal and took hours to create. They were expressive. They said something about who you were and what you wanted someone else to hear. If a relationship ended, the one thing I wanted back was my mixtapes. And I know I am not the only one who had that special attachment to music growing up.</p>
+                        
+                        <p>I am also in my car for work nearly every day, driving long distances. CarPlay helps, but sometimes I know exactly what vibe I want for a drive, or I've mapped out which podcasts to queue up. Why not have those specific collections at my fingertips? Or take some time to explore what friends have shared with me without digging through an interface that fights me every step?</p>
+                        
+                        <p>That's what <span class="brand">Mixtaped</span> solves. Quick access to your favorite playlists. Easy sharing with context. A library of collections from people whose taste you trust.</p>
+                        
+                        <p>We are just getting started. Future versions of <span class="brand">Mixtaped</span> will focus on deeper Spotify integration and more ways to discover and organize. And we are working on simplifying the saving and storage problem for a light HTML web app. But the core will always be simple: your music, your mixtapes, one tap away.</p>
+                    </div>
+                    
+                    <div class="about-divider"></div>
+                    
+                    <div class="about-section-title">Ways to Use <span class="brand-header">Mixtaped</span></div>
+                    
+                    <div class="use-case-grid">
+                        <div class="use-case-card">
+                            <div class="use-case-icon"><span class="material-symbols-outlined">directions_car</span></div>
+                            <div class="use-case-title">Road Trip Ready</div>
+                            <div class="use-case-desc">Queue up the perfect drive. Morning coffee vibes, desert highway energy, late night wind-down. All one tap away.</div>
+                        </div>
+                        <div class="use-case-card">
+                            <div class="use-case-icon"><span class="material-symbols-outlined">podcasts</span></div>
+                            <div class="use-case-title">Podcast Queues</div>
+                            <div class="use-case-desc">Map out your week's listening. Group episodes by topic, mood, or trip length. No more hunting through your library.</div>
+                        </div>
+                        <div class="use-case-card">
+                            <div class="use-case-icon"><span class="material-symbols-outlined">dining</span></div>
+                            <div class="use-case-title">Dinner Party Host</div>
+                            <div class="use-case-desc">Curate the evening's soundtrack. Arrival drinks, dinner conversation, after-hours groove. Seamless transitions.</div>
+                        </div>
+                        <div class="use-case-card">
+                            <div class="use-case-icon"><span class="material-symbols-outlined">directions_run</span></div>
+                            <div class="use-case-title">Workout Blocks</div>
+                            <div class="use-case-desc">Warm-up, push, cool-down. Build workout phases with playlists that match your intensity.</div>
+                        </div>
+                        <div class="use-case-card">
+                            <div class="use-case-icon"><span class="material-symbols-outlined">person_heart</span></div>
+                            <div class="use-case-title">Gift a Vibe</div>
+                            <div class="use-case-desc">Better than a playlist. Share a whole collection that tells a story. Perfect for birthdays, holidays, or just because.</div>
+                        </div>
+                        <div class="use-case-card">
+                            <div class="use-case-icon"><span class="material-symbols-outlined">radio</span></div>
+                            <div class="use-case-title">Music Discovery</div>
+                            <div class="use-case-desc">Collect mixtapes from friends with great taste. Their curation becomes your next favorite artist.</div>
+                        </div>
                     </div>
                     
                     <div class="share-back">
