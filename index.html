@@ -393,6 +393,7 @@
             flex-direction: column;
             gap: var(--gap);
             width: var(--grid-width, 100%);
+            max-width: 700px;
             margin: 0 auto;
         }
         
@@ -441,7 +442,7 @@
         }
         
         .dive-title {
-            font-size: var(--font-heading);
+            font-size: 16px;
             font-weight: 600;
             line-height: 1.3;
             color: var(--text2);
@@ -449,7 +450,7 @@
         }
         
         .dive-desc {
-            font-size: var(--font-body);
+            font-size: var(--font-card);
             color: var(--text2);
             line-height: var(--line-height);
         }
@@ -1860,7 +1861,7 @@
                         <div class="card" id="form"></div>
                     </div>
                     <div class="footer">
-                        <a href="https://buymeacoffee.com/fromnineteen80" target="_blank" style="color: #1DB954; text-decoration: none;">Donate to the developer here</a>
+                        Donate to the developer <a href="https://buymeacoffee.com/fromnineteen80" target="_blank" style="color: #1DB954; text-decoration: none;">here</a>
                     </div>
                 </div>
             </div>
@@ -2138,7 +2139,7 @@
                                 <button class="pl-move-down" data-i="${i}">▼</button>
                             </div>` : ''}
                         </div>
-                        <div class="pl-title">${esc(it.title) || 'Name will fill via Spotify API when you paste share link'}</div>
+                        <div class="pl-title">${esc(it.title) || 'Name will fill when you add playlist URL above'}</div>
                         <textarea class="pl-input pl-desc" placeholder="Add description" data-i="${i}" data-f="desc" rows="1">${esc(it.desc)}</textarea>
                     </div>
                 </div>
