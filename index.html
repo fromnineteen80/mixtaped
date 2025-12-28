@@ -1180,6 +1180,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 44px;
             margin-bottom: var(--gap);
         }
         
@@ -2326,6 +2327,10 @@
                     const id = getID(displayItems[idx].url);
                     if (id) {
                         window.location.href = 'spotify:playlist:' + id;
+                    } else {
+                        // No URL - go to Edit
+                        updateSidebarActive('sidebar-edit-btn');
+                        showEdit();
                     }
                 };
             });
@@ -2448,9 +2453,6 @@
                 }).join('');
                 el.querySelectorAll('.sidebar-mixtape-item').forEach(btn => {
                     btn.onclick = () => {
-                        updateSidebarActive(null);
-                        document.querySelectorAll('.sidebar-mixtape-item').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
                         showFriend(parseInt(btn.dataset.i));
                     };
                 });
@@ -2571,6 +2573,15 @@
             if (!mixtape) return;
             
             currentFriendMixtape = mixtape;
+            
+            // Set the title in toolbar
+            document.querySelector('.toggle-label').textContent = mixtape.title || 'Untitled Mixtape';
+            
+            // Update sidebar active state
+            updateSidebarActive(null);
+            document.querySelectorAll('.sidebar-mixtape-item').forEach(b => b.classList.remove('active'));
+            const sidebarBtn = document.querySelector(`.sidebar-mixtape-item[data-i="${idx}"]`);
+            if (sidebarBtn) sidebarBtn.classList.add('active');
             
             document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
             document.getElementById('friend').classList.add('on');
@@ -2947,6 +2958,9 @@
             window.addEventListener('resize', () => {
                 if (document.getElementById('main').classList.contains('on')) {
                     renderGrid();
+                }
+                if (document.getElementById('friend').classList.contains('on')) {
+                    renderFriendView();
                 }
             });
         }
