@@ -1455,7 +1455,7 @@
                 <div class="sidebar-divider"></div>
                 <button class="sidebar-item" id="sidebar-about-btn"><span class="material-symbols-outlined">info</span><span class="sidebar-text">About</span></button>
                 <button class="sidebar-item" id="sidebar-help-btn"><span class="material-symbols-outlined">tooltip_2</span><span class="sidebar-text">Help</span></button>
-                <a class="sidebar-item" href="/cdn-cgi/l/email-protection#690a06050007290a0605000704081007081b0d47070c1d561a1c0b030c0a1d542420313d28392c2d4c5b59381c0c1a1d000607"><span class="material-symbols-outlined">mail</span><span class="sidebar-text">Email</span></a>
+                <a class="sidebar-item" href="mailto:colin@colinmaynard.net?subject=MIXTAPED%20Question"><span class="material-symbols-outlined">mail</span><span class="sidebar-text">Email</span></a>
                 <a class="sidebar-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank"><span class="material-symbols-outlined">local_cafe</span><span class="sidebar-text">Donate</span></a>
                 <div class="sidebar-divider"></div>
                 <div class="sidebar-item sidebar-mixtapes-label"><span class="material-symbols-outlined">headphones</span><span class="sidebar-text">Mixtapes</span></div>
@@ -1486,7 +1486,7 @@
                         <div class="menu-divider"></div>
                         <button class="menu-item" id="about-btn">About</button>
                         <button class="menu-item" id="help-btn">Help</button>
-                        <a class="menu-item" href="/cdn-cgi/l/email-protection#fb9894979295bb9894979295969a82959a899fd5959e8fc4888e99919e988fc6b6b2a3afbaabbebfdec9cbaa8e9e888f929495">Email</a>
+                        <a class="menu-item" href="mailto:colin@colinmaynard.net?subject=MIXTAPED%20Question">Email</a>
                         <a class="menu-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank">Donate</a>
                         <div class="menu-divider"></div>
                         <div class="menu-label">Mixtapes</div>
@@ -1622,7 +1622,7 @@
                     </div>
                     
                     <div class="about-footer">
-                        <p>For questions or help setting up your <span class="brand">Mixtaped</span> app, <a href="/cdn-cgi/l/email-protection#8deee2e1e4e3cdeee2e1e4e3e0ecf4e3ecffe9a3e3e8f9b2fef8efe7e8eef9b0c0c4d5d9ccddc8c9a8bfbddcf8e8fef9e4e2e3">email here</a>.</p>
+                        <p>For questions or help setting up your <span class="brand">Mixtaped</span> app, <a href="mailto:colin@colinmaynard.net?subject=MIXTAPED%20Question">email here</a>.</p>
                         <p>If you love using this tool, feel free to <a href="https://buymeacoffee.com/fromnineteen80" target="_blank">donate here</a>.</p>
                     </div>
                     
@@ -1772,7 +1772,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         /* ============================================
            JAVASCRIPT
            ============================================ */
@@ -2856,4 +2856,20 @@
                         saveMixtapes();
                         renderMixtapesList();
                         alert('Added ' + label + '!');
+                    }
+                }
+            }
+        }
+
+        /* --------------------------------------------
+           INITIALIZE APP
+           -------------------------------------------- */
+        load();
+        setup();
+        renderGrid();
+        checkBrowser();
+        checkUrlImport();
+    </script>
+</body>
+</html>
              
