@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=add,check,content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
     
     <style>
         /* ============================================
@@ -476,7 +476,7 @@
         }
         
         .action-btn {
-            font-size: var(--font-button);
+            font-size: var(--font-input);
             font-family: inherit;
             color: var(--text2);
             background: var(--card);
@@ -526,7 +526,7 @@
             letter-spacing: 0.5px;
         }
         .section-desc {
-            font-size: var(--font-body);
+            font-size: var(--font-card);
             color: var(--text2);
             line-height: var(--line-height);
             margin: 8px 0 12px;
@@ -537,6 +537,9 @@
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow);
+        }
+        .card.has-dropdown {
+            overflow: visible;
         }
         
         /* --------------------------------------------
@@ -1094,7 +1097,7 @@
         }
         
         .custom-select-btn {
-            font-size: var(--font-button);
+            font-size: var(--font-input);
             font-family: inherit;
             color: var(--text2);
             background: var(--card);
@@ -1135,6 +1138,21 @@
         .custom-select-option:active { background: var(--input); }
         .custom-select-option.selected { font-weight: 600; }
         
+        /* Inline select - matches header text style */
+        .custom-select.inline .custom-select-btn {
+            background: none;
+            box-shadow: none;
+            padding: 0;
+            font-size: var(--font-small);
+            color: var(--text3);
+            gap: 4px;
+        }
+        .custom-select.inline .custom-select-btn:active { opacity: 0.5; }
+        .custom-select.inline .custom-select-btn svg {
+            width: 10px;
+            height: 10px;
+        }
+        
         /* Collected mixtapes */
         .view-toggle {
             display: flex;
@@ -1159,6 +1177,31 @@
         .toggle-label {
             font-size: var(--font-small);
             color: var(--text3);
+            line-height: 1;
+        }
+        .copy-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            color: var(--text3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            transition: all 0.15s ease;
+        }
+        .copy-btn .material-symbols-outlined {
+            font-size: 20px;
+        }
+        .copy-btn:active {
+            transform: scale(0.9);
+            opacity: 0.7;
+        }
+        .copy-btn.copied {
+            background: var(--input);
+            color: var(--text2);
+            padding: 4px;
         }
         .collected-list {
             margin-top: 12px;
@@ -1191,6 +1234,7 @@
             color: var(--text3);
             text-align: center;
             padding: 24px;
+            margin-bottom: 80px;
         }
         
         .collected-item {
@@ -1280,10 +1324,56 @@
             margin-bottom: var(--gap);
         }
         
+        .share-toolbar {
+            margin-bottom: var(--gap);
+            display: block;
+            width: 100%;
+        }
+        .share-toolbar-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            line-height: 1.4;
+        }
+        .share-toolbar-input {
+            width: 100%;
+            font-size: var(--font-small);
+            font-family: inherit;
+            color: var(--text2);
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 0;
+            line-height: 1.4;
+        }
+        .share-toolbar-input::placeholder {
+            color: var(--text3);
+        }
+        
         .friend-grid {
             display: grid;
             gap: var(--gap);
             width: 100%;
+        }
+        
+        .collab-instructions {
+            margin-bottom: var(--gap);
+        }
+        .collab-text {
+            font-size: var(--font-small);
+            color: var(--text3);
+            line-height: var(--line-height);
+        }
+        
+        .collab-add-form {
+            margin-bottom: var(--gap);
+        }
+        .collab-add-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 12px;
         }
 
         /* Responsive */
@@ -1361,7 +1451,8 @@
             
             .sidebar.collapsed .sidebar-title,
             .sidebar.collapsed .sidebar-text,
-            .sidebar.collapsed .sidebar-mixtapes,
+            .sidebar.collapsed .sidebar-dropdown-content,
+            .sidebar.collapsed .sidebar-dropdown-arrow,
             .sidebar.collapsed .sidebar-label,
             .sidebar.collapsed .sidebar-footer {
                 display: none;
@@ -1377,13 +1468,13 @@
                 padding: 7px 0;
             }
             
-            .sidebar.collapsed .sidebar-mixtapes-label {
+            .sidebar.collapsed .sidebar-dropdown-toggle {
                 justify-content: center;
                 padding: 7px 0;
                 cursor: pointer;
             }
             
-            .sidebar.collapsed .sidebar-mixtapes-label:active {
+            .sidebar.collapsed .sidebar-dropdown-toggle:active {
                 background: var(--input);
             }
             
@@ -1490,16 +1581,44 @@
                 background: none;
             }
             
-            .sidebar-mixtapes {
+            .sidebar-dropdown {
+                width: 100%;
+            }
+            
+            .sidebar-dropdown-toggle {
+                justify-content: flex-start;
+                position: relative;
+            }
+            
+            .sidebar-dropdown-arrow {
+                position: absolute;
+                right: 20px;
+                color: var(--text3);
+                transition: transform 0.2s ease;
+            }
+            
+            .sidebar-dropdown-toggle.open .sidebar-dropdown-arrow {
+                transform: rotate(180deg);
+            }
+            
+            .sidebar-dropdown-content {
+                display: none;
                 padding: 0;
+            }
+            
+            .sidebar-dropdown-content.open {
+                display: block;
             }
             
             .no-mixtapes {
                 font-size: var(--font-sidebar);
                 color: var(--text3);
                 font-style: italic;
-                padding: 0 20px 7px 50px;
-                margin-top: -4px;
+                padding: 7px 20px 7px 50px;
+                cursor: default;
+            }
+            .no-mixtapes:hover {
+                background: var(--input);
             }
             
             .sidebar-mixtape-item {
@@ -1642,8 +1761,24 @@
                 <a class="sidebar-item" href="/cdn-cgi/l/email-protection#781b17141116381b1714111615190116190a1c56161d0c470b0d1a121d1b0c453531202c39283d3c5d4a48290d1d0b0c111716"><span class="material-symbols-outlined">mail</span><span class="sidebar-text">Email</span></a>
                 <a class="sidebar-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank"><span class="material-symbols-outlined">local_cafe</span><span class="sidebar-text">Donate</span></a>
                 <div class="sidebar-divider"></div>
-                <div class="sidebar-item sidebar-mixtapes-label"><span class="material-symbols-outlined">headphones</span><span class="sidebar-text">Mixtapes</span></div>
-                <div class="sidebar-mixtapes" id="sidebar-mixtapes"></div>
+                <div class="sidebar-dropdown">
+                    <button class="sidebar-item sidebar-dropdown-toggle" id="sidebar-mixtapes-toggle">
+                        <span class="material-symbols-outlined">headphones</span>
+                        <span class="sidebar-text">Mixtapes</span>
+                        <svg class="sidebar-dropdown-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="sidebar-dropdown-content open" id="sidebar-mixtapes"></div>
+                </div>
+                <div class="sidebar-dropdown">
+                    <button class="sidebar-item sidebar-dropdown-toggle" id="sidebar-collaborate-toggle">
+                        <span class="material-symbols-outlined">person_heart</span>
+                        <span class="sidebar-text">Collaborate</span>
+                        <svg class="sidebar-dropdown-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="sidebar-dropdown-content" id="sidebar-collaborate">
+                        <div class="no-mixtapes">Ask a friend</div>
+                    </div>
+                </div>
             </nav>
             <div class="sidebar-footer">
                 <div class="sidebar-label" style="padding: 0 0 8px;">Theme</div>
@@ -1686,11 +1821,35 @@
             <div class="content">
                 <!-- Main View -->
                 <div class="view on" id="main">
+                    <div class="share-toolbar" id="main-toolbar" style="display: none;">
+                        <div class="share-toolbar-row">
+                            <span class="toggle-label">Share Your Mixtape</span>
+                            <button class="copy-btn" id="main-copy-btn" title="Copy share code"><span class="material-symbols-outlined">content_copy</span></button>
+                        </div>
+                        <div class="share-toolbar-row">
+                            <input type="text" class="share-toolbar-input" id="main-share-name" placeholder="Add Your Name">
+                        </div>
+                        <div class="share-toolbar-row">
+                            <input type="text" class="share-toolbar-input" id="main-share-title" placeholder="Add A Title">
+                        </div>
+                    </div>
                     <div class="grid" id="grid"></div>
                 </div>
 
                 <!-- Deep Dive View -->
                 <div class="view" id="dive">
+                    <div class="share-toolbar" id="dive-toolbar" style="display: none;">
+                        <div class="share-toolbar-row">
+                            <span class="toggle-label">Share Your Mixtape</span>
+                            <button class="copy-btn" id="dive-copy-btn" title="Copy share code"><span class="material-symbols-outlined">content_copy</span></button>
+                        </div>
+                        <div class="share-toolbar-row">
+                            <input type="text" class="share-toolbar-input" id="dive-share-name" placeholder="Add Your Name">
+                        </div>
+                        <div class="share-toolbar-row">
+                            <input type="text" class="share-toolbar-input" id="dive-share-title" placeholder="Add A Title">
+                        </div>
+                    </div>
                     <div class="dive-list" id="dive-list"></div>
                 </div>
 
@@ -1698,7 +1857,7 @@
                 <div class="view" id="share">
                     <div class="section">
                         <div class="edit-toolbar">
-                            <div class="section-hd">Share Your Mixtape</div>
+                            <div class="section-hd">Share Your <span class="brand">Mixtape</span></div>
                         </div>
                         <p class="section-desc">Remember making mixtapes for your friends? Here we are in the future sharing Spotify playlists. But the vibe is so much more than one playlist. It can be a season, a theme, your favorite genres. Whatever you want it to be or say about you. Generate a code and share your favorite playlists with someone who needs to hear what you've been listening to. They will see your mixtape in the Deep Dive format so adding descriptions to each of your playlists will add helpful context.</p>
                         <p class="section-desc" style="margin-top: 12px;"><span style="font-weight: 600;">Tip:</span> Save your share code in your Notes app or email it to yourself. If you ever lose your data, you can restore everything by clicking on Recover in the menu.</p>
@@ -1713,7 +1872,7 @@
                     </div>
                     <div class="section" style="margin-top: 48px;">
                         <div class="edit-toolbar">
-                            <div class="section-hd">Add a Friend's Mixtape</div>
+                            <div class="section-hd">Add a Friend's <span class="brand">Mixtape</span></div>
                         </div>
                         <p class="section-desc">Got the hookup from a friend? Paste it here and start listening to their favorite tunes. Perfect for road trips, parties, or when you just need someone else to be the DJ. The latest five mixtapes you save, along with your favorites, will be available in your menu. And every mixtape you collect is available below.</p>
                         <div class="card">
@@ -1725,18 +1884,41 @@
                     </div>
                     <div class="section" style="margin-top: 48px;">
                         <div class="edit-toolbar">
-                            <div class="section-hd">Collected Mixtapes</div>
-                            <div class="filter-controls" style="display: flex; gap: 8px; align-items: center;">
-                                <div class="custom-select" id="mixtape-filter-wrap">
-                                    <div class="custom-select-btn" id="mixtape-filter-btn">
-                                        <span id="mixtape-filter-label">Newest</span>
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                            <div class="section-hd">Curate Your Own <span class="brand">Mixtapes</span></div>
+                        </div>
+                        <p class="section-desc">Save the mixtapes you created for quick access. Pick a template that matches the vibe, paste your share code, and it'll appear in your Mixtapes with the right icon. Perfect for road trips, focus sessions, or any collection you want at your fingertips.</p>
+                        <div class="card has-dropdown">
+                            <div class="pl-item" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                <div class="custom-select inline" id="template-select-wrap">
+                                    <div class="custom-select-btn" id="template-select-btn">
+                                        <span id="template-select-label">Road Trip</span>
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                                     </div>
-                                    <div class="custom-select-options" id="mixtape-filter-options">
-                                        <div class="custom-select-option selected" data-value="newest">Newest</div>
-                                        <div class="custom-select-option" data-value="oldest">Oldest</div>
-                                        <div class="custom-select-option" data-value="friend">Friend A-Z</div>
+                                    <div class="custom-select-options" id="template-select-options">
+                                        <div class="custom-select-option selected" data-value="roadtrip" data-icon="directions_car">Road Trip</div>
+                                        <div class="custom-select-option" data-value="dinner" data-icon="dining">Dinner Party</div>
+                                        <div class="custom-select-option" data-value="workout" data-icon="directions_run">Workout</div>
+                                        <div class="custom-select-option" data-value="podcast" data-icon="podcasts">Podcast</div>
+                                        <div class="custom-select-option" data-value="focus" data-icon="mindfulness">Focus</div>
                                     </div>
+                                </div>
+                                <input class="pl-input" type="text" id="curate-string" placeholder="Paste your code here" style="flex: 1; min-width: 120px; margin-bottom: 0;">
+                                <button class="action-btn" id="curate-btn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section" style="margin-top: 48px;">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Collected <span class="brand">Mixtapes</span></div>
+                            <div class="custom-select inline" id="mixtape-filter-wrap">
+                                <div class="custom-select-btn" id="mixtape-filter-btn">
+                                    <span id="mixtape-filter-label">Newest</span>
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                                </div>
+                                <div class="custom-select-options" id="mixtape-filter-options">
+                                    <div class="custom-select-option selected" data-value="newest">Newest</div>
+                                    <div class="custom-select-option" data-value="oldest">Oldest</div>
+                                    <div class="custom-select-option" data-value="friend">Friend A-Z</div>
                                 </div>
                             </div>
                         </div>
@@ -1979,15 +2161,35 @@
 
                 <!-- Friend's Mixtape View -->
                 <div class="view" id="friend">
-                    <div class="friend-toolbar">
-                        <span class="toggle-label">Toggle Mixtape</span>
-                        <div class="view-toggle" id="friend-view-toggle">
-                            <button class="view-toggle-btn active" data-view="grid"><span class="material-symbols-outlined">grid_view</span></button>
-                            <button class="view-toggle-btn" data-view="list"><span class="material-symbols-outlined">format_image_left</span></button>
+                    <div class="share-toolbar" id="friend-header-toolbar">
+                        <div class="share-toolbar-header">
+                            <span class="toggle-label" id="friend-title">Toggle Mixtape</span>
+                            <div id="friend-toolbar-actions">
+                                <div class="view-toggle" id="friend-view-toggle">
+                                    <button class="view-toggle-btn active" data-view="grid"><span class="material-symbols-outlined">grid_view</span></button>
+                                    <button class="view-toggle-btn" data-view="list"><span class="material-symbols-outlined">format_image_left</span></button>
+                                </div>
+                                <button class="copy-btn" id="collab-copy-btn" style="display: none;" title="Copy share code"><span class="material-symbols-outlined">content_copy</span></button>
+                            </div>
                         </div>
+                        <input type="text" class="share-toolbar-input" id="collab-name" placeholder="Add Your Name" style="display: none;">
+                    </div>
+                    <div class="collab-instructions" id="collab-instructions" style="display: none;">
+                        <p class="collab-text">Add your favorite playlists and share back. You can include up to 14 playlists total.</p>
                     </div>
                     <div class="dive-list" id="friend-list" style="display: none;"></div>
                     <div class="friend-grid" id="friend-grid"></div>
+                    <div class="collab-add-form" id="collab-add-form" style="display: none;">
+                        <div class="card">
+                            <div class="pl-item">
+                                <input class="pl-input" type="text" id="collab-url" placeholder="Paste Spotify playlist link">
+                            </div>
+                        </div>
+                        <div class="collab-add-actions">
+                            <button class="txt-btn" id="collab-add-cancel">Cancel</button>
+                            <button class="action-btn" id="collab-add-save">Add</button>
+                        </div>
+                    </div>
                     <div class="dive-back">
                         <button class="txt-btn" id="friend-back-btn">Back</button>
                     </div>
@@ -2224,11 +2426,22 @@
             // Only show items with URLs
             const filled = items.filter(it => it.url && getID(it.url));
             
+            // Show/hide toolbar based on filled count
+            const mainToolbar = document.getElementById('main-toolbar');
+            const showToolbars = filled.length >= 3;
+            
+            if (mainToolbar) {
+                mainToolbar.style.display = showToolbars ? 'block' : 'none';
+            }
+            
             // If less than 3 filled, show all slots (with placeholders)
             // If 3+ filled, only show the filled ones
             const displayItems = filled.length >= 3 ? filled : items;
             
-            const { cols, size } = calcGrid(displayItems.length);
+            // Can add more playlists if under 14
+            const canAdd = filled.length >= 3 && filled.length < 14;
+            
+            const { cols, size } = calcGrid(displayItems.length + (canAdd ? 1 : 0));
             const g = document.getElementById('grid');
             
             document.documentElement.style.setProperty('--tile-size', size + 'px');
@@ -2241,9 +2454,16 @@
                     </div>
                     <div class="tile-title">${esc(it.title) || 'Add playlist'}</div>
                 </div>
-            `).join('');
+            `).join('') + (canAdd ? `
+                <div class="tile" id="main-add-tile">
+                    <div class="tile-img">
+                        <div class="tile-ph"><span class="material-symbols-outlined">music_note_2</span></div>
+                    </div>
+                    <div class="tile-title">Add playlist</div>
+                </div>
+            ` : '');
             
-            g.querySelectorAll('.tile').forEach(t => {
+            g.querySelectorAll('.tile:not(#main-add-tile)').forEach(t => {
                 t.onclick = () => {
                     const it = displayItems[t.dataset.i];
                     const id = getID(it.url);
@@ -2257,6 +2477,15 @@
                     }
                 };
             });
+            
+            // Add tile click handler - go to Edit
+            const addTile = document.getElementById('main-add-tile');
+            if (addTile) {
+                addTile.onclick = () => {
+                    updateSidebarActive('sidebar-edit-btn');
+                    showEdit();
+                };
+            }
         }
 
         // Render form
@@ -2458,6 +2687,15 @@
 
         function renderDive() {
             const filled = items.filter(it => it.url && getID(it.url));
+            
+            // Show/hide toolbar based on filled count
+            const diveToolbar = document.getElementById('dive-toolbar');
+            const showToolbars = filled.length >= 3;
+            
+            if (diveToolbar) {
+                diveToolbar.style.display = showToolbars ? 'block' : 'none';
+            }
+            
             const displayItems = filled.length >= 3 ? filled : items;
             
             const list = document.getElementById('dive-list');
@@ -2587,27 +2825,53 @@
         }
         
         function renderSidebarMixtapes() {
-            const el = document.getElementById('sidebar-mixtapes');
-            if (!el) return;
+            const mixtapesEl = document.getElementById('sidebar-mixtapes');
+            const collaborateEl = document.getElementById('sidebar-collaborate');
             
-            const starred = mixtapes.filter(m => m.starred).sort((a, b) => new Date(b.added) - new Date(a.added));
-            const unstarred = mixtapes.filter(m => !m.starred).sort((a, b) => new Date(b.added) - new Date(a.added)).slice(0, 5);
-            const toShow = [...starred, ...unstarred];
+            // Split into curated (your own) vs friend mixtapes
+            const curated = mixtapes.filter(m => m.template && !m.name);
+            const friends = mixtapes.filter(m => !m.template || m.name);
             
-            if (toShow.length === 0) {
-                el.innerHTML = '<div class="no-mixtapes">Ask a friend</div>';
-            } else {
-                el.innerHTML = toShow.map((m) => {
-                    const idx = mixtapes.indexOf(m);
-                    const label = m.title ? `${m.name}: ${m.title}` : m.name;
-                    const icon = m.starred ? 'star' : 'play_arrow';
-                    return `<button class="sidebar-mixtape-item" data-i="${idx}"><span class="material-symbols-outlined">${icon}</span>${esc(label)}</button>`;
-                }).join('');
-                el.querySelectorAll('.sidebar-mixtape-item').forEach(btn => {
-                    btn.onclick = () => {
-                        showFriend(parseInt(btn.dataset.i));
-                    };
-                });
+            // Render Mixtapes section (curated only)
+            if (mixtapesEl) {
+                if (curated.length === 0) {
+                    mixtapesEl.innerHTML = '<div class="no-mixtapes">Save music here</div>';
+                } else {
+                    mixtapesEl.innerHTML = curated.map((m) => {
+                        const idx = mixtapes.indexOf(m);
+                        const icon = m.templateIcon || 'directions_car';
+                        const label = m.title || 'My Mixtape';
+                        return `<button class="sidebar-mixtape-item" data-i="${idx}"><span class="material-symbols-outlined">${icon}</span>${esc(label)}</button>`;
+                    }).join('');
+                    mixtapesEl.querySelectorAll('.sidebar-mixtape-item').forEach(btn => {
+                        btn.onclick = () => {
+                            showFriend(parseInt(btn.dataset.i));
+                        };
+                    });
+                }
+            }
+            
+            // Render Collaborate section (friend mixtapes)
+            if (collaborateEl) {
+                const starred = friends.filter(m => m.starred).sort((a, b) => new Date(b.added) - new Date(a.added));
+                const unstarred = friends.filter(m => !m.starred).sort((a, b) => new Date(b.added) - new Date(a.added)).slice(0, 5);
+                const toShow = [...starred, ...unstarred];
+                
+                if (toShow.length === 0) {
+                    collaborateEl.innerHTML = '<div class="no-mixtapes">Ask a friend</div>';
+                } else {
+                    collaborateEl.innerHTML = toShow.map((m) => {
+                        const idx = mixtapes.indexOf(m);
+                        const icon = m.starred ? 'star' : 'play_arrow';
+                        const label = m.title ? `${m.name}: ${m.title}` : m.name;
+                        return `<button class="sidebar-mixtape-item" data-i="${idx}"><span class="material-symbols-outlined">${icon}</span>${esc(label)}</button>`;
+                    }).join('');
+                    collaborateEl.querySelectorAll('.sidebar-mixtape-item').forEach(btn => {
+                        btn.onclick = () => {
+                            showFriend(parseInt(btn.dataset.i));
+                        };
+                    });
+                }
             }
         }
         
@@ -2719,15 +2983,29 @@
         }
         
         let currentFriendMixtape = null;
+        let currentFriendIdx = null;
         
         function showFriend(idx) {
             const mixtape = mixtapes[idx];
             if (!mixtape) return;
             
             currentFriendMixtape = mixtape;
+            currentFriendIdx = idx;
             
-            // Set the title in toolbar
-            document.querySelector('.toggle-label').textContent = mixtape.title || 'Untitled Mixtape';
+            // Set the title - for collaboration show "[Name] wants to collaborate on [title]"
+            const titleEl = document.getElementById('friend-title');
+            if (mixtape.name && mixtape.title) {
+                titleEl.textContent = `${mixtape.name} wants to collaborate on ${mixtape.title}`;
+            } else {
+                titleEl.textContent = mixtape.title || 'Untitled Mixtape';
+            }
+            
+            // Show collaboration UI for friend mixtapes (has name)
+            const isCollab = mixtape.name && !mixtape.template;
+            document.getElementById('collab-instructions').style.display = isCollab ? 'block' : 'none';
+            document.getElementById('collab-name').style.display = isCollab ? 'block' : 'none';
+            document.getElementById('collab-copy-btn').style.display = isCollab ? 'flex' : 'none';
+            document.getElementById('friend-view-toggle').style.display = isCollab ? 'none' : 'flex';
             
             // Update sidebar active state
             updateSidebarActive(null);
@@ -2756,6 +3034,10 @@
                 const { cols } = calcGrid(mixtape.playlists.length);
                 grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
                 
+                // Check if this is a collab mixtape and can add more
+                const isCollab = mixtape.name && !mixtape.template;
+                const canAdd = isCollab && mixtape.playlists.length < 14;
+                
                 grid.innerHTML = mixtape.playlists.map((it, i) => `
                     <div class="tile" data-i="${i}">
                         <div class="tile-img">
@@ -2763,9 +3045,16 @@
                         </div>
                         <div class="tile-title">${esc(it.title) || 'Playlist'}</div>
                     </div>
-                `).join('');
+                `).join('') + (canAdd ? `
+                    <div class="tile tile-add" id="collab-add-tile">
+                        <div class="tile-img">
+                            <div class="tile-ph tile-add-icon"><span class="material-symbols-outlined">add</span></div>
+                        </div>
+                        <div class="tile-title">Add playlist</div>
+                    </div>
+                ` : '');
                 
-                grid.querySelectorAll('.tile').forEach(item => {
+                grid.querySelectorAll('.tile:not(.tile-add)').forEach(item => {
                     item.onclick = () => {
                         const pl = mixtape.playlists[item.dataset.i];
                         const id = getID(pl.url);
@@ -2774,6 +3063,12 @@
                         }
                     };
                 });
+                
+                // Add tile click handler
+                const addTile = document.getElementById('collab-add-tile');
+                if (addTile) {
+                    addTile.onclick = () => showCollabAddForm();
+                }
             } else {
                 grid.style.display = 'none';
                 list.style.display = 'flex';
@@ -2798,6 +3093,61 @@
                         }
                     };
                 });
+            }
+        }
+        
+        function showCollabAddForm() {
+            document.getElementById('friend-grid').style.display = 'none';
+            document.getElementById('collab-add-form').style.display = 'block';
+            document.getElementById('collab-url').value = '';
+            document.getElementById('collab-url').focus();
+        }
+        
+        function hideCollabAddForm() {
+            document.getElementById('collab-add-form').style.display = 'none';
+            document.getElementById('friend-grid').style.display = 'grid';
+        }
+        
+        async function addCollabPlaylist() {
+            if (!currentFriendMixtape || currentFriendIdx === null) return;
+            
+            const url = document.getElementById('collab-url').value.trim();
+            if (!url) {
+                alert('Please paste a Spotify playlist link');
+                return;
+            }
+            
+            const id = getID(url);
+            if (!id) {
+                alert('Invalid Spotify playlist link');
+                return;
+            }
+            
+            // Fetch playlist info
+            try {
+                const embedUrl = `https://open.spotify.com/embed/playlist/${id}`;
+                const res = await fetch(embedUrl);
+                const html = await res.text();
+                
+                const titleMatch = html.match(/<title>([^<]+)<\/title>/);
+                const title = titleMatch ? titleMatch[1].replace(' | Spotify', '').replace(' - playlist by ', ' by ') : 'Playlist';
+                
+                const imgMatch = html.match(/content="(https:\/\/image-cdn-[^"]+)"/);
+                const img = imgMatch ? imgMatch[1] : '';
+                
+                // Add to the mixtape
+                currentFriendMixtape.playlists.push({
+                    url: url,
+                    title: title,
+                    img: img,
+                    desc: ''
+                });
+                
+                saveMixtapes();
+                hideCollabAddForm();
+                renderFriendView();
+            } catch (err) {
+                alert('Could not fetch playlist info. Please check the link.');
             }
         }
 
@@ -2845,13 +3195,24 @@
                 document.getElementById('sidebar').classList.toggle('collapsed');
             };
             
-            // Mixtapes label opens sidebar when collapsed
-            document.querySelector('.sidebar-mixtapes-label').onclick = () => {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar.classList.contains('collapsed')) {
-                    sidebar.classList.remove('collapsed');
-                }
-            };
+            // Sidebar dropdown toggles
+            document.querySelectorAll('.sidebar-dropdown-toggle').forEach(toggle => {
+                toggle.onclick = () => {
+                    const sidebar = document.getElementById('sidebar');
+                    // If sidebar is collapsed, expand it first
+                    if (sidebar.classList.contains('collapsed')) {
+                        sidebar.classList.remove('collapsed');
+                        return;
+                    }
+                    // Toggle the dropdown
+                    toggle.classList.toggle('open');
+                    const content = toggle.nextElementSibling;
+                    content.classList.toggle('open');
+                };
+            });
+            
+            // Initialize mixtapes dropdown as open
+            document.getElementById('sidebar-mixtapes-toggle').classList.add('open');
             
             // Render sidebar themes
             renderSidebarThemes();
@@ -3024,7 +3385,63 @@
             // Close dropdown when clicking outside
             document.addEventListener('click', () => {
                 filterOptions.classList.remove('open');
+                document.getElementById('template-select-options').classList.remove('open');
             });
+            
+            // Template select dropdown
+            const templateBtn = document.getElementById('template-select-btn');
+            const templateOptions = document.getElementById('template-select-options');
+            
+            templateBtn.onclick = (e) => {
+                e.stopPropagation();
+                templateOptions.classList.toggle('open');
+            };
+            
+            templateOptions.querySelectorAll('.custom-select-option').forEach(opt => {
+                opt.onclick = (e) => {
+                    e.stopPropagation();
+                    templateOptions.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    document.getElementById('template-select-label').textContent = opt.textContent;
+                    templateOptions.classList.remove('open');
+                };
+            });
+            
+            // Curate button - save your own mixtape with template
+            document.getElementById('curate-btn').onclick = () => {
+                const str = document.getElementById('curate-string').value.trim();
+                if (!str) {
+                    alert('Please paste your share code');
+                    return;
+                }
+                const data = parseMixtapeString(str);
+                if (!data) {
+                    alert('Invalid share code');
+                    return;
+                }
+                
+                // Get selected template
+                const selectedOpt = templateOptions.querySelector('.custom-select-option.selected');
+                const template = selectedOpt ? selectedOpt.dataset.value : 'roadtrip';
+                const templateIcon = selectedOpt ? selectedOpt.dataset.icon : 'directions_car';
+                
+                // Add to mixtapes with template info (no name shown)
+                mixtapes.unshift({
+                    name: '', // Empty name means it's a curated mixtape
+                    title: data.title || 'My Mixtape',
+                    playlists: data.playlists,
+                    starred: false,
+                    addedAt: Date.now(),
+                    template: template,
+                    templateIcon: templateIcon
+                });
+                saveMixtapes();
+                renderMixtapesList();
+                renderCollectedList();
+                renderSidebarMixtapes();
+                document.getElementById('curate-string').value = '';
+                alert('Saved "' + (data.title || 'My Mixtape') + '" to your mixtapes!');
+            };
             
             // Friend view toggle (grid/list)
             document.querySelectorAll('#friend-view-toggle .view-toggle-btn').forEach(btn => {
@@ -3068,6 +3485,160 @@
             document.getElementById('recover-back-btn').onclick = showMain;
             document.getElementById('about-back-btn').onclick = showMain;
             document.getElementById('help-back-btn').onclick = showMain;
+            
+            // Collaboration copy handler
+            document.getElementById('collab-copy-btn').onclick = async function() {
+                if (!currentFriendMixtape) return;
+                
+                const yourName = document.getElementById('collab-name').value.trim();
+                if (!yourName) {
+                    alert('Please add your name');
+                    return;
+                }
+                
+                // Build combined name: "OriginalName & YourName"
+                const combinedName = currentFriendMixtape.name ? 
+                    `${currentFriendMixtape.name} & ${yourName}` : yourName;
+                
+                // Generate code with the friend's playlists and combined name
+                const data = {
+                    n: combinedName,
+                    t: currentFriendMixtape.title || '',
+                    p: currentFriendMixtape.playlists.map(it => ({
+                        u: it.url,
+                        t: it.title,
+                        i: it.img,
+                        d: it.desc
+                    }))
+                };
+                const str = btoa(encodeURIComponent(JSON.stringify(data)));
+                
+                try {
+                    await navigator.clipboard.writeText(str);
+                    const btn = this;
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<span class="material-symbols-outlined">check</span> Copied';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    alert('Could not copy to clipboard');
+                }
+            };
+            
+            // Collab add form handlers
+            document.getElementById('collab-add-cancel').onclick = hideCollabAddForm;
+            document.getElementById('collab-add-save').onclick = addCollabPlaylist;
+            
+            // Copy share code buttons on main/dive views
+            async function copyShareCode(btn, nameInputId, titleInputId) {
+                const name = document.getElementById(nameInputId).value.trim();
+                if (!name) {
+                    alert('Please add your name');
+                    return;
+                }
+                const title = document.getElementById(titleInputId).value.trim() || 'My Mixtape';
+                const str = generateMixtapeString(name, title);
+                
+                try {
+                    await navigator.clipboard.writeText(str);
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<span class="material-symbols-outlined">check</span> Copied';
+                    btn.classList.add('copied');
+                    
+                    // Also update Share page inputs
+                    document.getElementById('share-name').value = name;
+                    document.getElementById('share-title').value = title;
+                    
+                    // Trigger short URL generation for Share page
+                    const fullUrl = window.location.origin + window.location.pathname + '?m=' + encodeURIComponent(str);
+                    
+                    document.getElementById('share-output').innerHTML = `
+                        <div class="share-success">Generating short URL...</div>
+                    `;
+                    
+                    const callbackName = 'tinyurlCallback' + Date.now();
+                    window[callbackName] = async (data) => {
+                        delete window[callbackName];
+                        
+                        if (data && data.shorturl) {
+                            document.getElementById('share-output').innerHTML = `
+                                <div class="share-success">Short URL ready!</div>
+                                <div class="share-label">Short URL</div>
+                                <div class="card">
+                                    <div class="pl-item">
+                                        <div class="share-code" id="short-link">${data.shorturl}</div>
+                                        <button class="action-btn full" id="copy-short-btn">Copy Short URL</button>
+                                    </div>
+                                </div>
+                                <div class="share-label" style="margin-top: 16px;">Backup Code</div>
+                                <div class="card">
+                                    <div class="pl-item">
+                                        <div class="share-code">${str}</div>
+                                        <button class="action-btn full" id="copy-btn">Copy Code</button>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            document.getElementById('copy-short-btn').onclick = () => {
+                                navigator.clipboard.writeText(data.shorturl).then(() => {
+                                    document.getElementById('copy-short-btn').innerHTML = '✓ Short URL Copied';
+                                    document.getElementById('copy-short-btn').classList.add('completed');
+                                });
+                            };
+                            
+                            document.getElementById('copy-btn').onclick = () => {
+                                navigator.clipboard.writeText(str).then(() => {
+                                    document.getElementById('copy-btn').innerHTML = '✓ Code Copied';
+                                    document.getElementById('copy-btn').classList.add('completed');
+                                });
+                            };
+                        } else {
+                            document.getElementById('share-output').innerHTML = `
+                                <div class="share-success">Code ready (shortener unavailable)</div>
+                                <div class="share-label">Backup Code</div>
+                                <div class="card">
+                                    <div class="pl-item">
+                                        <div class="share-code">${str}</div>
+                                        <button class="action-btn full" id="copy-btn">Copy Code</button>
+                                    </div>
+                                </div>
+                            `;
+                            document.getElementById('copy-btn').onclick = () => {
+                                navigator.clipboard.writeText(str).then(() => {
+                                    document.getElementById('copy-btn').innerHTML = '✓ Code Copied';
+                                    document.getElementById('copy-btn').classList.add('completed');
+                                });
+                            };
+                        }
+                    };
+                    
+                    const script = document.createElement('script');
+                    script.src = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(fullUrl)}&format=jsonp&callback=${callbackName}`;
+                    script.onerror = () => {
+                        delete window[callbackName];
+                        document.getElementById('share-output').innerHTML = `
+                            <div class="share-success">Code copied!</div>
+                            <div class="share-label">Your Share Code</div>
+                            <div class="share-code">${str}</div>
+                            <p style="margin-top: 12px; font-size: var(--font-small); color: var(--text3);">Save this code in your Notes app or at notepad.cc in case you need to recover your mixtape later.</p>
+                        `;
+                    };
+                    document.body.appendChild(script);
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    alert('Could not copy to clipboard');
+                }
+            }
+            
+            document.getElementById('main-copy-btn').onclick = function() { copyShareCode(this, 'main-share-name', 'main-share-title'); };
+            document.getElementById('dive-copy-btn').onclick = function() { copyShareCode(this, 'dive-share-name', 'dive-share-title'); };
 
             // Edit view buttons
             document.getElementById('cancel-btn').onclick = () => {
