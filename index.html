@@ -58,11 +58,16 @@
             --gap: 16px;
             --padding: 20px;
             
-            /* Typography */
-            --font-size-body: 13px;
-            --font-size-input: 16px;
-            --font-size-small: 11px;
-            --font-size-icon: 13px;
+            /* Typography - Mobile first */
+            --font-body: 16px;
+            --font-card: 13px;
+            --font-small: 13px;
+            --font-input: 13px;
+            --font-heading: 18px;
+            --font-menu: 17px;
+            --font-button: 15px;
+            --font-sidebar: 13px;
+            --line-height: 1.5;
             
             /* Radius */
             --radius-lg: 14px;
@@ -117,6 +122,19 @@
             --shadow: 0 2px 12px rgba(0,0,0,0.06);
             --placeholder-bg: var(--card);
             --sidebar-bg: #1DB954;
+        }
+
+        /* Typography - Desktop overrides */
+        @media (min-width: 768px) {
+            :root {
+                --font-body: 16px;
+                --font-card: 13px;
+                --font-small: 11px;
+                --font-input: 13px;
+                --font-heading: 16px;
+                --font-button: 14px;
+                --font-sidebar: 13px;
+            }
         }
 
         /* --------------------------------------------
@@ -183,7 +201,7 @@
             font-size: 15px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5em;
+            letter-spacing: 0.3em;
             color: var(--text2);
             cursor: pointer;
         }
@@ -231,7 +249,7 @@
             width: 100%;
             padding: 6px 16px;
             text-align: left;
-            font-size: var(--font-size-body);
+            font-size: var(--font-menu);
             font-family: inherit;
             color: var(--text2);
             background: none;
@@ -249,7 +267,7 @@
         
         .menu-label {
             padding: 4px 16px 2px;
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             color: var(--text2);
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -348,7 +366,7 @@
 
         .tile-title {
             margin-top: 8px;
-            font-size: var(--font-size-body);
+            font-size: var(--font-card);
             font-weight: 600;
             line-height: 1.3;
             white-space: nowrap;
@@ -358,7 +376,7 @@
         }
 
         .tile-desc {
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             color: var(--text2);
             margin-top: 2px;
             line-height: 1.2;
@@ -423,7 +441,7 @@
         }
         
         .dive-title {
-            font-size: 18px;
+            font-size: var(--font-heading);
             font-weight: 600;
             line-height: 1.3;
             color: var(--text2);
@@ -431,9 +449,9 @@
         }
         
         .dive-desc {
-            font-size: 15px;
+            font-size: var(--font-body);
             color: var(--text2);
-            line-height: 1.5;
+            line-height: var(--line-height);
         }
         
         .dive-back {
@@ -457,7 +475,7 @@
         }
         
         .action-btn {
-            font-size: var(--font-size-body);
+            font-size: var(--font-button);
             font-family: inherit;
             color: var(--text2);
             background: var(--card);
@@ -488,7 +506,7 @@
         }
 
         .txt-btn {
-            font-size: var(--font-size-body);
+            font-size: var(--font-button);
             color: var(--text2);
             background: none;
             border: none;
@@ -500,16 +518,16 @@
 
         .section { margin-bottom: var(--gap); }
         .section-hd {
-            font-size: 12px;
+            font-size: var(--font-small);
             font-weight: 600;
             color: var(--text2);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         .section-desc {
-            font-size: var(--font-size-body);
+            font-size: var(--font-body);
             color: var(--text2);
-            line-height: 1.5;
+            line-height: var(--line-height);
             margin: 8px 0 12px;
         }
 
@@ -527,7 +545,7 @@
             margin-bottom: 32px;
         }
         .help-title {
-            font-size: var(--font-size-body);
+            font-size: var(--font-small);
             font-weight: 600;
             color: var(--text);
             margin-bottom: 16px;
@@ -537,16 +555,16 @@
             letter-spacing: 0.5px;
         }
         .help-q {
-            font-size: var(--font-size-body);
+            font-size: var(--font-card);
             font-weight: 600;
             color: var(--text2);
             margin-top: 16px;
             margin-bottom: 6px;
         }
         .help-a {
-            font-size: var(--font-size-body);
+            font-size: var(--font-body);
             color: var(--text2);
-            line-height: 1.5;
+            line-height: var(--line-height);
             margin: 0;
         }
         
@@ -620,8 +638,8 @@
             margin-bottom: 24px;
         }
         .about-intro p {
-            font-size: var(--font-size-body);
-            line-height: 1.6;
+            font-size: var(--font-body);
+            line-height: var(--line-height);
             color: var(--text2);
             margin: 0;
         }
@@ -660,14 +678,14 @@
             font-size: 22px;
         }
         .about-card-title {
-            font-size: var(--font-size-body);
+            font-size: var(--font-card);
             font-weight: 600;
             color: var(--text2);
             margin-bottom: 8px;
         }
         .about-card-desc {
-            font-size: var(--font-size-body);
-            line-height: 1.5;
+            font-size: var(--font-card);
+            line-height: var(--line-height);
             color: var(--text2);
             margin: 0;
         }
@@ -677,9 +695,9 @@
             padding: 8px 0 24px;
         }
         .about-footer p {
-            font-size: var(--font-size-body);
+            font-size: var(--font-card);
             color: var(--text2);
-            line-height: 1.6;
+            line-height: var(--line-height);
             margin: 0 0 2px;
         }
         .about-footer p:last-child {
@@ -699,7 +717,7 @@
             justify-content: space-between;
             padding: 14px var(--padding);
             min-height: 44px;
-            font-size: var(--font-size-body);
+            font-size: var(--font-card);
         }
 
         /* Segmented control */
@@ -712,7 +730,7 @@
 
         .seg-btn {
             padding: 6px 16px;
-            font-size: var(--font-size-body);
+            font-size: var(--font-button);
             font-weight: 500;
             color: var(--text);
             background: transparent;
@@ -791,7 +809,7 @@
         }
         
         .pl-delete {
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             font-family: inherit;
             color: var(--text3);
             background: none;
@@ -817,8 +835,8 @@
 
         .pl-input {
             width: 100%;
-            padding: 14px;
-            font-size: 15px;
+            padding: 10px;
+            font-size: var(--font-input);
             font-family: inherit;
             background: var(--input);
             border: none;
@@ -830,7 +848,7 @@
         
         textarea.pl-input {
             resize: none;
-            min-height: 48px;
+            min-height: 38px;
             line-height: 1.4;
             overflow: hidden;
         }
@@ -871,8 +889,8 @@
         
         .pl-title {
             width: 100%;
-            padding: 14px;
-            font-size: 15px;
+            padding: 10px;
+            font-size: var(--font-input);
             font-family: inherit;
             background: var(--input);
             border: none;
@@ -882,7 +900,7 @@
         }
 
         .pl-meta {
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             color: var(--text2);
         }
 
@@ -893,7 +911,7 @@
             flex-shrink: 0;
         }
         .footer-txt {
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             color: var(--text3);
         }
         
@@ -928,7 +946,7 @@
         }
         
         .share-success {
-            font-size: var(--font-size-body);
+            font-size: var(--font-card);
             font-weight: 600;
             color: var(--accent);
             text-align: center;
@@ -937,7 +955,7 @@
         }
         
         .share-label {
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             font-weight: 600;
             color: var(--text2);
             text-transform: uppercase;
@@ -950,7 +968,7 @@
             border-radius: var(--radius-md);
             padding: var(--padding);
             word-break: break-all;
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             color: var(--text2);
             margin-bottom: 12px;
             box-shadow: var(--shadow);
@@ -958,7 +976,7 @@
         
         .share-code {
             word-break: break-all;
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             color: var(--text2);
             padding: 8px 0;
             line-height: 1.4;
@@ -980,7 +998,7 @@
         }
         
         .custom-select-btn {
-            font-size: var(--font-size-body);
+            font-size: var(--font-button);
             font-family: inherit;
             color: var(--text2);
             background: var(--card);
@@ -1012,7 +1030,7 @@
         .custom-select-options.open { display: block; }
         
         .custom-select-option {
-            font-size: var(--font-size-body);
+            font-size: var(--font-card);
             color: var(--text2);
             padding: 10px 16px;
             cursor: pointer;
@@ -1040,7 +1058,7 @@
             font-size: 20px;
         }
         .view-toggle-btn.active {
-            color: var(--text);
+            color: var(--text2);
         }
         .collected-list {
             margin-top: 12px;
@@ -1069,7 +1087,7 @@
         }
         
         .collected-empty {
-            font-size: var(--font-size-body);
+            font-size: var(--font-card);
             color: var(--text3);
             text-align: center;
             padding: 24px;
@@ -1105,7 +1123,7 @@
         }
         
         .collected-title {
-            font-size: var(--font-size-body);
+            font-size: var(--font-card);
             font-weight: 500;
             color: var(--text2);
         }
@@ -1123,7 +1141,7 @@
         }
         
         .collected-meta {
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             color: var(--text3);
             margin-top: 2px;
         }
@@ -1138,7 +1156,7 @@
             width: 100%;
             padding: 6px 0;
             text-align: left;
-            font-size: var(--font-size-body);
+            font-size: var(--font-menu);
             color: var(--text2);
             background: none;
             border: none;
@@ -1148,7 +1166,7 @@
         .mixtape-item:active { opacity: 0.6; }
         
         .no-mixtapes {
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             color: var(--text3);
             font-style: italic;
         }
@@ -1156,16 +1174,14 @@
         /* Friend view */
         .friend-toolbar {
             display: flex;
-            justify-content: center;
+            justify-content: flex-end;
             margin-bottom: var(--gap);
         }
         
         .friend-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
             gap: var(--gap);
-            width: var(--grid-width, 100%);
-            margin: 0 auto;
+            width: 100%;
         }
 
         /* Responsive */
@@ -1181,7 +1197,7 @@
             right: 0;
             background: var(--card);
             color: var(--text2);
-            font-size: var(--font-size-small);
+            font-size: var(--font-small);
             padding: 12px 16px;
             padding-top: calc(12px + var(--safe-t));
             display: flex;
@@ -1298,7 +1314,7 @@
                 font-size: 15px;
                 font-weight: 600;
                 text-transform: uppercase;
-                letter-spacing: 0.4em;
+                letter-spacing: 0.3em;
                 color: var(--text2);
                 cursor: pointer;
             }
@@ -1332,7 +1348,7 @@
                 width: 100%;
                 padding: 7px 20px;
                 text-align: left;
-                font-size: var(--font-size-body);
+                font-size: var(--font-sidebar);
                 font-family: inherit;
                 color: var(--text2);
                 background: none;
@@ -1359,7 +1375,7 @@
             
             .sidebar-label {
                 padding: 12px 20px 6px;
-                font-size: var(--font-size-small);
+                font-size: 11px;
                 color: var(--text2);
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -1377,7 +1393,7 @@
             }
             
             .no-mixtapes {
-                font-size: var(--font-size-body);
+                font-size: var(--font-sidebar);
                 color: var(--text3);
                 font-style: italic;
                 padding: 0 20px 7px 50px;
@@ -1391,7 +1407,7 @@
                 width: 100%;
                 padding: 7px 20px;
                 text-align: left;
-                font-size: var(--font-size-body);
+                font-size: var(--font-sidebar);
                 color: var(--text2);
                 background: none;
                 border: none;
@@ -1511,7 +1527,7 @@
                 <div class="sidebar-divider"></div>
                 <button class="sidebar-item" id="sidebar-about-btn"><span class="material-symbols-outlined">info</span><span class="sidebar-text">About</span></button>
                 <button class="sidebar-item" id="sidebar-help-btn"><span class="material-symbols-outlined">tooltip_2</span><span class="sidebar-text">Help</span></button>
-                <a class="sidebar-item" href="mailto:colin@colinmaynard.net?subject=MIXTAPED%20Question"><span class="material-symbols-outlined">mail</span><span class="sidebar-text">Email</span></a>
+                <a class="sidebar-item" href="/cdn-cgi/l/email-protection#781b17141116381b1714111615190116190a1c56161d0c470b0d1a121d1b0c453531202c39283d3c5d4a48290d1d0b0c111716"><span class="material-symbols-outlined">mail</span><span class="sidebar-text">Email</span></a>
                 <a class="sidebar-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank"><span class="material-symbols-outlined">local_cafe</span><span class="sidebar-text">Donate</span></a>
                 <div class="sidebar-divider"></div>
                 <div class="sidebar-item sidebar-mixtapes-label"><span class="material-symbols-outlined">headphones</span><span class="sidebar-text">Mixtapes</span></div>
@@ -1542,7 +1558,7 @@
                         <div class="menu-divider"></div>
                         <button class="menu-item" id="about-btn">About</button>
                         <button class="menu-item" id="help-btn">Help</button>
-                        <a class="menu-item" href="mailto:colin@colinmaynard.net?subject=MIXTAPED%20Question">Email</a>
+                        <a class="menu-item" href="/cdn-cgi/l/email-protection#a7c4c8cbcec9e7c4c8cbcec9cac6dec9c6d5c389c9c2d398d4d2c5cdc2c4d39aeaeefff3e6f7e2e3829597f6d2c2d4d3cec8c9">Email</a>
                         <a class="menu-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank">Donate</a>
                         <div class="menu-divider"></div>
                         <div class="menu-label">Mixtapes</div>
@@ -1678,7 +1694,7 @@
                     </div>
                     
                     <div class="about-footer">
-                        <p>For questions or help setting up your <span class="brand">Mixtaped</span> app, <a href="mailto:colin@colinmaynard.net?subject=MIXTAPED%20Question">email here</a>.</p>
+                        <p>For questions or help setting up your <span class="brand">Mixtaped</span> app, <a href="/cdn-cgi/l/email-protection#9bf8f4f7f2f5dbf8f4f7f2f5f6fae2f5fae9ffb5f5feefa4e8eef9f1fef8efa6d6d2c3cfdacbdedfbea9abcaeefee8eff2f4f5">email here</a>.</p>
                         <p>If you love using this tool, feel free to <a href="https://buymeacoffee.com/fromnineteen80" target="_blank">donate here</a>.</p>
                     </div>
                     
@@ -1834,7 +1850,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         /* ============================================
            JAVASCRIPT
            ============================================ */
@@ -2560,6 +2576,10 @@
             if (isGrid) {
                 list.style.display = 'none';
                 grid.style.display = 'grid';
+                
+                const { cols } = calcGrid(mixtape.playlists.length);
+                grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+                
                 grid.innerHTML = mixtape.playlists.map((it, i) => `
                     <div class="tile" data-i="${i}">
                         <div class="tile-img">
@@ -2979,4 +2999,3 @@
     </script>
 </body>
 </html>
-         
