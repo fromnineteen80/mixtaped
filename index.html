@@ -17,7 +17,7 @@
     
     <style>
         /* ============================================
-           MIXTAPED - Spotify Playlist Curator PWA
+           MIXTAPED - Spotify Playlist Collector PWA
            © 2025 fromnineteen80. All rights reserved.
            ============================================ */
 
@@ -620,7 +620,7 @@
             margin-bottom: 24px;
         }
         .about-intro p {
-            font-size: 16px;
+            font-size: var(--font-size-body);
             line-height: 1.6;
             color: var(--text2);
             margin: 0;
@@ -660,7 +660,7 @@
             font-size: 22px;
         }
         .about-card-title {
-            font-size: 15px;
+            font-size: var(--font-size-body);
             font-weight: 600;
             color: var(--text2);
             margin-bottom: 8px;
@@ -1022,8 +1022,50 @@
         .custom-select-option.selected { font-weight: 600; }
         
         /* Collected mixtapes */
+        .view-toggle {
+            display: flex;
+            gap: 4px;
+        }
+        .view-toggle-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            color: var(--text3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .view-toggle-btn .material-symbols-outlined {
+            font-size: 20px;
+        }
+        .view-toggle-btn.active {
+            color: var(--text);
+        }
         .collected-list {
             margin-top: 12px;
+        }
+        .collected-list.grid-view {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .collected-list.grid-view .collected-item {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 12px;
+            margin-bottom: 0;
+        }
+        .collected-list.grid-view .collected-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .collected-list.grid-view .collected-info {
+            text-align: center;
+        }
+        .collected-list.grid-view .collected-title {
+            margin-bottom: 4px;
         }
         
         .collected-empty {
@@ -1112,11 +1154,18 @@
         }
         
         /* Friend view */
-        .friend-header {
-            font-size: var(--font-size-body);
-            font-weight: 600;
-            color: var(--text2);
+        .friend-toolbar {
+            display: flex;
+            justify-content: center;
             margin-bottom: var(--gap);
+        }
+        
+        .friend-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--gap);
+            width: var(--grid-width, 100%);
+            margin: 0 auto;
         }
 
         /* Responsive */
@@ -1549,7 +1598,7 @@
                     <div class="section" style="margin-top: 48px;">
                         <div class="edit-toolbar">
                             <div class="section-hd">Collected Mixtapes</div>
-                            <div class="filter-controls">
+                            <div class="filter-controls" style="display: flex; gap: 8px; align-items: center;">
                                 <div class="custom-select" id="mixtape-filter-wrap">
                                     <div class="custom-select-btn" id="mixtape-filter-btn">
                                         <span id="mixtape-filter-label">Newest</span>
@@ -1751,8 +1800,14 @@
 
                 <!-- Friend's Mixtape View -->
                 <div class="view" id="friend">
-                    <div class="friend-header" id="friend-header"></div>
+                    <div class="friend-toolbar">
+                        <div class="view-toggle" id="friend-view-toggle">
+                            <button class="view-toggle-btn" data-view="grid" title="Grid view"><span class="material-symbols-outlined">grid_view</span></button>
+                            <button class="view-toggle-btn active" data-view="list" title="Deep Dive"><span class="material-symbols-outlined">thumbnail_bar</span></button>
+                        </div>
+                    </div>
                     <div class="dive-list" id="friend-list"></div>
+                    <div class="friend-grid" id="friend-grid" style="display: none;"></div>
                     <div class="dive-back">
                         <button class="txt-btn" id="friend-back-btn">Back</button>
                     </div>
@@ -2442,8 +2497,6 @@
             const infos = el.querySelectorAll('.collected-info');
             const dels = el.querySelectorAll('.collected-delete');
             
-            alert('Found: ' + stars.length + ' stars, ' + infos.length + ' infos, ' + dels.length + ' deletes');
-            
             stars.forEach(star => {
                 star.onclick = function() { toggleStar(parseInt(this.dataset.idx)); };
             });
@@ -2482,40 +2535,74 @@
             document.getElementById('help').classList.add('on');
         }
         
+        let currentFriendMixtape = null;
+        
         function showFriend(idx) {
             const mixtape = mixtapes[idx];
             if (!mixtape) return;
             
+            currentFriendMixtape = mixtape;
+            
             document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
             document.getElementById('friend').classList.add('on');
             
-            const headerText = mixtape.title 
-                ? `${mixtape.name}: ${mixtape.title}` 
-                : `${mixtape.name}'s Mixtape`;
-            document.getElementById('friend-header').textContent = headerText;
+            renderFriendView();
+        }
+        
+        function renderFriendView() {
+            if (!currentFriendMixtape) return;
+            const mixtape = currentFriendMixtape;
             
+            const isGrid = document.querySelector('#friend-view-toggle .view-toggle-btn[data-view="grid"].active');
             const list = document.getElementById('friend-list');
-            list.innerHTML = mixtape.playlists.map((it, i) => `
-                <div class="dive-item" data-i="${i}">
-                    <div class="dive-img">
-                        ${it.img ? `<img src="${esc(it.img)}" alt="">` : `<div class="dive-ph"><span class="material-symbols-outlined">music_note_2</span></div>`}
-                    </div>
-                    <div class="dive-info">
-                        <div class="dive-title">${esc(it.title) || 'Playlist'}</div>
-                        ${it.desc ? `<div class="dive-desc">${esc(it.desc)}</div>` : ''}
-                    </div>
-                </div>
-            `).join('');
+            const grid = document.getElementById('friend-grid');
             
-            list.querySelectorAll('.dive-item').forEach(item => {
-                item.onclick = () => {
-                    const pl = mixtape.playlists[item.dataset.i];
-                    const id = getID(pl.url);
-                    if (id) {
-                        window.location.href = 'spotify:playlist:' + id;
-                    }
-                };
-            });
+            if (isGrid) {
+                list.style.display = 'none';
+                grid.style.display = 'grid';
+                grid.innerHTML = mixtape.playlists.map((it, i) => `
+                    <div class="tile" data-i="${i}">
+                        <div class="tile-img">
+                            ${it.img ? `<img src="${esc(it.img)}" alt="">` : `<div class="tile-ph"><span class="material-symbols-outlined">music_note_2</span></div>`}
+                        </div>
+                        <div class="tile-title">${esc(it.title) || 'Playlist'}</div>
+                    </div>
+                `).join('');
+                
+                grid.querySelectorAll('.tile').forEach(item => {
+                    item.onclick = () => {
+                        const pl = mixtape.playlists[item.dataset.i];
+                        const id = getID(pl.url);
+                        if (id) {
+                            window.location.href = 'spotify:playlist:' + id;
+                        }
+                    };
+                });
+            } else {
+                grid.style.display = 'none';
+                list.style.display = 'flex';
+                list.innerHTML = mixtape.playlists.map((it, i) => `
+                    <div class="dive-item" data-i="${i}">
+                        <div class="dive-img">
+                            ${it.img ? `<img src="${esc(it.img)}" alt="">` : `<div class="dive-ph"><span class="material-symbols-outlined">music_note_2</span></div>`}
+                        </div>
+                        <div class="dive-info">
+                            <div class="dive-title">${esc(it.title) || 'Playlist'}</div>
+                            ${it.desc ? `<div class="dive-desc">${esc(it.desc)}</div>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                
+                list.querySelectorAll('.dive-item').forEach(item => {
+                    item.onclick = () => {
+                        const pl = mixtape.playlists[item.dataset.i];
+                        const id = getID(pl.url);
+                        if (id) {
+                            window.location.href = 'spotify:playlist:' + id;
+                        }
+                    };
+                });
+            }
         }
 
         /* --------------------------------------------
@@ -2743,6 +2830,15 @@
                 filterOptions.classList.remove('open');
             });
             
+            // Friend view toggle (grid/list)
+            document.querySelectorAll('#friend-view-toggle .view-toggle-btn').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelectorAll('#friend-view-toggle .view-toggle-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderFriendView();
+                };
+            });
+            
             // Recovery
             document.getElementById('recovery-btn').onclick = () => {
                 const str = document.getElementById('recovery-string').value.trim();
@@ -2883,4 +2979,4 @@
     </script>
 </body>
 </html>
-   
+         
