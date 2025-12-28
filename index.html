@@ -3516,11 +3516,16 @@
                 try {
                     await navigator.clipboard.writeText(str);
                     const btn = this;
-                    const originalHTML = btn.innerHTML;
-                    btn.innerHTML = '<span class="material-symbols-outlined">check</span> Copied';
+                    const originalBtnHTML = btn.innerHTML;
+                    const label = document.getElementById('friend-title');
+                    const originalLabelText = label.textContent;
+                    
+                    btn.innerHTML = '<span class="material-symbols-outlined">check</span>';
+                    label.textContent = 'Copied';
                     btn.classList.add('copied');
                     setTimeout(() => {
-                        btn.innerHTML = originalHTML;
+                        btn.innerHTML = originalBtnHTML;
+                        label.textContent = originalLabelText;
                         btn.classList.remove('copied');
                     }, 2000);
                 } catch (err) {
@@ -3544,8 +3549,13 @@
                 
                 try {
                     await navigator.clipboard.writeText(str);
-                    const originalHTML = btn.innerHTML;
-                    btn.innerHTML = '<span class="material-symbols-outlined">check</span> Copied';
+                    const originalBtnHTML = btn.innerHTML;
+                    const label = btn.parentElement.querySelector('.toggle-label');
+                    const originalLabelText = label.textContent;
+                    
+                    // Show check icon and "Copied" text to left
+                    btn.innerHTML = '<span class="material-symbols-outlined">check</span>';
+                    label.textContent = 'Copied';
                     btn.classList.add('copied');
                     
                     // Also update Share page inputs
@@ -3629,7 +3639,8 @@
                     document.body.appendChild(script);
                     
                     setTimeout(() => {
-                        btn.innerHTML = originalHTML;
+                        btn.innerHTML = originalBtnHTML;
+                        label.textContent = originalLabelText;
                         btn.classList.remove('copied');
                     }, 2000);
                 } catch (err) {
