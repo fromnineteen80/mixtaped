@@ -1060,6 +1060,10 @@
         .view-toggle-btn.active {
             color: var(--text2);
         }
+        .toggle-label {
+            font-size: var(--font-small);
+            color: var(--text3);
+        }
         .collected-list {
             margin-top: 12px;
         }
@@ -1174,7 +1178,8 @@
         /* Friend view */
         .friend-toolbar {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: var(--gap);
         }
         
@@ -1417,7 +1422,12 @@
             .sidebar-mixtape-item .material-symbols-outlined {
                 font-size: 18px;
             }
-            .sidebar-mixtape-item:active { opacity: 0.6; }
+            .sidebar-mixtape-item:hover { background: #E6E6E5; }
+            .sidebar-mixtape-item:active { background: #E2E2E1; }
+            .sidebar-mixtape-item.active { font-weight: 600; background: #E6E6E5; }
+            [data-theme="dark"] .sidebar-mixtape-item:hover { background: #222222; }
+            [data-theme="dark"] .sidebar-mixtape-item:active { background: #252525; }
+            [data-theme="dark"] .sidebar-mixtape-item.active { background: #222222; }
             
             .sidebar-footer {
                 padding: 16px 20px;
@@ -1817,9 +1827,10 @@
                 <!-- Friend's Mixtape View -->
                 <div class="view" id="friend">
                     <div class="friend-toolbar">
+                        <span class="toggle-label">Toggle Mixtape</span>
                         <div class="view-toggle" id="friend-view-toggle">
-                            <button class="view-toggle-btn" data-view="grid" title="Grid view"><span class="material-symbols-outlined">grid_view</span></button>
-                            <button class="view-toggle-btn active" data-view="list" title="Deep Dive"><span class="material-symbols-outlined">thumbnail_bar</span></button>
+                            <button class="view-toggle-btn" data-view="grid"><span class="material-symbols-outlined">grid_view</span></button>
+                            <button class="view-toggle-btn active" data-view="list"><span class="material-symbols-outlined">format_image_left</span></button>
                         </div>
                     </div>
                     <div class="dive-list" id="friend-list"></div>
@@ -2438,6 +2449,8 @@
                 el.querySelectorAll('.sidebar-mixtape-item').forEach(btn => {
                     btn.onclick = () => {
                         updateSidebarActive(null);
+                        document.querySelectorAll('.sidebar-mixtape-item').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
                         showFriend(parseInt(btn.dataset.i));
                     };
                 });
