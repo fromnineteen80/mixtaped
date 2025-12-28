@@ -1381,6 +1381,91 @@
             .section { max-width: 560px; margin-left: auto; margin-right: auto; }
         }
         
+        /* Embed Player Section */
+        .embed-section {
+            margin-top: 24px;
+        }
+        
+        .embed-divider {
+            width: 100%;
+            height: 1px;
+            background: var(--text3);
+            opacity: 0.3;
+            margin: 0 auto 24px;
+        }
+        
+        .embed-container {
+            display: flex;
+            gap: 2px;
+            width: 100%;
+            min-height: 500px;
+            overflow: hidden;
+            background: var(--bg);
+        }
+        
+        .embed-playlist-list {
+            width: 20%;
+            min-width: 120px;
+            max-width: 180px;
+            background: var(--bg);
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        
+        .embed-playlist-item {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: var(--font-small);
+            font-family: inherit;
+            color: var(--text2);
+            background: none;
+            border: none;
+            cursor: pointer;
+            line-height: 1.3;
+            word-wrap: break-word;
+            transition: background 0.15s ease;
+        }
+        
+        .embed-playlist-item:hover {
+            background: var(--sidebar-bg);
+        }
+        
+        .embed-playlist-item:active {
+            background: var(--sidebar-bg);
+        }
+        
+        .embed-playlist-item.active {
+            background: var(--sidebar-bg);
+            font-weight: 600;
+        }
+        
+        [data-theme="spotify"] .embed-playlist-item:hover,
+        [data-theme="spotify"] .embed-playlist-item:active,
+        [data-theme="spotify"] .embed-playlist-item.active {
+            background: #1DB954;
+            color: #fff;
+        }
+        
+        .embed-player {
+            flex: 1;
+            min-height: 500px;
+        }
+        
+        .embed-player iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Hide embed section on mobile - only show on tablet+ */
+        @media (max-width: 767px) {
+            .embed-section {
+                display: none;
+            }
+        }
+        
         /* Safari recommendation banner */
         .safari-banner {
             position: fixed;
@@ -1834,6 +1919,13 @@
                         </div>
                     </div>
                     <div class="grid" id="grid"></div>
+                    <div class="embed-section" id="main-embed-section" style="display: none;">
+                        <div class="embed-divider"></div>
+                        <div class="embed-container">
+                            <div class="embed-playlist-list" id="main-embed-list"></div>
+                            <div class="embed-player" id="main-embed-player"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Deep Dive View -->
@@ -2179,6 +2271,13 @@
                     </div>
                     <div class="dive-list" id="friend-list" style="display: none;"></div>
                     <div class="friend-grid" id="friend-grid"></div>
+                    <div class="embed-section" id="friend-embed-section" style="display: none;">
+                        <div class="embed-divider"></div>
+                        <div class="embed-container">
+                            <div class="embed-playlist-list" id="friend-embed-list"></div>
+                            <div class="embed-player" id="friend-embed-player"></div>
+                        </div>
+                    </div>
                     <div class="collab-add-form" id="collab-add-form" style="display: none;">
                         <div class="card">
                             <div class="pl-item">
@@ -2428,6 +2527,7 @@
             
             // Show/hide toolbar based on filled count
             const mainToolbar = document.getElementById('main-toolbar');
+            const embedSection = document.getElementById('main-embed-section');
             const showToolbars = filled.length >= 3;
             
             if (mainToolbar) {
@@ -2486,6 +2586,53 @@
                     showEdit();
                 };
             }
+            
+            // Render embed section (only show if 3+ playlists)
+            if (embedSection) {
+                if (filled.length >= 3) {
+                    embedSection.style.display = 'block';
+                    renderEmbedSection('main-embed-list', 'main-embed-player', filled);
+                } else {
+                    embedSection.style.display = 'none';
+                }
+            }
+        }
+
+        // Render embed section with playlist list and Spotify player
+        function renderEmbedSection(listId, playerId, playlists) {
+            const listEl = document.getElementById(listId);
+            const playerEl = document.getElementById(playerId);
+            
+            if (!listEl || !playerEl || playlists.length === 0) return;
+            
+            // Build playlist list
+            listEl.innerHTML = playlists.map((it, i) => `
+                <button class="embed-playlist-item ${i === 0 ? 'active' : ''}" data-i="${i}" data-url="${esc(it.url)}">
+                    ${esc(it.title) || 'Playlist'}
+                </button>
+            `).join('');
+            
+            // Set initial embed (first playlist)
+            const firstId = getID(playlists[0].url);
+            if (firstId) {
+                playerEl.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${firstId}?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+            }
+            
+            // Handle playlist selection
+            listEl.querySelectorAll('.embed-playlist-item').forEach(btn => {
+                btn.onclick = () => {
+                    // Update active state
+                    listEl.querySelectorAll('.embed-playlist-item').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Update embed
+                    const idx = parseInt(btn.dataset.i);
+                    const id = getID(playlists[idx].url);
+                    if (id) {
+                        playerEl.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${id}?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+                    }
+                };
+            });
         }
 
         // Render form
@@ -3026,6 +3173,7 @@
             const isGrid = document.querySelector('#friend-view-toggle .view-toggle-btn[data-view="grid"].active');
             const list = document.getElementById('friend-list');
             const grid = document.getElementById('friend-grid');
+            const embedSection = document.getElementById('friend-embed-section');
             
             if (isGrid) {
                 list.style.display = 'none';
@@ -3069,9 +3217,21 @@
                 if (addTile) {
                     addTile.onclick = () => showCollabAddForm();
                 }
+                
+                // Show embed section for grid view
+                if (embedSection && mixtape.playlists.length >= 1) {
+                    embedSection.style.display = 'block';
+                    renderEmbedSection('friend-embed-list', 'friend-embed-player', mixtape.playlists);
+                }
             } else {
                 grid.style.display = 'none';
                 list.style.display = 'flex';
+                
+                // Hide embed section in list/deep dive view
+                if (embedSection) {
+                    embedSection.style.display = 'none';
+                }
+                
                 list.innerHTML = mixtape.playlists.map((it, i) => `
                     <div class="dive-item" data-i="${i}">
                         <div class="dive-img">
