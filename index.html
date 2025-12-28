@@ -2015,6 +2015,9 @@
                     if (id) {
                         // Try deep link first, fallback to web URL
                         window.location.href = 'spotify:playlist:' + id;
+                    } else {
+                        // No URL - go to Edit
+                        showEdit();
                     }
                 };
             });
@@ -2879,4 +2882,4 @@
     </script>
 </body>
 </html>
-                   
+           
