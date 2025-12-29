@@ -556,8 +556,24 @@
         .help-section {
             margin-bottom: 32px;
         }
+        /* --------------------------------------------
+           HELP PAGE
+           -------------------------------------------- */
+        #help {
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #help .about-hero img {
+            object-position: center top;
+        }
+        
+        .help-section {
+            margin-bottom: 32px;
+        }
         .help-title {
-            font-size: var(--font-small);
+            font-size: var(--font-body);
             font-weight: 600;
             color: var(--text);
             margin-bottom: 16px;
@@ -574,7 +590,7 @@
             margin-bottom: 6px;
         }
         .help-a {
-            font-size: var(--font-body);
+            font-size: var(--font-card);
             color: var(--text2);
             line-height: var(--line-height);
             margin: 0;
@@ -1544,9 +1560,18 @@
             }
             
             .sidebar.collapsed {
-                width: 60px;
-                min-width: 60px;
+                width: 48px;
+                min-width: 48px;
                 background: var(--bg);
+                border-right: 1px solid #E6E6E5;
+            }
+            
+            [data-theme="dark"] .sidebar.collapsed {
+                border-right-color: #222222;
+            }
+            
+            [data-theme="spotify"] .sidebar.collapsed {
+                border-right-color: #E6E6E5;
             }
             
             .sidebar .icon-collapsed {
@@ -1575,15 +1600,112 @@
                 padding: 0;
             }
             
+            .sidebar.collapsed .sidebar-toggle {
+                position: relative;
+            }
+            
+            .sidebar.collapsed .sidebar-toggle::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                left: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                margin-left: 8px;
+                padding: 4px 8px;
+                background: #161616;
+                color: #F5F5F4;
+                font-size: 11px;
+                font-family: inherit;
+                font-weight: 400;
+                border-radius: 4px;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.15s ease, visibility 0.15s ease;
+                pointer-events: none;
+                z-index: 300;
+            }
+            
+            .sidebar.collapsed .sidebar-toggle:hover::after {
+                opacity: 1;
+                visibility: visible;
+            }
+            
             .sidebar.collapsed .sidebar-item {
                 justify-content: center;
                 padding: 7px 0;
+                margin: 0 6px;
+                width: calc(100% - 12px);
+                border-radius: 6px;
+                position: relative;
+            }
+            
+            .sidebar.collapsed .sidebar-nav {
+                overflow: visible;
+            }
+            
+            .sidebar.collapsed .sidebar-item::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                left: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                margin-left: 8px;
+                padding: 4px 8px;
+                background: #161616;
+                color: #F5F5F4;
+                font-size: 11px;
+                font-family: inherit;
+                font-weight: 400;
+                border-radius: 4px;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.15s ease, visibility 0.15s ease;
+                pointer-events: none;
+                z-index: 300;
+            }
+            
+            .sidebar.collapsed .sidebar-item:hover::after {
+                opacity: 1;
+                visibility: visible;
             }
             
             .sidebar.collapsed .sidebar-dropdown-toggle {
                 justify-content: center;
                 padding: 7px 0;
+                margin: 0 6px;
+                width: calc(100% - 12px);
+                border-radius: 6px;
                 cursor: pointer;
+                position: relative;
+            }
+            
+            .sidebar.collapsed .sidebar-dropdown-toggle::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                left: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                margin-left: 8px;
+                padding: 4px 8px;
+                background: #161616;
+                color: #F5F5F4;
+                font-size: 11px;
+                font-family: inherit;
+                font-weight: 400;
+                border-radius: 4px;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.15s ease, visibility 0.15s ease;
+                pointer-events: none;
+                z-index: 300;
+            }
+            
+            .sidebar.collapsed .sidebar-dropdown-toggle:hover::after {
+                opacity: 1;
+                visibility: visible;
             }
             
             .sidebar.collapsed .sidebar-dropdown-toggle:active {
@@ -1825,9 +1947,53 @@
                 visibility: visible;
             }
             
-            /* Hide footer icons when sidebar collapsed */
+            /* Footer icons when sidebar collapsed - show with right-side tooltips */
             .sidebar.collapsed .sidebar-footer-icon {
-                display: none;
+                display: flex;
+            }
+            
+            .sidebar.collapsed .sidebar-footer-icon::after {
+                top: 50%;
+                bottom: auto;
+                left: 100%;
+                right: auto;
+                transform: translateY(-50%);
+                margin-top: 0;
+                margin-left: 8px;
+                background: #161616;
+                color: #F5F5F4;
+            }
+            
+            /* Theme buttons collapsed tooltips */
+            .sidebar.collapsed .theme-btn {
+                position: relative;
+            }
+            
+            .sidebar.collapsed .theme-btn::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                left: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                margin-left: 8px;
+                padding: 4px 8px;
+                background: #161616;
+                color: #F5F5F4;
+                font-size: 11px;
+                font-family: inherit;
+                font-weight: 400;
+                border-radius: 4px;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.15s ease, visibility 0.15s ease;
+                pointer-events: none;
+                z-index: 300;
+            }
+            
+            .sidebar.collapsed .theme-btn:hover::after {
+                opacity: 1;
+                visibility: visible;
             }
             
             /* Spotify theme adjustments for footer icons */
@@ -1879,8 +2045,8 @@
             
             /* When sidebar is collapsed */
             .sidebar.collapsed + .wrapper {
-                margin-left: 60px;
-                width: calc(100% - 60px);
+                margin-left: 48px;
+                width: calc(100% - 48px);
                 padding-left: 40px;
             }
             
@@ -2319,23 +2485,23 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-title" id="sidebar-title">MIXTAPED</div>
-                <button class="sidebar-toggle" id="sidebar-toggle">
+                <button class="sidebar-toggle" id="sidebar-toggle" data-tooltip="Expand">
                     <span class="material-symbols-outlined icon-expanded">first_page</span>
                     <span class="material-symbols-outlined icon-collapsed">thumbnail_bar</span>
                 </button>
             </div>
             <nav class="sidebar-nav">
-                <button class="sidebar-item active" id="sidebar-grid-btn"><span class="material-symbols-outlined">grid_view</span><span class="sidebar-text">Grid Layout</span></button>
-                <button class="sidebar-item" id="sidebar-dive-btn"><span class="material-symbols-outlined">format_image_left</span><span class="sidebar-text">Deep Dive</span></button>
+                <button class="sidebar-item active" id="sidebar-grid-btn" data-tooltip="Grid Layout"><span class="material-symbols-outlined">grid_view</span><span class="sidebar-text">Grid Layout</span></button>
+                <button class="sidebar-item" id="sidebar-dive-btn" data-tooltip="Deep Dive"><span class="material-symbols-outlined">format_image_left</span><span class="sidebar-text">Deep Dive</span></button>
                 <div class="sidebar-divider"></div>
-                <button class="sidebar-item" id="sidebar-edit-btn"><span class="material-symbols-outlined">edit</span><span class="sidebar-text">Edit</span></button>
-                <button class="sidebar-item" id="sidebar-share-btn"><span class="material-symbols-outlined">share</span><span class="sidebar-text">Share</span></button>
-                <button class="sidebar-item" id="sidebar-recover-btn"><span class="material-symbols-outlined">history</span><span class="sidebar-text">Recover</span></button>
-                <button class="sidebar-item" id="sidebar-about-btn"><span class="material-symbols-outlined">info</span><span class="sidebar-text">About</span></button>
-                <a class="sidebar-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank"><span class="material-symbols-outlined">local_cafe</span><span class="sidebar-text">Donate</span></a>
+                <button class="sidebar-item" id="sidebar-edit-btn" data-tooltip="Edit"><span class="material-symbols-outlined">edit</span><span class="sidebar-text">Edit</span></button>
+                <button class="sidebar-item" id="sidebar-share-btn" data-tooltip="Share"><span class="material-symbols-outlined">share</span><span class="sidebar-text">Share</span></button>
+                <button class="sidebar-item" id="sidebar-recover-btn" data-tooltip="Recover"><span class="material-symbols-outlined">history</span><span class="sidebar-text">Recover</span></button>
+                <button class="sidebar-item" id="sidebar-about-btn" data-tooltip="About"><span class="material-symbols-outlined">info</span><span class="sidebar-text">About</span></button>
+                <a class="sidebar-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank" data-tooltip="Donate"><span class="material-symbols-outlined">local_cafe</span><span class="sidebar-text">Donate</span></a>
                 <div class="sidebar-divider"></div>
                 <div class="sidebar-dropdown">
-                    <button class="sidebar-item sidebar-dropdown-toggle" id="sidebar-mixtapes-toggle">
+                    <button class="sidebar-item sidebar-dropdown-toggle" id="sidebar-mixtapes-toggle" data-tooltip="Mixtapes">
                         <span class="material-symbols-outlined">headphones</span>
                         <span class="sidebar-text">Mixtapes</span>
                         <svg class="sidebar-dropdown-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
@@ -2343,7 +2509,7 @@
                     <div class="sidebar-dropdown-content open" id="sidebar-mixtapes"></div>
                 </div>
                 <div class="sidebar-dropdown">
-                    <button class="sidebar-item sidebar-dropdown-toggle" id="sidebar-collaborate-toggle">
+                    <button class="sidebar-item sidebar-dropdown-toggle" id="sidebar-collaborate-toggle" data-tooltip="Collaborate">
                         <span class="material-symbols-outlined">person_heart</span>
                         <span class="sidebar-text">Collaborate</span>
                         <svg class="sidebar-dropdown-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
@@ -2654,7 +2820,7 @@
                         
                         <div class="help-section">
                             <div class="help-title">Getting Started</div>
-                            <div class="help-q">What is Mixtaped?</div>
+                            <div class="help-q">What is <span class="brand">Mixtaped</span>?</div>
                             <p class="help-a"><span class="brand">Mixtaped</span> is a way to collect and share your favorite Spotify playlists. Think of it like making a mixtape for a friend, but with playlists instead of songs. Add your playlists, write descriptions for each one, and share the collection with anyone. It's also a quick way to access your favorite playlists on mobile since Spotify buries user-created playlists deep within the app interface.</p>
                             
                             <div class="help-q">How do I add a playlist?</div>
@@ -2679,7 +2845,7 @@
                             <p class="help-a">Privacy extensions and ad blockers can block requests to Spotify's servers, preventing playlist data from loading. If you're having trouble, try disabling your ad blocker for this site.</p>
                             
                             <div class="help-q">Data is stored locally</div>
-                            <p class="help-a">All your data is stored on your device, not on a server. This keeps it private, but means clearing your browser data or switching devices will reset the app. Always keep a saved share code as backup.</p>
+                            <p class="help-a">All your data is stored on your device, not on a server. This keeps it private, but means clearing your browser data or switching devices will reset the app. Always keep a saved share code as backup. Our Recover page helps you generate a full backup of your data and also restore the entire app.</p>
                         </div>
                         
                         <div class="help-section">
@@ -3549,8 +3715,9 @@
             
             const cur = document.body.dataset.theme || 'light';
             const opts = sysDark ? ['dark', 'spotify'] : ['light', 'dark', 'spotify'];
+            const tooltips = { light: 'Light', dark: 'Dark', spotify: 'Spotify' };
             
-            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'on':''}" data-t="${t}"><span class="material-symbols-outlined">format_paint</span></div>`).join('') +
+            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'on':''}" data-t="${t}" data-tooltip="${tooltips[t]}"><span class="material-symbols-outlined">format_paint</span></div>`).join('') +
                 `<a href="#" class="sidebar-footer-icon" id="sidebar-help-icon" data-tooltip="Help"><span class="material-symbols-outlined">tooltip_2</span></a>` +
                 `<a href="/cdn-cgi/l/email-protection#92f1fdfef5d2f1fdfefbfcfff3ebfcf3e0f6bcfcf7e6" class="sidebar-footer-icon" data-tooltip="Email"><span class="material-symbols-outlined">mail</span></a>`;
             
