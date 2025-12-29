@@ -321,6 +321,7 @@
             display: grid;
             gap: var(--gap);
             width: 100%;
+            margin-top: 8px;
         }
 
         /* Tiles */
@@ -1325,7 +1326,7 @@
         }
         
         .share-toolbar {
-            margin-bottom: var(--gap);
+            margin-bottom: 24px;
             display: block;
             width: 100%;
         }
@@ -1398,18 +1399,21 @@
             display: flex;
             gap: 2px;
             width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
             min-height: 500px;
             overflow: hidden;
             background: var(--bg);
         }
         
         .embed-playlist-list {
-            width: 20%;
+            width: 160px;
             min-width: 120px;
-            max-width: 180px;
+            max-width: 160px;
             background: var(--bg);
             overflow-y: auto;
             padding: 8px 0;
+            flex-shrink: 0;
         }
         
         .embed-playlist-item {
@@ -1820,10 +1824,332 @@
                 display: none !important;
             }
         }
+        
+        /* --------------------------------------------
+           MOBILE PHONE LAYOUT
+           -------------------------------------------- */
+        /* Hide mobile elements by default */
+        .mobile-header,
+        .mobile-top-tray,
+        .mobile-bottom-tray,
+        .mobile-more-menu {
+            display: none !important;
+        }
+        
+        /* Show mobile elements only on mobile phones */
+        body.mobile-phone .mobile-header,
+        body.mobile-phone .mobile-top-tray,
+        body.mobile-phone .mobile-bottom-tray {
+            display: flex !important;
+        }
+        
+        body.mobile-phone .mobile-more-menu.open {
+            display: block !important;
+        }
+        
+        /* Hide desktop header on mobile phones */
+        body.mobile-phone .header {
+            display: none;
+        }
+        
+        /* Hide embed section on mobile phones */
+        body.mobile-phone .embed-section {
+            display: none !important;
+        }
+        
+        /* Mobile Header */
+        body.mobile-phone .mobile-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: calc(32px + var(--safe-t));
+            padding-top: var(--safe-t);
+            background: var(--card);
+            align-items: center;
+            justify-content: center;
+            z-index: 201;
+        }
+        
+        .mobile-header-title {
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--text2);
+        }
+        
+        /* Mobile Top Tray */
+        body.mobile-phone .mobile-top-tray {
+            position: fixed;
+            top: calc(32px + var(--safe-t));
+            left: 0;
+            right: 0;
+            height: 48px;
+            background: var(--card);
+            z-index: 200;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .mobile-top-scroll {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-left: calc(var(--safe-l) + 12px);
+            padding-right: calc(var(--safe-r) + 12px);
+        }
+        .mobile-top-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .mobile-top-icon {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: var(--text3);
+            cursor: pointer;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .mobile-top-icon .material-symbols-outlined {
+            font-size: 22px;
+        }
+        .mobile-top-icon:active {
+            opacity: 0.5;
+        }
+        .mobile-top-icon.active {
+            color: var(--text);
+        }
+        
+        .mobile-top-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--text3);
+            opacity: 0.3;
+            margin: 0 12px;
+            flex-shrink: 0;
+        }
+        
+        .mobile-top-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-top-placeholder {
+            font-size: var(--font-small);
+            color: var(--text3);
+            font-style: italic;
+        }
+        
+        .mobile-top-item {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: var(--font-small);
+            color: var(--text2);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .mobile-top-item:active {
+            opacity: 0.5;
+        }
+        
+        /* Mobile Bottom Tray */
+        body.mobile-phone .mobile-bottom-tray {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            padding-bottom: var(--safe-b);
+            background: var(--card);
+            align-items: center;
+            justify-content: space-around;
+            padding-left: var(--safe-l);
+            padding-right: var(--safe-r);
+            z-index: 200;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .mobile-bottom-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 6px 12px;
+            background: none;
+            border: none;
+            color: var(--text3);
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .mobile-bottom-item .material-symbols-outlined {
+            font-size: 24px;
+        }
+        .mobile-bottom-item:active {
+            opacity: 0.5;
+        }
+        .mobile-bottom-item.active {
+            color: var(--text2);
+        }
+        
+        .mobile-bottom-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+        
+        /* Mobile More Menu */
+        .mobile-more-menu {
+            position: fixed;
+            bottom: calc(56px + var(--safe-b));
+            right: 8px;
+            background: var(--card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow), 0 4px 20px rgba(0,0,0,0.15);
+            padding: 4px 0;
+            min-width: 140px;
+            z-index: 250;
+        }
+        .mobile-more-menu.open {
+            display: block;
+        }
+        
+        .mobile-more-item {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: var(--font-menu);
+            font-family: inherit;
+            color: var(--text2);
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .mobile-more-item:active {
+            background: var(--input);
+        }
+        
+        .mobile-more-themes {
+            padding: 12px 16px;
+        }
+        
+        .mobile-more-label {
+            font-size: var(--font-small);
+            color: var(--text3);
+            margin-bottom: 8px;
+        }
+        
+        .mobile-themes {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .mobile-more-divider {
+            height: 1px;
+            background: var(--input);
+            margin: 4px 0;
+        }
+        
+        /* Adjust app layout for mobile phone */
+        body.mobile-phone .app {
+            padding-top: calc(32px + 48px + var(--safe-t) + var(--gap));
+            padding-bottom: calc(56px + var(--safe-b) + var(--gap));
+        }
+        
+        body.mobile-phone .wrapper {
+            height: 100%;
+        }
+        
+        /* Add spacing above main content on mobile */
+        body.mobile-phone .grid,
+        body.mobile-phone .dive-list {
+            margin-top: 8px;
+        }
+        
+        /* Ensure bottom tray is always visible and fixed */
+        body.mobile-phone .mobile-bottom-tray {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
     </style>
 </head>
 <body>
     <div class="app">
+        <!-- Mobile Header -->
+        <div class="mobile-header" id="mobile-header">
+            <span class="mobile-header-title">MIXTAPED</span>
+        </div>
+        
+        <!-- Mobile Top Tray -->
+        <div class="mobile-top-tray" id="mobile-top-tray">
+            <div class="mobile-top-scroll" id="mobile-top-scroll">
+                <button class="mobile-top-icon active" id="mobile-home-btn"><span class="material-symbols-outlined">music_note_2</span></button>
+                <button class="mobile-top-icon" id="mobile-mixtapes-btn"><span class="material-symbols-outlined">headphones</span></button>
+                <button class="mobile-top-icon" id="mobile-collab-btn"><span class="material-symbols-outlined">person_heart</span></button>
+                <div class="mobile-top-divider"></div>
+                <span class="mobile-top-content" id="mobile-top-content"></span>
+            </div>
+        </div>
+        
+        <!-- Mobile Bottom Tray -->
+        <div class="mobile-bottom-tray" id="mobile-bottom-tray">
+            <button class="mobile-bottom-item active" id="mobile-grid-btn">
+                <span class="material-symbols-outlined">grid_view</span>
+                <span class="mobile-bottom-label">Grid</span>
+            </button>
+            <button class="mobile-bottom-item" id="mobile-dive-btn">
+                <span class="material-symbols-outlined">format_image_left</span>
+                <span class="mobile-bottom-label">Deep</span>
+            </button>
+            <button class="mobile-bottom-item" id="mobile-edit-btn">
+                <span class="material-symbols-outlined">edit</span>
+                <span class="mobile-bottom-label">Edit</span>
+            </button>
+            <button class="mobile-bottom-item" id="mobile-share-btn">
+                <span class="material-symbols-outlined">share</span>
+                <span class="mobile-bottom-label">Share</span>
+            </button>
+            <button class="mobile-bottom-item" id="mobile-recover-btn">
+                <span class="material-symbols-outlined">history</span>
+                <span class="mobile-bottom-label">Recover</span>
+            </button>
+            <button class="mobile-bottom-item" id="mobile-more-btn">
+                <span class="material-symbols-outlined">menu</span>
+                <span class="mobile-bottom-label">More</span>
+            </button>
+        </div>
+        
+        <!-- Mobile More Menu -->
+        <div class="mobile-more-menu" id="mobile-more-menu">
+            <div class="mobile-more-themes">
+                <div class="mobile-more-label">Theme</div>
+                <div class="mobile-themes" id="mobile-themes"></div>
+            </div>
+            <div class="mobile-more-divider"></div>
+            <a class="mobile-more-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank">Donate</a>
+            <a class="mobile-more-item" href="/cdn-cgi/l/email-protection#86e5e9eaefe8c6e5e9eaefe8ebe7ffe8e7f4e2a8e8e3f2b9f5f3e4ece3e5f2bbcbcfded2c7d6c3c2e3f4f6d7f3e3f5f2efe9e8">Email</a>
+            <button class="mobile-more-item" id="mobile-about-btn">About</button>
+            <button class="mobile-more-item" id="mobile-help-btn">Help</button>
+        </div>
+        
         <!-- Sidebar for larger screens -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
@@ -2029,9 +2355,9 @@
                         </div>
                         <p class="section-desc">Lost your playlists? If you saved your share code in your Notes app or emailed it to yourself, paste it here to restore your mixtape.</p>
                         <div class="card">
-                            <div class="pl-item">
-                                <input class="pl-input" type="text" id="recovery-string" placeholder="Paste your share code here">
-                                <button class="action-btn full" id="recovery-btn">Restore My Mixtape</button>
+                            <div class="pl-item" style="display: flex; gap: 8px; align-items: center;">
+                                <input class="pl-input" type="text" id="recovery-string" placeholder="Paste your share code here" style="flex: 1; margin-bottom: 0;">
+                                <button class="action-btn" id="recovery-btn">Restore</button>
                             </div>
                         </div>
                     </div>
@@ -2605,6 +2931,10 @@
             
             if (!listEl || !playerEl || playlists.length === 0) return;
             
+            // Determine embed theme based on app theme (0=dark, 1=light)
+            const currentTheme = document.body.dataset.theme || 'light';
+            const embedTheme = currentTheme === 'light' ? '1' : '0';
+            
             // Build playlist list
             listEl.innerHTML = playlists.map((it, i) => `
                 <button class="embed-playlist-item ${i === 0 ? 'active' : ''}" data-i="${i}" data-url="${esc(it.url)}">
@@ -2615,7 +2945,7 @@
             // Set initial embed (first playlist)
             const firstId = getID(playlists[0].url);
             if (firstId) {
-                playerEl.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${firstId}?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+                playerEl.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${firstId}?utm_source=generator&theme=${embedTheme}" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
             }
             
             // Handle playlist selection
@@ -2625,11 +2955,13 @@
                     listEl.querySelectorAll('.embed-playlist-item').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     
-                    // Update embed
+                    // Update embed with current theme
+                    const currentTheme = document.body.dataset.theme || 'light';
+                    const embedTheme = currentTheme === 'light' ? '1' : '0';
                     const idx = parseInt(btn.dataset.i);
                     const id = getID(playlists[idx].url);
                     if (id) {
-                        playerEl.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${id}?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+                        playerEl.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${id}?utm_source=generator&theme=${embedTheme}" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
                     }
                 };
             });
@@ -3857,6 +4189,169 @@
                     renderFriendView();
                 }
             });
+            
+            // Mobile tray event handlers
+            setupMobileTrays();
+        }
+        
+        /* --------------------------------------------
+           MOBILE TRAY HANDLERS
+           -------------------------------------------- */
+        let mobileTopMode = 'home'; // 'home', 'mixtapes', 'collab'
+        
+        function setupMobileTrays() {
+            // Top tray icons
+            document.getElementById('mobile-home-btn').onclick = () => {
+                setMobileTopMode('home');
+                showMain();
+                updateMobileBottomActive('mobile-grid-btn');
+            };
+            
+            document.getElementById('mobile-mixtapes-btn').onclick = () => {
+                setMobileTopMode('mixtapes');
+            };
+            
+            document.getElementById('mobile-collab-btn').onclick = () => {
+                setMobileTopMode('collab');
+            };
+            
+            // Bottom tray buttons
+            document.getElementById('mobile-grid-btn').onclick = () => {
+                updateMobileBottomActive('mobile-grid-btn');
+                showMain();
+            };
+            
+            document.getElementById('mobile-dive-btn').onclick = () => {
+                updateMobileBottomActive('mobile-dive-btn');
+                showDive();
+            };
+            
+            document.getElementById('mobile-edit-btn').onclick = () => {
+                updateMobileBottomActive('mobile-edit-btn');
+                showEdit();
+            };
+            
+            document.getElementById('mobile-share-btn').onclick = () => {
+                updateMobileBottomActive('mobile-share-btn');
+                showShare();
+            };
+            
+            document.getElementById('mobile-recover-btn').onclick = () => {
+                updateMobileBottomActive('mobile-recover-btn');
+                showRecover();
+            };
+            
+            document.getElementById('mobile-more-btn').onclick = (e) => {
+                e.stopPropagation();
+                document.getElementById('mobile-more-menu').classList.toggle('open');
+            };
+            
+            // More menu items
+            document.getElementById('mobile-help-btn').onclick = () => {
+                closeMobileMoreMenu();
+                updateMobileBottomActive(null);
+                showHelp();
+            };
+            
+            document.getElementById('mobile-about-btn').onclick = () => {
+                closeMobileMoreMenu();
+                updateMobileBottomActive(null);
+                showAbout();
+            };
+            
+            // Close more menu when clicking outside
+            document.addEventListener('click', () => {
+                closeMobileMoreMenu();
+            });
+            document.getElementById('mobile-more-menu').onclick = (e) => e.stopPropagation();
+            
+            // Render mobile themes
+            renderMobileThemes();
+        }
+        
+        function renderMobileThemes() {
+            const el = document.getElementById('mobile-themes');
+            if (!el) return;
+            const cur = document.body.dataset.theme || 'light';
+            const opts = sysDark ? ['dark', 'spotify'] : ['light', 'dark', 'spotify'];
+            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'on':''}" data-t="${t}"></div>`).join('');
+            el.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    setTheme(btn.dataset.t);
+                    // Update all theme buttons across the app
+                    document.querySelectorAll('.theme-btn').forEach(b => {
+                        b.classList.toggle('on', b.dataset.t === btn.dataset.t);
+                        b.classList.toggle('active', b.dataset.t === btn.dataset.t);
+                    });
+                };
+            });
+        }
+        
+        function closeMobileMoreMenu() {
+            document.getElementById('mobile-more-menu').classList.remove('open');
+        }
+        
+        function setMobileTopMode(mode) {
+            mobileTopMode = mode;
+            
+            // Update icon active states
+            document.getElementById('mobile-home-btn').classList.toggle('active', mode === 'home');
+            document.getElementById('mobile-mixtapes-btn').classList.toggle('active', mode === 'mixtapes');
+            document.getElementById('mobile-collab-btn').classList.toggle('active', mode === 'collab');
+            
+            // Update scroll area content
+            renderMobileTopScroll();
+        }
+        
+        function renderMobileTopScroll() {
+            const contentEl = document.getElementById('mobile-top-content');
+            
+            if (mobileTopMode === 'home') {
+                contentEl.innerHTML = '';
+            } else if (mobileTopMode === 'mixtapes') {
+                // Show curated mixtapes (ones with template, no name)
+                const curated = mixtapes.filter(m => m.template && !m.name);
+                if (curated.length === 0) {
+                    contentEl.innerHTML = '<span class="mobile-top-placeholder">Save music here</span>';
+                } else {
+                    contentEl.innerHTML = curated.map((m, i) => {
+                        const idx = mixtapes.indexOf(m);
+                        const label = m.title || 'My Mixtape';
+                        return `<button class="mobile-top-item" data-idx="${idx}">${esc(label)}</button>`;
+                    }).join('');
+                    contentEl.querySelectorAll('.mobile-top-item').forEach(btn => {
+                        btn.onclick = () => {
+                            showFriend(parseInt(btn.dataset.idx));
+                            updateMobileBottomActive(null);
+                        };
+                    });
+                }
+            } else if (mobileTopMode === 'collab') {
+                // Show friend mixtapes (ones with name, no template)
+                const friends = mixtapes.filter(m => !m.template || m.name);
+                if (friends.length === 0) {
+                    contentEl.innerHTML = '<span class="mobile-top-placeholder">Ask a friend</span>';
+                } else {
+                    contentEl.innerHTML = friends.map((m, i) => {
+                        const idx = mixtapes.indexOf(m);
+                        const label = m.title ? `${m.name}: ${m.title}` : m.name;
+                        return `<button class="mobile-top-item" data-idx="${idx}">${esc(label)}</button>`;
+                    }).join('');
+                    contentEl.querySelectorAll('.mobile-top-item').forEach(btn => {
+                        btn.onclick = () => {
+                            showFriend(parseInt(btn.dataset.idx));
+                            updateMobileBottomActive(null);
+                        };
+                    });
+                }
+            }
+        }
+        
+        function updateMobileBottomActive(activeId) {
+            document.querySelectorAll('.mobile-bottom-item').forEach(item => {
+                item.classList.toggle('active', item.id === activeId);
+            });
         }
         
         /* --------------------------------------------
@@ -3910,6 +4405,24 @@
         }
 
         /* --------------------------------------------
+           MOBILE PHONE DETECTION
+           -------------------------------------------- */
+        function isMobilePhone() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            const isPhone = /android.*mobile|iphone|ipod|blackberry|iemobile|opera mini/i.test(ua);
+            const isSmallScreen = window.innerWidth <= 480;
+            return isPhone || isSmallScreen;
+        }
+        
+        function updateMobileClass() {
+            if (isMobilePhone()) {
+                document.body.classList.add('mobile-phone');
+            } else {
+                document.body.classList.remove('mobile-phone');
+            }
+        }
+
+        /* --------------------------------------------
            INITIALIZE APP
            -------------------------------------------- */
         load();
@@ -3917,6 +4430,8 @@
         renderGrid();
         checkBrowser();
         checkUrlImport();
+        updateMobileClass();
+        window.addEventListener('resize', updateMobileClass);
     </script>
 </body>
 </html>
