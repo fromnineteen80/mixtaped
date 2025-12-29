@@ -2167,7 +2167,7 @@
         }
         
         .welcome-title {
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.3em;
@@ -2177,7 +2177,7 @@
         }
         
         .welcome-intro {
-            font-size: var(--font-card);
+            font-size: 13px;
             color: var(--text2);
             line-height: var(--line-height);
             margin-bottom: 20px;
@@ -2199,9 +2199,9 @@
         }
         
         .welcome-feature-icon {
-            width: 32px;
-            height: 32px;
-            min-width: 32px;
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
             background: var(--input);
             border-radius: 8px;
             display: flex;
@@ -2211,7 +2211,7 @@
         }
         
         .welcome-feature-icon .material-symbols-outlined {
-            font-size: 18px;
+            font-size: 20px;
         }
         
         .welcome-feature-text {
@@ -2219,16 +2219,37 @@
         }
         
         .welcome-feature-title {
-            font-size: var(--font-card);
+            font-size: 15px;
             font-weight: 600;
             color: var(--text2);
             margin-bottom: 2px;
         }
         
         .welcome-feature-desc {
-            font-size: var(--font-small);
+            font-size: 14px;
             color: var(--text3);
             line-height: 1.4;
+        }
+        
+        /* Desktop: smaller welcome popup text */
+        @media (min-width: 768px) {
+            .welcome-title {
+                font-size: 13px;
+            }
+            .welcome-feature-icon {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+            }
+            .welcome-feature-icon .material-symbols-outlined {
+                font-size: 18px;
+            }
+            .welcome-feature-title {
+                font-size: 13px;
+            }
+            .welcome-feature-desc {
+                font-size: 12px;
+            }
         }
         
         .welcome-btn {
