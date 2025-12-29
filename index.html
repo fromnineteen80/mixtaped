@@ -2138,6 +2138,18 @@
             transition: opacity 0.15s ease;
         }
         
+        .modal-link {
+            display: inline-block;
+            margin-top: 12px;
+            font-size: var(--font-small);
+            color: var(--text);
+            text-decoration: none;
+        }
+        
+        .modal-link:active {
+            opacity: 0.6;
+        }
+        
         /* Welcome Popup */
         .welcome-overlay {
             display: none;
@@ -2399,6 +2411,22 @@
             font-style: italic;
         }
         
+        .mobile-top-paste {
+            font-size: var(--font-small);
+            font-family: inherit;
+            font-style: italic;
+            color: var(--text2);
+            background: transparent;
+            border: none;
+            outline: none;
+            min-width: 200px;
+        }
+        
+        .mobile-top-paste::placeholder {
+            color: var(--text3);
+            font-style: italic;
+        }
+        
         .mobile-top-item {
             display: inline-block;
             padding: 8px 16px;
@@ -2626,6 +2654,7 @@
         <div class="mobile-top-tray" id="mobile-top-tray">
             <div class="mobile-top-scroll" id="mobile-top-scroll">
                 <button class="mobile-top-icon active" id="mobile-home-btn"><span class="material-symbols-outlined">music_note_2</span></button>
+                <button class="mobile-top-icon" id="mobile-add-btn"><span class="material-symbols-outlined">add</span></button>
                 <button class="mobile-top-icon" id="mobile-mixtapes-btn"><span class="material-symbols-outlined">headphones</span></button>
                 <button class="mobile-top-icon" id="mobile-collab-btn"><span class="material-symbols-outlined">person_heart</span></button>
                 <div class="mobile-top-divider"></div>
@@ -3226,8 +3255,23 @@
         
         // Custom modal popup
         function showModal(message) {
-            document.getElementById('modal-content').textContent = message;
+            document.getElementById('modal-content').innerHTML = message;
+            document.getElementById('modal-btn').textContent = 'OK';
+            document.getElementById('modal-btn').onclick = closeModal;
             document.getElementById('modal-overlay').classList.add('open');
+        }
+        
+        function showModalWithLink(message, linkText, linkAction) {
+            document.getElementById('modal-content').innerHTML = message + 
+                `<br><a href="#" class="modal-link" id="modal-action-link">${linkText}</a>`;
+            document.getElementById('modal-btn').textContent = 'OK';
+            document.getElementById('modal-btn').onclick = closeModal;
+            document.getElementById('modal-overlay').classList.add('open');
+            document.getElementById('modal-action-link').onclick = (e) => {
+                e.preventDefault();
+                closeModal();
+                linkAction();
+            };
         }
         
         function closeModal() {
@@ -3235,7 +3279,6 @@
         }
         
         // Setup modal close handlers
-        document.getElementById('modal-btn').onclick = closeModal;
         document.getElementById('modal-overlay').onclick = (e) => {
             if (e.target === document.getElementById('modal-overlay')) closeModal();
         };
@@ -3947,7 +3990,7 @@
             // Render Mixtapes section (curated only)
             if (mixtapesEl) {
                 if (curated.length === 0) {
-                    mixtapesEl.innerHTML = '<div class="no-mixtapes">Save mixtapes here</div>';
+                    mixtapesEl.innerHTML = '<div class="no-mixtapes">Saved mixtapes here</div>';
                 } else {
                     mixtapesEl.innerHTML = curated.map((m) => {
                         const idx = mixtapes.indexOf(m);
@@ -4482,12 +4525,16 @@
                     added: new Date().toISOString(),
                     starred: false
                 });
+                const newIdx = mixtapes.length - 1;
                 saveMixtapes();
                 renderMixtapesList();
                 renderCollectedList();
                 document.getElementById('import-string').value = '';
                 const label = data.title ? `${data.name}: ${data.title}` : data.name;
-                showModal('Added ' + label + '!');
+                showModalWithLink('Added ' + label + '!', 'View in Collaborate', () => {
+                    showFriend(newIdx);
+                    setMobileTopMode('collab');
+                });
             };
             
             // Custom dropdown for filter
@@ -4917,7 +4964,7 @@
         /* --------------------------------------------
            MOBILE TRAY HANDLERS
            -------------------------------------------- */
-        let mobileTopMode = 'home'; // 'home', 'mixtapes', 'collab'
+        let mobileTopMode = 'home'; // 'home', 'add', 'mixtapes', 'collab'
         
         function setupMobileTrays() {
             // Top tray icons
@@ -4925,6 +4972,10 @@
                 setMobileTopMode('home');
                 showMain();
                 updateMobileBottomActive('mobile-grid-btn');
+            };
+            
+            document.getElementById('mobile-add-btn').onclick = () => {
+                setMobileTopMode('add');
             };
             
             document.getElementById('mobile-mixtapes-btn').onclick = () => {
@@ -5017,6 +5068,7 @@
             
             // Update icon active states
             document.getElementById('mobile-home-btn').classList.toggle('active', mode === 'home');
+            document.getElementById('mobile-add-btn').classList.toggle('active', mode === 'add');
             document.getElementById('mobile-mixtapes-btn').classList.toggle('active', mode === 'mixtapes');
             document.getElementById('mobile-collab-btn').classList.toggle('active', mode === 'collab');
             
@@ -5029,11 +5081,38 @@
             
             if (mobileTopMode === 'home') {
                 contentEl.innerHTML = '';
+            } else if (mobileTopMode === 'add') {
+                contentEl.innerHTML = '<input type="text" class="mobile-top-paste" id="mobile-paste-input" placeholder="Paste your friends\' mixtapes">';
+                const pasteInput = document.getElementById('mobile-paste-input');
+                pasteInput.addEventListener('input', () => {
+                    const str = pasteInput.value.trim();
+                    if (!str) return;
+                    
+                    const data = parseMixtapeString(str);
+                    if (data) {
+                        // Add with metadata - routes to Collaborate since it has a name
+                        mixtapes.push({
+                            name: data.name,
+                            title: data.title || '',
+                            playlists: data.playlists,
+                            added: new Date().toISOString(),
+                            starred: false
+                        });
+                        saveMixtapes();
+                        renderMixtapesList();
+                        renderSidebarMixtapes();
+                        pasteInput.value = '';
+                        const label = data.title ? `${data.name}: ${data.title}` : data.name;
+                        showModal('Added ' + label + '!');
+                        // Switch to collab view to show the new mixtape
+                        setMobileTopMode('collab');
+                    }
+                });
             } else if (mobileTopMode === 'mixtapes') {
                 // Show curated mixtapes (ones with template, no name)
                 const curated = mixtapes.filter(m => m.template && !m.name);
                 if (curated.length === 0) {
-                    contentEl.innerHTML = '<span class="mobile-top-placeholder">Save mixtapes here</span>';
+                    contentEl.innerHTML = '<span class="mobile-top-placeholder">Saved mixtapes here</span>';
                 } else {
                     contentEl.innerHTML = curated.map((m, i) => {
                         const idx = mixtapes.indexOf(m);
