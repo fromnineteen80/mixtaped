@@ -2535,21 +2535,23 @@
             right: 0;
             background: var(--card);
             display: flex !important;
-            align-items: center;
-            justify-content: space-evenly;
-            height: 48px;
-            padding-bottom: env(safe-area-inset-bottom, 0px);
-            box-sizing: content-box;
+            flex-direction: column;
             z-index: 200;
             box-shadow: 0 -1px 3px rgba(0,0,0,0.12);
         }
         
         body.mobile-phone .mobile-bottom-tray-inner {
-            display: contents;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            height: 48px;
+            width: 100%;
         }
         
         body.mobile-phone .mobile-bottom-tray-safe {
-            display: none;
+            height: env(safe-area-inset-bottom, 0px);
+            max-height: 34px; /* Cap the safe area - iPhone home indicator is ~34px */
+            background: var(--card);
         }
         
         body.mobile-phone[data-theme="dark"] .mobile-bottom-tray {
@@ -2639,7 +2641,7 @@
         /* Adjust app layout for mobile phone */
         body.mobile-phone .app {
             padding-top: calc(48px + var(--safe-t)) !important;
-            padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px)) !important;
+            padding-bottom: calc(48px + min(env(safe-area-inset-bottom, 0px), 34px)) !important;
         }
         
         body.mobile-phone .wrapper {
