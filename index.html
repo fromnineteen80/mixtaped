@@ -2145,10 +2145,14 @@
         }
         
         /* Show mobile elements only on mobile phones */
-        body.mobile-phone .mobile-header,
         body.mobile-phone .mobile-top-tray,
         body.mobile-phone .mobile-bottom-tray {
             display: flex !important;
+        }
+        
+        /* Hide mobile header - music note icon serves as logo */
+        body.mobile-phone .mobile-header {
+            display: none !important;
         }
         
         body.mobile-phone .mobile-more-menu.open {
@@ -2165,32 +2169,10 @@
             display: none !important;
         }
         
-        /* Mobile Header */
-        body.mobile-phone .mobile-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: calc(32px + var(--safe-t));
-            padding-top: var(--safe-t);
-            background: var(--card);
-            align-items: center;
-            justify-content: center;
-            z-index: 201;
-        }
-        
-        .mobile-header-title {
-            font-size: 15px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            color: var(--text2);
-        }
-        
-        /* Mobile Top Tray */
+        /* Mobile Top Tray - positioned below dynamic island */
         body.mobile-phone .mobile-top-tray {
             position: fixed;
-            top: calc(32px + var(--safe-t));
+            top: var(--safe-t);
             left: 0;
             right: 0;
             height: 48px;
@@ -2388,7 +2370,7 @@
         
         /* Adjust app layout for mobile phone */
         body.mobile-phone .app {
-            padding-top: calc(32px + 48px + var(--safe-t)) !important;
+            padding-top: calc(48px + var(--safe-t)) !important;
             padding-bottom: calc(56px + var(--safe-b)) !important;
         }
         
