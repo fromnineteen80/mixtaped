@@ -13,12 +13,12 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200..500,0,0&icon_names=add,check,content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,format_paint,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200..500,0,0&icon_names=add,check,close,content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,format_paint,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2,widgets">
     
     <style>
         /* ============================================
            MIXTAPED - Spotify Playlist Collector PWA
-           © 2025 fromnineteen80. All rights reserved.
+           Â© 2025 fromnineteen80. All rights reserved.
            ============================================ */
 
         /* --------------------------------------------
@@ -2550,6 +2550,14 @@
             display: none;
         }
         
+        /* iOS Safari PWA safe area - 24px bottom padding */
+        body.mobile-phone.ios-pwa .mobile-bottom-tray-safe {
+            display: block;
+            height: 24px;
+            width: 100%;
+            background: var(--card);
+        }
+        
         body.mobile-phone[data-theme="dark"] .mobile-bottom-tray {
             box-shadow: 0 -1px 3px rgba(0,0,0,0.25);
         }
@@ -2599,7 +2607,7 @@
         .mobile-more-item {
             display: block;
             width: 100%;
-            padding: 12px 16px;
+            padding: 8px 16px;
             text-align: left;
             font-size: var(--font-menu);
             font-family: inherit;
@@ -2679,6 +2687,234 @@
             bottom: 0;
             left: 0;
             right: 0;
+        }
+        
+        /* --------------------------------------------
+           WIDGET PAGE STYLES
+           -------------------------------------------- */
+        .widget-step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .widget-step-num {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        [data-theme="dark"] .widget-step-num {
+            background: var(--text);
+            color: var(--bg);
+        }
+        .widget-step-content {
+            flex: 1;
+        }
+        .widget-step-title {
+            font-size: var(--font-card);
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 6px;
+        }
+        .widget-step-desc {
+            font-size: var(--font-card);
+            color: var(--text2);
+            line-height: var(--line-height);
+        }
+        .widget-step-desc a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .widget-step-desc a:active {
+            opacity: 0.6;
+        }
+        
+        .widget-sizes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+        @media (max-width: 500px) {
+            .widget-sizes {
+                grid-template-columns: 1fr;
+            }
+        }
+        .widget-size-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        .widget-size-icon {
+            font-size: 32px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .widget-size-name {
+            font-size: var(--font-card);
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 4px;
+        }
+        .widget-size-desc {
+            font-size: var(--font-small);
+            color: var(--text3);
+        }
+        
+        .widget-code-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px 20px;
+            font-size: var(--font-button);
+            font-family: inherit;
+            font-weight: 500;
+            color: #fff;
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            margin: 24px 0;
+        }
+        .widget-code-btn:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+        .widget-code-btn .material-symbols-outlined {
+            font-size: 20px;
+        }
+        [data-theme="dark"] .widget-code-btn {
+            background: var(--text);
+            color: var(--bg);
+        }
+        
+        .widget-tip {
+            background: var(--card);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 24px;
+            box-shadow: var(--shadow);
+        }
+        .widget-tip-title {
+            font-size: var(--font-card);
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .widget-tip-title .material-symbols-outlined {
+            font-size: 18px;
+            color: var(--accent);
+        }
+        .widget-tip-text {
+            font-size: var(--font-card);
+            color: var(--text2);
+            line-height: var(--line-height);
+        }
+        
+        /* Code Modal */
+        .code-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .code-modal-overlay.open {
+            display: flex;
+        }
+        .code-modal {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 600px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .code-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--input);
+            flex-shrink: 0;
+        }
+        .code-modal-title {
+            font-size: var(--font-card);
+            font-weight: 600;
+            color: var(--text2);
+        }
+        .code-modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .code-modal-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-xs);
+        }
+        .code-modal-btn:hover {
+            background: var(--input);
+        }
+        .code-modal-btn:active {
+            opacity: 0.7;
+        }
+        .code-modal-btn .material-symbols-outlined {
+            font-size: 20px;
+        }
+        .code-modal-btn.copied {
+            color: var(--accent);
+        }
+        .code-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+        }
+        .code-modal-code {
+            font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            color: var(--text2);
+            white-space: pre;
+            padding: 16px 20px;
+            margin: 0;
+            overflow-x: auto;
+        }
+        .code-modal-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--input);
+            flex-shrink: 0;
+        }
+        .code-modal-hint {
+            font-size: var(--font-small);
+            color: var(--text3);
+            text-align: center;
         }
     </style>
 </head>
@@ -2775,14 +3011,14 @@
         <!-- Mobile More Menu -->
         <div class="mobile-more-menu" id="mobile-more-menu">
             <div class="mobile-more-themes">
-                <div class="mobile-more-label">Theme</div>
                 <div class="mobile-themes" id="mobile-themes"></div>
             </div>
             <div class="mobile-more-divider"></div>
             <a class="mobile-more-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank">Donate</a>
-            <a class="mobile-more-item" href="/cdn-cgi/l/email-protection#86e5e9eaefe8c6e5e9eaefe8ebe7ffe8e7f4e2a8e8e3f2b9f5f3e4ece3e5f2bbcbcfded2c7d6c3c2e3f4f6d7f3e3f5f2efe9e8">Email</a>
+            <a class="mobile-more-item" href="/cdn-cgi/l/email-protection#86e5e9eaefe8c6e5e9eaefe8ebe7ffe8e7f4e2a8e8e3f2b9f5f3e4ece3e5f2bbcbcfded2c7d6c3c2e3f4e2a8e8e3f2">Email</a>
             <button class="mobile-more-item" id="mobile-about-btn">About</button>
             <button class="mobile-more-item" id="mobile-help-btn">Help</button>
+            <button class="mobile-more-item" id="mobile-widget-btn">iOS Widget</button>
         </div>
         
         <!-- Sidebar for larger screens -->
@@ -2845,6 +3081,7 @@
                         <button class="menu-item" id="share-btn">Share</button>
                         <button class="menu-item" id="recover-btn">Recover</button>
                         <button class="menu-item" id="about-btn">About</button>
+                        <button class="menu-item" id="widget-btn">iOS Widget</button>
                         <div class="menu-divider"></div>
                         <button class="menu-label menu-collapse" id="menu-mixtapes-toggle">Mixtapes<svg class="menu-collapse-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
                         <div class="mixtapes-list open" id="mixtapes-list"></div>
@@ -3225,6 +3462,129 @@
                     </div>
                 </div>
 
+                <!-- Widget View -->
+                <div class="view" id="widget">
+                    <div class="section">
+                        <div class="about-hero">
+                            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1200&auto=format&fit=crop" alt="iPhone on desk">
+                            <div class="about-hero-overlay">
+                                <h1 class="about-hero-title">Widget For &nbsp;<span>MIXTAPED</span></h1>
+                            </div>
+                        </div>
+                        
+                        <div class="about-intro">
+                            <p>Put your <span class="brand">Mixtaped</span> playlists right on your iPhone home screen. Tap any playlist artwork to open it directly in Spotify. No digging through apps or menus. Your music, one tap away.</p>
+                        </div>
+                        
+                        <div class="widget-sizes">
+                            <div class="widget-size-card">
+                                <div class="widget-size-icon">▪️</div>
+                                <div class="widget-size-name">Small</div>
+                                <div class="widget-size-desc">1 playlist with full artwork</div>
+                            </div>
+                            <div class="widget-size-card">
+                                <div class="widget-size-icon">▬</div>
+                                <div class="widget-size-name">Medium</div>
+                                <div class="widget-size-desc">4 playlists in a row</div>
+                            </div>
+                            <div class="widget-size-card">
+                                <div class="widget-size-icon">▢</div>
+                                <div class="widget-size-name">Large</div>
+                                <div class="widget-size-desc">6 or 9 playlists in a grid</div>
+                            </div>
+                        </div>
+                        
+                        <div class="about-divider"></div>
+                        
+                        <div class="about-section-title">How to Set Up Your Widget</div>
+                        
+                        <div class="widget-step">
+                            <div class="widget-step-num">1</div>
+                            <div class="widget-step-content">
+                                <div class="widget-step-title">Download Scriptable</div>
+                                <div class="widget-step-desc">Install the free <a href="https://apps.apple.com/app/scriptable/id1405459188" target="_blank">Scriptable app</a> from the App Store. This app lets you run custom JavaScript widgets on your iPhone home screen.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="widget-step">
+                            <div class="widget-step-num">2</div>
+                            <div class="widget-step-content">
+                                <div class="widget-step-title">Copy the Widget Code</div>
+                                <div class="widget-step-desc">Tap the button below to open the widget code. Tap the copy icon in the top right corner to copy all the code to your clipboard.</div>
+                            </div>
+                        </div>
+                        
+                        <button class="widget-code-btn" id="show-widget-code-btn">
+                            <span class="material-symbols-outlined">content_copy</span>
+                            View Widget Code
+                        </button>
+                        
+                        <div class="widget-step">
+                            <div class="widget-step-num">3</div>
+                            <div class="widget-step-content">
+                                <div class="widget-step-title">Create a New Script in Scriptable</div>
+                                <div class="widget-step-desc">Open Scriptable. Tap the <strong>+</strong> button in the top right to create a new script. Tap in the editor area and paste the code you copied. Tap <strong>Done</strong> to save. You can rename the script to "Mixtaped" by tapping the title at the top.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="widget-step">
+                            <div class="widget-step-num">4</div>
+                            <div class="widget-step-content">
+                                <div class="widget-step-title">Get Your Mixtaped Share Code</div>
+                                <div class="widget-step-desc">In <span class="brand">Mixtaped</span>, go to <strong>Share</strong>, enter your name and a title, then tap <strong>Generate</strong>. Copy the <strong>Backup Code</strong> (the long string of characters). This contains all your playlist data.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="widget-step">
+                            <div class="widget-step-num">5</div>
+                            <div class="widget-step-content">
+                                <div class="widget-step-title">Add the Widget to Your Home Screen</div>
+                                <div class="widget-step-desc">Long press on your home screen and tap the <strong>+</strong> button. Search for <strong>Scriptable</strong> and choose your preferred widget size (small, medium, or large). Tap <strong>Add Widget</strong>.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="widget-step">
+                            <div class="widget-step-num">6</div>
+                            <div class="widget-step-content">
+                                <div class="widget-step-title">Configure the Widget</div>
+                                <div class="widget-step-desc">Long press on the new widget and tap <strong>Edit Widget</strong>. Set <strong>Script</strong> to your Mixtaped script. In the <strong>Parameter</strong> field, paste your Mixtaped share code (the backup code from step 4). Tap outside the menu to save.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="widget-tip">
+                            <div class="widget-tip-title">
+                                <span class="material-symbols-outlined">info</span>
+                                Want a Different Mixtape?
+                            </div>
+                            <div class="widget-tip-text">You can use any mixtape share code in the widget parameter. Use your own mixtape, a friend's mixtape, or a collaboration. Each widget can show a different mixtape. Just paste a different share code in each widget's parameter.</div>
+                        </div>
+                        
+                        <div class="about-divider"></div>
+                        
+                        <div class="about-section-title">Advanced Options</div>
+                        
+                        <div class="help-section">
+                            <div class="help-q">Change the layout for large widgets</div>
+                            <p class="help-a">By default, large widgets show 6 playlists (2 rows of 3). To show 9 playlists (3 rows of 3), use a JSON parameter instead of the plain share code:</p>
+                            <p class="help-a" style="margin-top: 8px; font-family: monospace; font-size: 11px; background: var(--input); padding: 8px; border-radius: 6px;">{"code":"YOUR_SHARE_CODE","layout":"3x3"}</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-q">Switch between glass and solid backgrounds</div>
+                            <p class="help-a">The widget uses a semi-transparent "glass" style by default that works well with iOS 18. For a solid dark background, add the style option:</p>
+                            <p class="help-a" style="margin-top: 8px; font-family: monospace; font-size: 11px; background: var(--input); padding: 8px; border-radius: 6px;">{"code":"YOUR_SHARE_CODE","style":"solid"}</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <div class="help-q" style="font-size: 13px;">Widget not updating?</div>
+                            <p class="help-a" style="font-size: 13px;">iOS controls when widgets refresh. To force an update, open Scriptable and run the script manually, or remove and re-add the widget. If playlist images aren't loading, check that you have an internet connection and that the playlists are public on Spotify.</p>
+                        </div>
+                    </div>
+                    <div class="share-back">
+                        <button class="txt-btn" id="widget-back-btn">Back</button>
+                    </div>
+                </div>
+
                 <!-- Friend's Mixtape View -->
                 <div class="view" id="friend">
                     <div class="share-toolbar" id="friend-header-toolbar">
@@ -3286,6 +3646,29 @@
                         Donate to the developer <a href="https://buymeacoffee.com/fromnineteen80" target="_blank" style="color: #1DB954; text-decoration: none;">here</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Widget Code Modal -->
+    <div class="code-modal-overlay" id="code-modal-overlay">
+        <div class="code-modal">
+            <div class="code-modal-header">
+                <div class="code-modal-title">Mixtaped Widget Code</div>
+                <div class="code-modal-actions">
+                    <button class="code-modal-btn" id="copy-widget-code-btn" title="Copy code">
+                        <span class="material-symbols-outlined">content_copy</span>
+                    </button>
+                    <button class="code-modal-btn" id="close-code-modal-btn" title="Close">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+            <div class="code-modal-body">
+                <pre class="code-modal-code" id="widget-code-display"></pre>
+            </div>
+            <div class="code-modal-footer">
+                <div class="code-modal-hint">Tap the copy icon above, then paste into Scriptable</div>
             </div>
         </div>
     </div>
@@ -3668,8 +4051,8 @@
                         <div class="pl-url-row">
                             <input class="pl-input url" type="url" placeholder="Add Spotify playlist URL" value="${esc(it.url)}" data-i="${i}" data-f="url" autocapitalize="off" autocorrect="off">
                             ${showHandle ? `<div class="pl-reorder">
-                                <button class="pl-move-up" data-i="${i}">▲</button>
-                                <button class="pl-move-down" data-i="${i}">▼</button>
+                                <button class="pl-move-up" data-i="${i}">â–²</button>
+                                <button class="pl-move-down" data-i="${i}">â–¼</button>
                             </div>` : ''}
                         </div>
                         <div class="pl-title">${esc(it.title) || 'Name will fill when you add playlist URL above'}</div>
@@ -4184,13 +4567,13 @@
                 const date = new Date(m.added).toLocaleDateString();
                 return `
                     <div class="collected-item">
-                        <div class="collected-star ${m.starred ? 'starred' : ''}" data-idx="${idx}">★</div>
+                        <div class="collected-star ${m.starred ? 'starred' : ''}" data-idx="${idx}">â˜…</div>
                         <div class="collected-info" data-idx="${idx}">
                             <div class="collected-title">${esc(m.title)}</div>
                             <div class="collected-meta">Shared: ${date}</div>
                             <div class="collected-meta">From: ${esc(m.name)}</div>
                         </div>
-                        <div class="collected-delete" data-idx="${idx}">✕</div>
+                        <div class="collected-delete" data-idx="${idx}">âœ•</div>
                     </div>
                 `;
             }).join('');
@@ -4240,6 +4623,303 @@
         function showHelp() {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
             document.getElementById('help').classList.add('on');
+        }
+        
+        function showWidget() {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+            document.getElementById('widget').classList.add('on');
+        }
+        
+        // Widget code for Scriptable
+        const WIDGET_CODE = `// Mixtaped Widget for Scriptable (iOS)
+// Put your Spotify playlists on your home screen
+// Paste your Mixtaped share code as the widget Parameter
+
+const CONFIG = {
+    cornerRadius: 14,
+    spacing: 8,
+    padding: 12,
+    glassBackground: new Color("#FFFFFF", 0.15),
+    glassBorder: new Color("#FFFFFF", 0.3),
+    solidBackground: new Color("#1A1A1A", 0.95),
+    textColor: new Color("#FFFFFF"),
+    textColorSecondary: new Color("#FFFFFF", 0.7),
+    accentColor: new Color("#1DB954"),
+    placeholderColor: new Color("#2A2A2A"),
+    largeLayout: "2x3",
+    style: "glass",
+    cacheHours: 2,
+};
+
+function parseMixtapeCode(str) {
+    if (!str) return null;
+    try {
+        if (str.includes("?m=")) {
+            const match = str.match(/\\?m=([^&]+)/);
+            if (match) str = decodeURIComponent(match[1]);
+        }
+        const decoded = atob(str);
+        const data = JSON.parse(decodeURIComponent(decoded));
+        return {
+            name: data.n || "Mixtape",
+            title: data.t || "",
+            playlists: (data.p || []).map(p => ({
+                url: p.u, title: p.t, img: p.i, desc: p.d
+            }))
+        };
+    } catch (e) { return null; }
+}
+
+function getSpotifyId(url) {
+    if (!url) return null;
+    try {
+        const match = url.match(/playlist\\/([a-zA-Z0-9]+)/);
+        return match ? match[1] : null;
+    } catch (e) { return null; }
+}
+
+async function loadImage(url) {
+    if (!url) return null;
+    try {
+        const fm = FileManager.local();
+        const cacheDir = fm.joinPath(fm.cacheDirectory(), "mixtaped");
+        if (!fm.fileExists(cacheDir)) fm.createDirectory(cacheDir);
+        const hash = url.split("").reduce((a, b) => {
+            a = ((a << 5) - a) + b.charCodeAt(0);
+            return a & a;
+        }, 0);
+        const cachePath = fm.joinPath(cacheDir, \`img_\${Math.abs(hash)}.jpg\`);
+        if (fm.fileExists(cachePath)) {
+            const modified = fm.modificationDate(cachePath);
+            const age = (Date.now() - modified.getTime()) / (1000 * 60 * 60);
+            if (age < CONFIG.cacheHours) return fm.readImage(cachePath);
+        }
+        const req = new Request(url);
+        const img = await req.loadImage();
+        fm.writeImage(cachePath, img);
+        return img;
+    } catch (e) { return null; }
+}
+
+function createPlaceholder(size) {
+    const ctx = new DrawContext();
+    ctx.size = new Size(size, size);
+    ctx.opaque = false;
+    ctx.respectScreenScale = true;
+    ctx.setFillColor(CONFIG.placeholderColor);
+    ctx.fillRect(new Rect(0, 0, size, size));
+    ctx.setFillColor(new Color("#555555"));
+    const noteSize = size * 0.3;
+    const x = (size - noteSize) / 2;
+    const y = (size - noteSize) / 2;
+    ctx.fillEllipse(new Rect(x, y + noteSize * 0.6, noteSize * 0.4, noteSize * 0.4));
+    ctx.fillRect(new Rect(x + noteSize * 0.3, y, noteSize * 0.1, noteSize * 0.7));
+    return ctx.getImage();
+}
+
+async function addPlaylistImage(stack, playlist, size) {
+    let img = await loadImage(playlist.img);
+    if (!img) img = createPlaceholder(size);
+    const imgWidget = stack.addImage(img);
+    imgWidget.imageSize = new Size(size, size);
+    imgWidget.cornerRadius = CONFIG.cornerRadius;
+    imgWidget.contentMode = "filling";
+    return imgWidget;
+}
+
+async function createSmallWidget(playlists, style) {
+    const widget = new ListWidget();
+    widget.backgroundColor = style === "glass" ? CONFIG.glassBackground : CONFIG.solidBackground;
+    widget.setPadding(CONFIG.padding, CONFIG.padding, CONFIG.padding, CONFIG.padding);
+    if (playlists.length === 0) {
+        const text = widget.addText("No playlists");
+        text.textColor = CONFIG.textColor;
+        text.font = Font.mediumSystemFont(14);
+        return widget;
+    }
+    const playlist = playlists[0];
+    const id = getSpotifyId(playlist.url);
+    if (id) widget.url = \`spotify:playlist:\${id}\`;
+    const img = await loadImage(playlist.img) || createPlaceholder(200);
+    widget.backgroundImage = img;
+    const gradient = new LinearGradient();
+    gradient.locations = [0.4, 1.0];
+    gradient.colors = [new Color("#000000", 0), new Color("#000000", 0.85)];
+    widget.backgroundGradient = gradient;
+    widget.addSpacer();
+    const title = widget.addText(playlist.title || "Playlist");
+    title.textColor = CONFIG.textColor;
+    title.font = Font.boldSystemFont(14);
+    title.lineLimit = 2;
+    title.shadowColor = new Color("#000000", 0.5);
+    title.shadowRadius = 2;
+    title.shadowOffset = new Point(0, 1);
+    return widget;
+}
+
+async function createMediumWidget(playlists, style) {
+    const widget = new ListWidget();
+    widget.backgroundColor = style === "glass" ? CONFIG.glassBackground : CONFIG.solidBackground;
+    widget.setPadding(CONFIG.padding, CONFIG.padding, CONFIG.padding, CONFIG.padding);
+    const displayCount = Math.min(4, playlists.length);
+    if (displayCount === 0) {
+        const text = widget.addText("No playlists found");
+        text.textColor = CONFIG.textColor;
+        text.font = Font.mediumSystemFont(14);
+        return widget;
+    }
+    const availableWidth = 305;
+    const imgSize = Math.floor((availableWidth - (CONFIG.spacing * (displayCount - 1))) / displayCount);
+    const row = widget.addStack();
+    row.layoutHorizontally();
+    row.centerAlignContent();
+    row.spacing = CONFIG.spacing;
+    for (let i = 0; i < displayCount; i++) {
+        const playlist = playlists[i];
+        const id = getSpotifyId(playlist.url);
+        const itemStack = row.addStack();
+        itemStack.layoutVertically();
+        itemStack.size = new Size(imgSize, imgSize + 22);
+        if (id) itemStack.url = \`spotify:playlist:\${id}\`;
+        const imgContainer = itemStack.addStack();
+        imgContainer.size = new Size(imgSize, imgSize);
+        imgContainer.cornerRadius = CONFIG.cornerRadius;
+        if (style === "glass") {
+            imgContainer.borderWidth = 1;
+            imgContainer.borderColor = CONFIG.glassBorder;
+        }
+        await addPlaylistImage(imgContainer, playlist, imgSize);
+        itemStack.addSpacer(4);
+        const title = itemStack.addText(playlist.title || "Playlist");
+        title.textColor = CONFIG.textColor;
+        title.font = Font.mediumSystemFont(10);
+        title.lineLimit = 1;
+        title.centerAlignText();
+    }
+    return widget;
+}
+
+async function createLargeWidget(playlists, layout, style) {
+    const widget = new ListWidget();
+    widget.backgroundColor = style === "glass" ? CONFIG.glassBackground : CONFIG.solidBackground;
+    widget.setPadding(CONFIG.padding, CONFIG.padding, CONFIG.padding, CONFIG.padding);
+    const rows = layout === "3x3" ? 3 : 2;
+    const cols = 3;
+    const totalCount = rows * cols;
+    const displayCount = Math.min(totalCount, playlists.length);
+    if (displayCount === 0) {
+        const text = widget.addText("No playlists found");
+        text.textColor = CONFIG.textColor;
+        text.font = Font.mediumSystemFont(14);
+        return widget;
+    }
+    const availableWidth = 305;
+    const imgSize = Math.floor((availableWidth - (CONFIG.spacing * (cols - 1))) / cols);
+    const mainStack = widget.addStack();
+    mainStack.layoutVertically();
+    mainStack.spacing = CONFIG.spacing + 2;
+    let index = 0;
+    for (let r = 0; r < rows && index < displayCount; r++) {
+        const rowStack = mainStack.addStack();
+        rowStack.layoutHorizontally();
+        rowStack.spacing = CONFIG.spacing;
+        for (let c = 0; c < cols && index < displayCount; c++) {
+            const playlist = playlists[index];
+            const id = getSpotifyId(playlist.url);
+            const itemStack = rowStack.addStack();
+            itemStack.layoutVertically();
+            itemStack.size = new Size(imgSize, imgSize + 20);
+            if (id) itemStack.url = \`spotify:playlist:\${id}\`;
+            const imgContainer = itemStack.addStack();
+            imgContainer.size = new Size(imgSize, imgSize);
+            imgContainer.cornerRadius = CONFIG.cornerRadius;
+            if (style === "glass") {
+                imgContainer.borderWidth = 1;
+                imgContainer.borderColor = CONFIG.glassBorder;
+            }
+            await addPlaylistImage(imgContainer, playlist, imgSize);
+            itemStack.addSpacer(3);
+            const title = itemStack.addText(playlist.title || "Playlist");
+            title.textColor = CONFIG.textColor;
+            title.font = Font.mediumSystemFont(9);
+            title.lineLimit = 1;
+            title.centerAlignText();
+            index++;
+        }
+    }
+    return widget;
+}
+
+async function createWidget() {
+    const widgetSize = config.widgetFamily || "medium";
+    let shareCode = args.widgetParameter || "";
+    let layout = CONFIG.largeLayout;
+    let style = CONFIG.style;
+    if (shareCode.startsWith("{")) {
+        try {
+            const params = JSON.parse(shareCode);
+            shareCode = params.code || "";
+            layout = params.layout || CONFIG.largeLayout;
+            style = params.style || CONFIG.style;
+        } catch (e) {}
+    }
+    const mixtape = parseMixtapeCode(shareCode);
+    if (!mixtape || mixtape.playlists.length === 0) {
+        const widget = new ListWidget();
+        widget.backgroundColor = style === "glass" ? CONFIG.glassBackground : CONFIG.solidBackground;
+        widget.setPadding(16, 16, 16, 16);
+        const title = widget.addText("MIXTAPED");
+        title.textColor = CONFIG.accentColor;
+        title.font = Font.boldSystemFont(18);
+        widget.addSpacer(8);
+        const instructions = widget.addText("Edit widget and paste your Mixtaped share code as the Parameter");
+        instructions.textColor = CONFIG.textColor;
+        instructions.font = Font.systemFont(12);
+        widget.addSpacer(8);
+        const hint = widget.addText("Get your code: Share > Generate");
+        hint.textColor = CONFIG.textColorSecondary;
+        hint.font = Font.systemFont(11);
+        return widget;
+    }
+    switch (widgetSize) {
+        case "small": return await createSmallWidget(mixtape.playlists, style);
+        case "medium": return await createMediumWidget(mixtape.playlists, style);
+        case "large":
+        case "extraLarge": return await createLargeWidget(mixtape.playlists, layout, style);
+        default: return await createMediumWidget(mixtape.playlists, style);
+    }
+}
+
+const widget = await createWidget();
+if (config.runsInWidget) {
+    Script.setWidget(widget);
+} else {
+    await widget.presentMedium();
+}
+Script.complete();`;
+        
+        function showCodeModal() {
+            document.getElementById('widget-code-display').textContent = WIDGET_CODE;
+            document.getElementById('code-modal-overlay').classList.add('open');
+        }
+        
+        function hideCodeModal() {
+            document.getElementById('code-modal-overlay').classList.remove('open');
+        }
+        
+        async function copyWidgetCode() {
+            try {
+                await navigator.clipboard.writeText(WIDGET_CODE);
+                const btn = document.getElementById('copy-widget-code-btn');
+                btn.classList.add('copied');
+                btn.innerHTML = '<span class="material-symbols-outlined">check</span>';
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '<span class="material-symbols-outlined">content_copy</span>';
+                }, 2000);
+            } catch (e) {
+                alert('Could not copy to clipboard');
+            }
         }
         
         let currentFriendMixtape = null;
@@ -4452,6 +5132,7 @@
             document.getElementById('recover-btn').onclick = () => { menu.classList.remove('open'); showRecover(); };
             document.getElementById('about-btn').onclick = () => { menu.classList.remove('open'); showAbout(); };
             document.getElementById('menu-help-btn').onclick = () => { menu.classList.remove('open'); showHelp(); };
+            document.getElementById('widget-btn').onclick = () => { menu.classList.remove('open'); showWidget(); };
             
             // Menu collapsible sections
             document.getElementById('menu-mixtapes-toggle').onclick = (e) => {
@@ -4562,20 +5243,20 @@
                         try {
                             await navigator.clipboard.writeText(data.shorturl);
                             document.querySelector('.share-success').textContent = 'Short URL copied to clipboard!';
-                            document.getElementById('copy-short-btn').innerHTML = '✓ Short URL Copied';
+                            document.getElementById('copy-short-btn').innerHTML = 'âœ“ Short URL Copied';
                             document.getElementById('copy-short-btn').classList.add('completed');
                         } catch(e) {}
                         
                         document.getElementById('copy-short-btn').onclick = () => {
                             navigator.clipboard.writeText(data.shorturl).then(() => {
-                                document.getElementById('copy-short-btn').innerHTML = '✓ Short URL Copied';
+                                document.getElementById('copy-short-btn').innerHTML = 'âœ“ Short URL Copied';
                                 document.getElementById('copy-short-btn').classList.add('completed');
                             });
                         };
                         
                         document.getElementById('copy-btn').onclick = () => {
                             navigator.clipboard.writeText(str).then(() => {
-                                document.getElementById('copy-btn').innerHTML = '✓ Code Copied';
+                                document.getElementById('copy-btn').innerHTML = 'âœ“ Code Copied';
                                 document.getElementById('copy-btn').classList.add('completed');
                             });
                         };
@@ -4598,7 +5279,7 @@
                     
                     document.getElementById('copy-btn').onclick = () => {
                         navigator.clipboard.writeText(str).then(() => {
-                            document.getElementById('copy-btn').innerHTML = '✓ Code Copied';
+                            document.getElementById('copy-btn').innerHTML = 'âœ“ Code Copied';
                             document.getElementById('copy-btn').classList.add('completed');
                         });
                     };
@@ -4781,7 +5462,7 @@
                         renderSidebarMixtapes();
                         
                         document.getElementById('recovery-string').value = '';
-                        document.getElementById('recovery-btn').textContent = '✓ Everything Restored';
+                        document.getElementById('recovery-btn').textContent = 'âœ“ Everything Restored';
                         document.getElementById('recovery-btn').classList.add('completed');
                         setTimeout(() => showMain(), 2000);
                     }
@@ -4803,7 +5484,7 @@
                     }));
                     save();
                     document.getElementById('recovery-string').value = '';
-                    document.getElementById('recovery-btn').textContent = '✓ Mixtape Restored';
+                    document.getElementById('recovery-btn').textContent = 'âœ“ Mixtape Restored';
                     document.getElementById('recovery-btn').classList.add('completed');
                     setTimeout(() => showMain(), 2000);
                 }
@@ -4851,7 +5532,7 @@
                 
                 document.getElementById('copy-backup-btn').onclick = () => {
                     navigator.clipboard.writeText(str).then(() => {
-                        document.getElementById('copy-backup-btn').innerHTML = '✓ Code Copied';
+                        document.getElementById('copy-backup-btn').innerHTML = 'âœ“ Code Copied';
                         document.getElementById('copy-backup-btn').classList.add('completed');
                     });
                 };
@@ -4862,6 +5543,15 @@
             document.getElementById('recover-back-btn').onclick = showMain;
             document.getElementById('about-back-btn').onclick = showMain;
             document.getElementById('help-back-btn').onclick = showMain;
+            document.getElementById('widget-back-btn').onclick = showMain;
+            
+            // Widget code modal handlers
+            document.getElementById('show-widget-code-btn').onclick = showCodeModal;
+            document.getElementById('close-code-modal-btn').onclick = hideCodeModal;
+            document.getElementById('copy-widget-code-btn').onclick = copyWidgetCode;
+            document.getElementById('code-modal-overlay').onclick = (e) => {
+                if (e.target.id === 'code-modal-overlay') hideCodeModal();
+            };
             
             // Collaboration copy handler
             document.getElementById('collab-copy-btn').onclick = async function() {
@@ -4971,14 +5661,14 @@
                             
                             document.getElementById('copy-short-btn').onclick = () => {
                                 navigator.clipboard.writeText(data.shorturl).then(() => {
-                                    document.getElementById('copy-short-btn').innerHTML = '✓ Short URL Copied';
+                                    document.getElementById('copy-short-btn').innerHTML = 'âœ“ Short URL Copied';
                                     document.getElementById('copy-short-btn').classList.add('completed');
                                 });
                             };
                             
                             document.getElementById('copy-btn').onclick = () => {
                                 navigator.clipboard.writeText(str).then(() => {
-                                    document.getElementById('copy-btn').innerHTML = '✓ Code Copied';
+                                    document.getElementById('copy-btn').innerHTML = 'âœ“ Code Copied';
                                     document.getElementById('copy-btn').classList.add('completed');
                                 });
                             };
@@ -4995,7 +5685,7 @@
                             `;
                             document.getElementById('copy-btn').onclick = () => {
                                 navigator.clipboard.writeText(str).then(() => {
-                                    document.getElementById('copy-btn').innerHTML = '✓ Code Copied';
+                                    document.getElementById('copy-btn').innerHTML = 'âœ“ Code Copied';
                                     document.getElementById('copy-btn').classList.add('completed');
                                 });
                             };
@@ -5148,6 +5838,12 @@
                 showAbout();
             };
             
+            document.getElementById('mobile-widget-btn').onclick = () => {
+                closeMobileMoreMenu();
+                updateMobileBottomActive(null);
+                showWidget();
+            };
+            
             // Close more menu when clicking outside
             document.addEventListener('click', () => {
                 closeMobileMoreMenu();
@@ -5290,7 +5986,7 @@
                 banner.className = 'safari-banner';
                 banner.innerHTML = `
                     <span>For the best experience, open in Safari and add to your home screen.</span>
-                    <button class="safari-close">✕</button>
+                    <button class="safari-close">âœ•</button>
                 `;
                 document.body.prepend(banner);
                 banner.querySelector('.safari-close').onclick = () => banner.remove();
@@ -5340,6 +6036,15 @@
                 document.body.classList.add('mobile-phone');
             } else {
                 document.body.classList.remove('mobile-phone');
+            }
+            
+            // Detect iOS Safari PWA (standalone mode)
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isStandalone = window.navigator.standalone === true;
+            if (isIOS && isStandalone) {
+                document.body.classList.add('ios-pwa');
+            } else {
+                document.body.classList.remove('ios-pwa');
             }
         }
 
