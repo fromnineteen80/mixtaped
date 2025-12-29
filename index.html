@@ -2138,6 +2138,120 @@
             transition: opacity 0.15s ease;
         }
         
+        /* Welcome Popup */
+        .welcome-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.3);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        
+        .welcome-overlay.open {
+            display: flex;
+        }
+        
+        .welcome-popup {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.25), 0 4px 12px rgba(0,0,0,0.15);
+            padding: 28px 24px;
+            max-width: 320px;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .welcome-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--text);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .welcome-intro {
+            font-size: var(--font-card);
+            color: var(--text2);
+            line-height: var(--line-height);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .welcome-features {
+            margin-bottom: 24px;
+        }
+        
+        .welcome-feature {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        
+        .welcome-feature:last-child {
+            margin-bottom: 0;
+        }
+        
+        .welcome-feature-icon {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            background: var(--input);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+        }
+        
+        .welcome-feature-icon .material-symbols-outlined {
+            font-size: 18px;
+        }
+        
+        .welcome-feature-text {
+            flex: 1;
+        }
+        
+        .welcome-feature-title {
+            font-size: var(--font-card);
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 2px;
+        }
+        
+        .welcome-feature-desc {
+            font-size: var(--font-small);
+            color: var(--text3);
+            line-height: 1.4;
+        }
+        
+        .welcome-btn {
+            display: block;
+            width: 100%;
+            font-size: var(--font-button);
+            font-family: inherit;
+            font-weight: 600;
+            color: #fff;
+            background: var(--text);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 14px 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        
+        .welcome-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        
         .modal-btn:active {
             opacity: 0.7;
         }
@@ -2437,6 +2551,38 @@
     </style>
 </head>
 <body>
+    <!-- Welcome Popup (first visit only) -->
+    <div class="welcome-overlay" id="welcome-overlay">
+        <div class="welcome-popup">
+            <div class="welcome-title">MIXTAPED</div>
+            <p class="welcome-intro">You build playlists in Spotify. We curate and share a master mixtape of your favorites.</p>
+            <div class="welcome-features">
+                <div class="welcome-feature">
+                    <div class="welcome-feature-icon"><span class="material-symbols-outlined">grid_view</span></div>
+                    <div class="welcome-feature-text">
+                        <div class="welcome-feature-title">Quick Access</div>
+                        <div class="welcome-feature-desc">Your favorite Spotify playlists, one tap away.</div>
+                    </div>
+                </div>
+                <div class="welcome-feature">
+                    <div class="welcome-feature-icon"><span class="material-symbols-outlined">share</span></div>
+                    <div class="welcome-feature-text">
+                        <div class="welcome-feature-title">Share</div>
+                        <div class="welcome-feature-desc">Send your entire collection with a single code.</div>
+                    </div>
+                </div>
+                <div class="welcome-feature">
+                    <div class="welcome-feature-icon"><span class="material-symbols-outlined">person_heart</span></div>
+                    <div class="welcome-feature-text">
+                        <div class="welcome-feature-title">Collaborate</div>
+                        <div class="welcome-feature-desc">Build mixtapes with friends.</div>
+                    </div>
+                </div>
+            </div>
+            <button class="welcome-btn" id="welcome-btn">Get Started</button>
+        </div>
+    </div>
+    
     <!-- Custom Modal -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal">
@@ -4976,6 +5122,23 @@
         }
 
         /* --------------------------------------------
+           WELCOME POPUP (First Visit)
+           -------------------------------------------- */
+        function checkFirstVisit() {
+            const hasVisited = localStorage.getItem('mixtaped_visited');
+            if (!hasVisited) {
+                document.getElementById('welcome-overlay').classList.add('open');
+            }
+        }
+        
+        function dismissWelcome() {
+            document.getElementById('welcome-overlay').classList.remove('open');
+            localStorage.setItem('mixtaped_visited', 'true');
+        }
+        
+        document.getElementById('welcome-btn').onclick = dismissWelcome;
+
+        /* --------------------------------------------
            INITIALIZE APP
            -------------------------------------------- */
         load();
@@ -4984,6 +5147,7 @@
         checkBrowser();
         checkUrlImport();
         updateMobileClass();
+        checkFirstVisit();
         window.addEventListener('resize', updateMobileClass);
     </script>
 </body>
