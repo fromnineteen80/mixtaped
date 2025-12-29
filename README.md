@@ -6,13 +6,22 @@ Remember making mixtapes? Carefully selecting songs, writing out the tracklist, 
 
 ## Features
 
+- **Quick Access** — Your favorite Spotify playlists, one tap away
+- **Share** — Send your entire collection with a single code
+- **Collaborate** — Build mixtapes with friends
 - **Grid & Deep Dive views** — See your playlists as album art tiles or detailed cards with descriptions
-- **One-tap playback** — Opens directly in Spotify
-- **Easy sharing** — Generate a link or code to share your collection
-- **Collect from friends** — Save mixtapes others share with you
+- **Embedded player** — Preview playlists without leaving the app (tablet/desktop)
 - **Works offline** — Install as an app on iOS or Android
 - **No account required** — Data stays on your device
 - **Three themes** — Light, Dark, and Spotify green
+
+## What's New
+
+- **Welcome popup** — First-time visitors see a quick intro to the three key features
+- **Mobile navigation** — Top tray for switching between your mixtapes and collaborations, bottom tray for main actions
+- **Full backup system** — Back up everything: your playlists, curated mixtapes, and collected collaborations
+- **Embedded Spotify player** — Listen to playlists directly in the app on larger screens
+- **Responsive design** — Collapsible sidebar with tooltips on desktop, optimized trays on mobile
 
 ## Setup Instructions
 
@@ -43,6 +52,7 @@ Upload all files to any web hosting service (Vercel, your own server, shared hos
 Once your app is hosted and you have a URL:
 
 ### iPhone (Safari only)
+
 1. Open the URL in **Safari** (not Chrome or other browsers)
 2. Tap the **Share** button (square with arrow pointing up)
 3. Scroll down and tap **"Add to Home Screen"**
@@ -50,13 +60,13 @@ Once your app is hosted and you have a URL:
 5. Open the app from your home screen
 
 ### Android
+
 1. Open the URL in **Chrome**
 2. Tap the **menu** (three dots)
 3. Tap **"Install app"** or **"Add to Home Screen"**
 4. Open the app from your home screen
 
 ## Files Included
-
 ```
 index.html                 The app
 manifest.json              PWA configuration
@@ -75,10 +85,20 @@ Mixtaped uses Spotify's public oEmbed API to fetch playlist titles and artwork. 
 
 All data is stored in your browser's localStorage. Nothing is sent to a server. Your playlists, settings, and collected mixtapes stay on your device.
 
+## Backup Your Data
+
+Go to **Recover** in the menu to create a full backup code. This saves:
+- Your main playlist collection
+- Curated mixtapes (Road Trip, Workout, etc.)
+- Collected mixtapes from friends
+- Collaboration history
+
+Save this code somewhere safe (Notes app, email, notepad.cc). You can restore everything from this single code.
+
 ## Limitations
 
 - **Playlists must be public** — Private playlists can't be loaded via the oEmbed API
-- **Local storage only** — Clearing browser data resets the app (always save your share code as backup)
+- **Local storage only** — Clearing browser data resets the app. Go to Recover to create a backup code and save it somewhere safe like your Notes app, email, or [notepad.cc](https://notepad.cc)
 - **Short URLs** — The is.gd URL shortener may occasionally be unavailable
 
 ## Credits
