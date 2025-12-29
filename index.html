@@ -241,6 +241,7 @@
             box-shadow: var(--shadow), 0 4px 20px rgba(0,0,0,0.15);
             padding: 4px 0;
             min-width: 140px;
+            max-width: 220px;
             z-index: 100;
         }
         .dropdown-content.open { display: block; }
@@ -267,15 +268,78 @@
         }
         
         .menu-label {
-            padding: 4px 16px 2px;
-            font-size: var(--font-small);
+            padding: 6px 16px;
+            font-size: var(--font-menu);
             color: var(--text2);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        }
+        
+        .menu-collapse {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        .menu-collapse:active {
+            background: var(--input);
+        }
+        
+        .menu-collapse-arrow {
+            transition: transform 0.2s ease;
+        }
+        
+        .menu-collapse.open .menu-collapse-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .mixtapes-list {
+            display: none;
+        }
+        
+        .mixtapes-list.open {
+            display: block;
+        }
+        
+        .menu-footer {
+            display: flex;
+            gap: 8px;
+            padding: 6px 16px 8px;
+        }
+        
+        .menu-footer-btn {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--input);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            color: var(--text2);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .menu-footer-btn .material-symbols-outlined {
+            font-size: 16px;
+        }
+        
+        .menu-footer-btn:active {
+            opacity: 0.5;
         }
         
         .dropdown-content .themes {
-            padding: 2px 16px 6px;
+            justify-content: center;
+            padding: 10px 16px 6px;
+        }
+        
+        .dropdown-content .menu-footer {
+            justify-content: center;
+            padding: 6px 16px 10px;
         }
 
         /* Theme buttons */
@@ -1342,6 +1406,23 @@
             font-size: var(--font-small);
             color: var(--text3);
             font-style: italic;
+        }
+        
+        .dropdown-content .no-mixtapes {
+            font-size: 11px;
+            padding: 4px 16px;
+        }
+        
+        .dropdown-content .mixtapes-list {
+            padding: 0;
+        }
+        
+        .dropdown-content .mixtape-item {
+            padding: 4px 16px;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         /* Friend view */
@@ -2765,17 +2846,19 @@
                         <button class="menu-item" id="edit-btn">Edit</button>
                         <button class="menu-item" id="share-btn">Share</button>
                         <button class="menu-item" id="recover-btn">Recover</button>
-                        <div class="menu-divider"></div>
                         <button class="menu-item" id="about-btn">About</button>
-                        <button class="menu-item" id="help-btn">Help</button>
-                        <a class="menu-item" href="/cdn-cgi/l/email-protection#a7c4c8cbcec9e7c4c8cbcec9cac6dec9c6d5c389c9c2d398d4d2c5cdc2c4d39aeaeefff3e6f7e2e3829597f6d2c2d4d3cec8c9">Email</a>
-                        <a class="menu-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank">Donate</a>
                         <div class="menu-divider"></div>
-                        <div class="menu-label">Mixtapes</div>
-                        <div class="mixtapes-list" id="mixtapes-list"></div>
+                        <button class="menu-label menu-collapse" id="menu-mixtapes-toggle">Mixtapes<svg class="menu-collapse-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+                        <div class="mixtapes-list open" id="mixtapes-list"></div>
+                        <button class="menu-label menu-collapse" id="menu-collab-toggle">Collaborate<svg class="menu-collapse-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+                        <div class="mixtapes-list open" id="collab-list"></div>
                         <div class="menu-divider"></div>
-                        <div class="menu-label">Theme</div>
                         <div class="themes" id="themes"></div>
+                        <div class="menu-footer">
+                            <button class="menu-footer-btn" id="menu-help-btn"><span class="material-symbols-outlined">tooltip_2</span></button>
+                            <a class="menu-footer-btn" href="/cdn-cgi/l/email-protection#a7c4c8cbcec9e7c4c8cbcec9cac6dec9c6d5c389c9c2d398d4d2c5cdc2c4d39aeaeefff3e6f7e2e3829597f6d2c2d4d3cec8c9"><span class="material-symbols-outlined">mail</span></a>
+                            <a class="menu-footer-btn" href="https://buymeacoffee.com/fromnineteen80" target="_blank"><span class="material-symbols-outlined">local_cafe</span></a>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -3910,33 +3993,53 @@
         }
         
         function renderMixtapesList() {
-            const el = document.getElementById('mixtapes-list');
-            if (!el) return;
+            const mixtapesEl = document.getElementById('mixtapes-list');
+            const collabEl = document.getElementById('collab-list');
             
-            // Show all starred + latest unstarred (up to 5 unstarred)
-            const starred = mixtapes.filter(m => m.starred).sort((a, b) => 
-                new Date(b.added) - new Date(a.added)
-            );
-            const unstarred = mixtapes.filter(m => !m.starred).sort((a, b) => 
-                new Date(b.added) - new Date(a.added)
-            ).slice(0, 5);
+            // Split into curated (your own) vs friend mixtapes
+            const curated = mixtapes.filter(m => m.template && !m.name);
+            const friends = mixtapes.filter(m => !m.template || m.name);
             
-            const toShow = [...starred, ...unstarred];
+            // Render Mixtapes section (curated only)
+            if (mixtapesEl) {
+                if (curated.length === 0) {
+                    mixtapesEl.innerHTML = '<div class="no-mixtapes">Saved mixtapes here</div>';
+                } else {
+                    mixtapesEl.innerHTML = curated.map((m) => {
+                        const idx = mixtapes.indexOf(m);
+                        const label = m.title || 'My Mixtape';
+                        return `<button class="mixtape-item" data-i="${idx}">${esc(label)}</button>`;
+                    }).join('');
+                    mixtapesEl.querySelectorAll('.mixtape-item').forEach(btn => {
+                        btn.onclick = () => {
+                            document.getElementById('menu').classList.remove('open');
+                            showFriend(parseInt(btn.dataset.i));
+                        };
+                    });
+                }
+            }
             
-            if (toShow.length === 0) {
-                el.innerHTML = '<div class="no-mixtapes">Ask a friend</div>';
-            } else {
-                el.innerHTML = toShow.map((m) => {
-                    const idx = mixtapes.indexOf(m);
-                    const label = m.title ? `${m.name}: ${m.title}` : m.name;
-                    return `<button class="mixtape-item" data-i="${idx}">${esc(label)}</button>`;
-                }).join('');
-                el.querySelectorAll('.mixtape-item').forEach(btn => {
-                    btn.onclick = () => {
-                        document.getElementById('menu').classList.remove('open');
-                        showFriend(parseInt(btn.dataset.i));
-                    };
-                });
+            // Render Collaborate section (friend mixtapes)
+            if (collabEl) {
+                const starred = friends.filter(m => m.starred).sort((a, b) => new Date(b.added) - new Date(a.added));
+                const unstarred = friends.filter(m => !m.starred).sort((a, b) => new Date(b.added) - new Date(a.added)).slice(0, 5);
+                const toShow = [...starred, ...unstarred];
+                
+                if (toShow.length === 0) {
+                    collabEl.innerHTML = '<div class="no-mixtapes">Ask a friend</div>';
+                } else {
+                    collabEl.innerHTML = toShow.map((m) => {
+                        const idx = mixtapes.indexOf(m);
+                        const label = m.title ? `${m.name}: ${m.title}` : m.name;
+                        return `<button class="mixtape-item" data-i="${idx}">${esc(label)}</button>`;
+                    }).join('');
+                    collabEl.querySelectorAll('.mixtape-item').forEach(btn => {
+                        btn.onclick = () => {
+                            document.getElementById('menu').classList.remove('open');
+                            showFriend(parseInt(btn.dataset.i));
+                        };
+                    });
+                }
             }
             
             // Also update sidebar mixtapes
@@ -4350,7 +4453,24 @@
             document.getElementById('dive-btn').onclick = () => { menu.classList.remove('open'); showDive(); };
             document.getElementById('recover-btn').onclick = () => { menu.classList.remove('open'); showRecover(); };
             document.getElementById('about-btn').onclick = () => { menu.classList.remove('open'); showAbout(); };
-            document.getElementById('help-btn').onclick = () => { menu.classList.remove('open'); showHelp(); };
+            document.getElementById('menu-help-btn').onclick = () => { menu.classList.remove('open'); showHelp(); };
+            
+            // Menu collapsible sections
+            document.getElementById('menu-mixtapes-toggle').onclick = (e) => {
+                e.stopPropagation();
+                const toggle = e.currentTarget;
+                toggle.classList.toggle('open');
+                document.getElementById('mixtapes-list').classList.toggle('open');
+            };
+            document.getElementById('menu-collab-toggle').onclick = (e) => {
+                e.stopPropagation();
+                const toggle = e.currentTarget;
+                toggle.classList.toggle('open');
+                document.getElementById('collab-list').classList.toggle('open');
+            };
+            // Initialize menu toggles as open
+            document.getElementById('menu-mixtapes-toggle').classList.add('open');
+            document.getElementById('menu-collab-toggle').classList.add('open');
             
             // Sidebar items (for larger screens)
             document.getElementById('sidebar-title').onclick = () => { updateSidebarActive('sidebar-grid-btn'); showMain(); };
