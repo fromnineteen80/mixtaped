@@ -1,4 +1,4 @@
-# Mixtaped
+# MIXTAPED
 
 Remember making mixtapes? Carefully selecting songs, writing out the tracklist, and handing it to someone who needed to hear what you'd been listening to. Mixtaped brings that feeling back for the streaming age thanks to the Spotify Web API.
 
