@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=add,check,content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=add,check,content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,format_paint,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
     
     <style>
         /* ============================================
@@ -289,13 +289,20 @@
             border-radius: 6px;
             border: 2px solid transparent;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-btn .material-symbols-outlined {
+            font-size: 18px;
         }
 
         .theme-btn:active { opacity: 0.6; }
         .theme-btn.on { border-color: var(--accent); }
-        .theme-btn[data-t="dark"] { background: #161616; }
-        .theme-btn[data-t="light"] { background: #F5F5F4; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); }
-        .theme-btn[data-t="spotify"] { background: #1DB954; }
+        .theme-btn[data-t="dark"] { background: #161616; color: var(--bg); }
+        .theme-btn[data-t="light"] { background: #F5F5F4; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); color: var(--text2); }
+        .theme-btn[data-t="spotify"] { background: #1DB954; color: var(--bg); }
 
         /* --------------------------------------------
            CONTENT AREA & VIEWS
@@ -1397,23 +1404,43 @@
         
         .embed-container {
             display: flex;
+            align-items: flex-start;
             gap: 10px;
             width: 100%;
-            max-width: 700px;
+            max-width: 900px;
             margin: 0 auto;
             min-height: 500px;
-            overflow: hidden;
             background: var(--bg);
         }
         
         .embed-playlist-list {
             width: 160px;
-            min-width: 120px;
-            max-width: 160px;
+            flex-shrink: 0;
             background: var(--bg);
             overflow-y: auto;
             padding: 8px 0;
+            max-height: 500px;
+        }
+        
+        .embed-player {
+            flex: 1;
+            min-height: 500px;
+        }
+        
+        .embed-spacer {
+            width: 160px;
             flex-shrink: 0;
+            background: var(--bg);
+        }
+        
+        .embed-section {
+            container-type: inline-size;
+        }
+        
+        @container (max-width: 800px) {
+            .embed-spacer {
+                display: none;
+            }
         }
         
         .embed-playlist-item {
@@ -1452,14 +1479,10 @@
             color: #fff;
         }
         
-        .embed-player {
-            flex: 1;
-            min-height: 500px;
-        }
-        
         .embed-player iframe {
             width: 100%;
             height: 100%;
+            min-height: 500px;
             border: none;
         }
         
@@ -1754,6 +1777,69 @@
             .sidebar-themes {
                 display: flex;
                 gap: 8px;
+            }
+            
+            .sidebar-footer-icon {
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--bg);
+                border: 2px solid var(--bg);
+                border-radius: 6px;
+                color: var(--text2);
+                text-decoration: none;
+                position: relative;
+                cursor: pointer;
+            }
+            
+            .sidebar-footer-icon .material-symbols-outlined {
+                font-size: 18px;
+            }
+            
+            .sidebar-footer-icon:hover {
+                opacity: 0.8;
+            }
+            
+            .sidebar-footer-icon::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                bottom: 100%;
+                right: 0;
+                margin-bottom: 6px;
+                padding: 4px 8px;
+                background: var(--bg);
+                color: var(--text2);
+                font-size: 11px;
+                font-family: inherit;
+                border-radius: 4px;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.15s ease, visibility 0.15s ease;
+            }
+            
+            .sidebar-footer-icon:hover::after {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            /* Hide footer icons when sidebar collapsed */
+            .sidebar.collapsed .sidebar-footer-icon {
+                display: none;
+            }
+            
+            /* Spotify theme adjustments for footer icons */
+            [data-theme="spotify"] .sidebar-footer-icon {
+                background: rgba(255,255,255,0.15);
+                border-color: rgba(255,255,255,0.15);
+                color: rgba(255,255,255,0.85);
+            }
+            
+            [data-theme="spotify"] .sidebar-footer-icon::after {
+                background: rgba(255,255,255,0.15);
+                color: rgba(255,255,255,0.85);
             }
             
             /* Hide mobile header on large screens when sidebar expanded */
@@ -2245,10 +2331,7 @@
                 <button class="sidebar-item" id="sidebar-edit-btn"><span class="material-symbols-outlined">edit</span><span class="sidebar-text">Edit</span></button>
                 <button class="sidebar-item" id="sidebar-share-btn"><span class="material-symbols-outlined">share</span><span class="sidebar-text">Share</span></button>
                 <button class="sidebar-item" id="sidebar-recover-btn"><span class="material-symbols-outlined">history</span><span class="sidebar-text">Recover</span></button>
-                <div class="sidebar-divider"></div>
                 <button class="sidebar-item" id="sidebar-about-btn"><span class="material-symbols-outlined">info</span><span class="sidebar-text">About</span></button>
-                <button class="sidebar-item" id="sidebar-help-btn"><span class="material-symbols-outlined">tooltip_2</span><span class="sidebar-text">Help</span></button>
-                <a class="sidebar-item" href="/cdn-cgi/l/email-protection#781b17141116381b1714111615190116190a1c56161d0c470b0d1a121d1b0c453531202c39283d3c5d4a48290d1d0b0c111716"><span class="material-symbols-outlined">mail</span><span class="sidebar-text">Email</span></a>
                 <a class="sidebar-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank"><span class="material-symbols-outlined">local_cafe</span><span class="sidebar-text">Donate</span></a>
                 <div class="sidebar-divider"></div>
                 <div class="sidebar-dropdown">
@@ -2271,7 +2354,6 @@
                 </div>
             </nav>
             <div class="sidebar-footer">
-                <div class="sidebar-label" style="padding: 0 0 8px;">Theme</div>
                 <div class="sidebar-themes" id="sidebar-themes"></div>
             </div>
         </aside>
@@ -2329,6 +2411,7 @@
                         <div class="embed-container">
                             <div class="embed-playlist-list" id="main-embed-list"></div>
                             <div class="embed-player" id="main-embed-player"></div>
+                            <div class="embed-spacer"></div>
                         </div>
                     </div>
                 </div>
@@ -2357,7 +2440,7 @@
                             <div class="section-hd">Share Your <span class="brand">Mixtape</span></div>
                         </div>
                         <p class="section-desc">Remember making mixtapes for your friends? Here we are in the future sharing Spotify playlists. But the vibe is so much more than one playlist. It can be a season, a theme, your favorite genres. Whatever you want it to be or say about you. Generate a code and share your favorite playlists with someone who needs to hear what you've been listening to. They will see your mixtape in the Deep Dive format so adding descriptions to each of your playlists will add helpful context.</p>
-                        <p class="section-desc" style="margin-top: 12px;"><span style="font-weight: 600;">Tip:</span> Save your share code in your Notes app or email it to yourself. If you ever lose your data, you can restore everything by clicking on Recover in the menu.</p>
+                        <p class="section-desc" style="margin-top: 12px;"><span style="font-weight: 600;">Tip:</span> To backup everything including your collected and collaborated mixtapes, go to Recover and generate a full backup code.</p>
                         <div class="card">
                             <div class="pl-item" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                                 <input class="pl-input" type="text" id="share-name" placeholder="Your name" style="flex: 1; min-width: 100px; margin-bottom: 0;">
@@ -2430,12 +2513,26 @@
                 <div class="view" id="recover">
                     <div class="section">
                         <div class="edit-toolbar">
-                            <div class="section-hd">Recover</div>
+                            <div class="section-hd">Create Backup</div>
                         </div>
-                        <p class="section-desc">Lost your playlists? If you saved your share code in your Notes app or emailed it to yourself, paste it here to restore your mixtape.</p>
+                        <p class="section-desc">Generate a backup code that saves everything: your mixtape, collected mixtapes, and collaborated mixtapes. Save this code in your Notes app or email it to yourself. You can also paste the code into a <a href="https://notepad.cc" target="_blank" style="color: var(--text); text-decoration: none;">notepad.cc</a> entry and bookmark the entry in your browser.</p>
+                        <div class="card">
+                            <div class="pl-item" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                <input class="pl-input" type="text" id="backup-name" placeholder="Your name" style="flex: 1; min-width: 100px; margin-bottom: 0;">
+                                <input class="pl-input" type="text" id="backup-title" placeholder="Backup title" style="flex: 1; min-width: 100px; margin-bottom: 0;">
+                                <button class="action-btn" id="backup-btn">Generate</button>
+                            </div>
+                        </div>
+                        <div class="share-output" id="backup-output"></div>
+                    </div>
+                    <div class="section" style="margin-top: 48px;">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Restore Backup</div>
+                        </div>
+                        <p class="section-desc">Lost your data? Paste your backup code here to restore everything.</p>
                         <div class="card">
                             <div class="pl-item" style="display: flex; gap: 8px; align-items: center;">
-                                <input class="pl-input" type="text" id="recovery-string" placeholder="Paste your share code here" style="flex: 1; margin-bottom: 0;">
+                                <input class="pl-input" type="text" id="recovery-string" placeholder="Paste your backup code here" style="flex: 1; margin-bottom: 0;">
                                 <button class="action-btn" id="recovery-btn">Restore</button>
                             </div>
                         </div>
@@ -2681,6 +2778,7 @@
                         <div class="embed-container">
                             <div class="embed-playlist-list" id="friend-embed-list"></div>
                             <div class="embed-player" id="friend-embed-player"></div>
+                            <div class="embed-spacer"></div>
                         </div>
                     </div>
                     <div class="collab-add-form" id="collab-add-form" style="display: none;">
@@ -2804,7 +2902,7 @@
             if (!el) return;
             const cur = document.body.dataset.theme || 'light';
             const opts = sysDark ? ['dark', 'spotify'] : ['light', 'dark', 'spotify'];
-            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'active':''}" data-t="${t}"></div>`).join('');
+            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'active':''}" data-t="${t}"><span class="material-symbols-outlined">format_paint</span></div>`).join('');
             el.querySelectorAll('.theme-btn').forEach(b => b.onclick = () => setTheme(b.dataset.t));
         }
 
@@ -3320,6 +3418,36 @@
             return btoa(encodeURIComponent(JSON.stringify(data)));
         }
         
+        function generateFullBackup(name, title) {
+            const filled = items.filter(it => it.url && getID(it.url));
+            const data = {
+                v: 2, // version to identify full backup format
+                n: name,
+                t: title || '',
+                p: filled.map(it => ({
+                    u: it.url,
+                    t: it.title,
+                    i: it.img,
+                    d: it.desc
+                })),
+                m: mixtapes.map(m => ({
+                    n: m.name,
+                    t: m.title,
+                    p: m.playlists.map(p => ({
+                        u: p.url,
+                        t: p.title,
+                        i: p.img,
+                        d: p.desc
+                    })),
+                    a: m.added,
+                    s: m.starred,
+                    tp: m.template,
+                    ti: m.templateIcon
+                }))
+            };
+            return btoa(encodeURIComponent(JSON.stringify(data)));
+        }
+        
         function parseMixtapeString(str) {
             try {
                 const data = JSON.parse(decodeURIComponent(atob(str)));
@@ -3331,6 +3459,44 @@
                         title: p.t,
                         img: p.i,
                         desc: p.d
+                    }))
+                };
+            } catch(e) {
+                return null;
+            }
+        }
+        
+        function parseFullBackup(str) {
+            try {
+                const data = JSON.parse(decodeURIComponent(atob(str)));
+                
+                // Check if it's a full backup (v2) or old format
+                if (data.v !== 2) {
+                    return null; // Not a full backup
+                }
+                
+                return {
+                    name: data.n,
+                    title: data.t || '',
+                    playlists: data.p.map(p => ({
+                        url: p.u,
+                        title: p.t,
+                        img: p.i,
+                        desc: p.d
+                    })),
+                    mixtapes: (data.m || []).map(m => ({
+                        name: m.n,
+                        title: m.t,
+                        playlists: m.p.map(p => ({
+                            url: p.u,
+                            title: p.t,
+                            img: p.i,
+                            desc: p.d
+                        })),
+                        added: m.a,
+                        starred: m.s,
+                        template: m.tp,
+                        templateIcon: m.ti
                     }))
                 };
             } catch(e) {
@@ -3384,7 +3550,9 @@
             const cur = document.body.dataset.theme || 'light';
             const opts = sysDark ? ['dark', 'spotify'] : ['light', 'dark', 'spotify'];
             
-            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'on':''}" data-t="${t}"></div>`).join('');
+            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'on':''}" data-t="${t}"><span class="material-symbols-outlined">format_paint</span></div>`).join('') +
+                `<a href="#" class="sidebar-footer-icon" id="sidebar-help-icon" data-tooltip="Help"><span class="material-symbols-outlined">tooltip_2</span></a>` +
+                `<a href="/cdn-cgi/l/email-protection#92f1fdfef5d2f1fdfefbfcfff3ebfcf3e0f6bcfcf7e6" class="sidebar-footer-icon" data-tooltip="Email"><span class="material-symbols-outlined">mail</span></a>`;
             
             el.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.onclick = () => {
@@ -3396,6 +3564,13 @@
                     });
                 };
             });
+            
+            // Help icon click handler
+            document.getElementById('sidebar-help-icon').onclick = (e) => { 
+                e.preventDefault();
+                updateSidebarActive('sidebar-help-btn'); 
+                showHelp(); 
+            };
         }
         
         function renderSidebarMixtapes() {
@@ -3543,7 +3718,11 @@
             document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
             document.getElementById('recover').classList.add('on');
             document.getElementById('recovery-string').value = '';
-            document.getElementById('recovery-btn').textContent = 'Restore My Mixtape';
+            document.getElementById('recovery-btn').textContent = 'Restore';
+            document.getElementById('recovery-btn').classList.remove('completed');
+            document.getElementById('backup-output').innerHTML = '';
+            document.getElementById('backup-name').value = '';
+            document.getElementById('backup-title').value = '';
         }
         
         function showAbout() {
@@ -3775,7 +3954,6 @@
             document.getElementById('sidebar-share-btn').onclick = () => { updateSidebarActive('sidebar-share-btn'); showShare(); };
             document.getElementById('sidebar-recover-btn').onclick = () => { updateSidebarActive('sidebar-recover-btn'); showRecover(); };
             document.getElementById('sidebar-about-btn').onclick = () => { updateSidebarActive('sidebar-about-btn'); showAbout(); };
-            document.getElementById('sidebar-help-btn').onclick = () => { updateSidebarActive('sidebar-help-btn'); showHelp(); };
             
             // Sidebar toggle (collapse/expand)
             document.getElementById('sidebar-toggle').onclick = () => {
@@ -4043,16 +4221,52 @@
             document.getElementById('recovery-btn').onclick = () => {
                 const str = document.getElementById('recovery-string').value.trim();
                 if (!str) {
-                    showModal('Please paste your share code');
+                    showModal('Please paste your backup code');
                     return;
                 }
+                
+                // Try full backup format first
+                const fullData = parseFullBackup(str);
+                if (fullData) {
+                    // Build confirmation message
+                    let msg = `Restore "${fullData.title}" by ${fullData.name}?`;
+                    const mixtapeCount = fullData.mixtapes.length;
+                    if (mixtapeCount > 0) {
+                        msg += ` This includes ${mixtapeCount} saved mixtape${mixtapeCount > 1 ? 's' : ''}.`;
+                    }
+                    msg += ' This will replace all your current data.';
+                    
+                    if (confirm(msg)) {
+                        // Restore main mixtape
+                        items = fullData.playlists.map(p => ({
+                            url: p.url,
+                            title: p.title,
+                            img: p.img,
+                            desc: p.desc
+                        }));
+                        save();
+                        
+                        // Restore all mixtapes (collected, curated, collaborated)
+                        mixtapes = fullData.mixtapes;
+                        saveMixtapes();
+                        renderMixtapesList();
+                        renderSidebarMixtapes();
+                        
+                        document.getElementById('recovery-string').value = '';
+                        document.getElementById('recovery-btn').textContent = '✓ Everything Restored';
+                        document.getElementById('recovery-btn').classList.add('completed');
+                        setTimeout(() => showMain(), 2000);
+                    }
+                    return;
+                }
+                
+                // Fall back to old format (just main mixtape)
                 const data = parseMixtapeString(str);
                 if (!data) {
-                    showModal('Invalid share code');
+                    showModal('Invalid backup code');
                     return;
                 }
                 if (confirm(`Restore "${data.title}" by ${data.name}? This will replace your current playlists.`)) {
-                    // Convert parsed data back to items format
                     items = data.playlists.map(p => ({
                         url: p.url,
                         title: p.title,
@@ -4061,10 +4275,58 @@
                     }));
                     save();
                     document.getElementById('recovery-string').value = '';
-                    document.getElementById('recovery-btn').textContent = '✓ Success! Your Mixtape Has Been Recovered';
+                    document.getElementById('recovery-btn').textContent = '✓ Mixtape Restored';
                     document.getElementById('recovery-btn').classList.add('completed');
                     setTimeout(() => showMain(), 2000);
                 }
+            };
+            
+            // Backup generation button
+            document.getElementById('backup-btn').onclick = () => {
+                const name = document.getElementById('backup-name').value.trim();
+                if (!name) {
+                    showModal('Please enter your name');
+                    return;
+                }
+                const title = document.getElementById('backup-title').value.trim();
+                if (!title) {
+                    showModal('Please enter a backup title');
+                    return;
+                }
+                const filled = items.filter(it => it.url && getID(it.url));
+                if (filled.length < 3) {
+                    showModal('You need at least 3 playlists in your mixtape to create a backup');
+                    return;
+                }
+                
+                const str = generateFullBackup(name, title);
+                
+                // Count what's being backed up
+                const curatedCount = mixtapes.filter(m => m.template && !m.name).length;
+                const friendCount = mixtapes.filter(m => !m.template || m.name).length;
+                
+                let summary = `Backup includes: ${filled.length} playlists in your mixtape`;
+                if (curatedCount > 0) summary += `, ${curatedCount} curated mixtape${curatedCount > 1 ? 's' : ''}`;
+                if (friendCount > 0) summary += `, ${friendCount} collected/collaborated mixtape${friendCount > 1 ? 's' : ''}`;
+                
+                document.getElementById('backup-output').innerHTML = `
+                    <div class="share-success">Backup code generated!</div>
+                    <p class="section-desc" style="margin-top: 8px;">${summary}</p>
+                    <div class="share-label" style="margin-top: 12px;">Your Backup Code</div>
+                    <div class="card">
+                        <div class="pl-item">
+                            <div class="share-code">${str}</div>
+                            <button class="action-btn full" id="copy-backup-btn">Copy Code</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('copy-backup-btn').onclick = () => {
+                    navigator.clipboard.writeText(str).then(() => {
+                        document.getElementById('copy-backup-btn').innerHTML = '✓ Code Copied';
+                        document.getElementById('copy-backup-btn').classList.add('completed');
+                    });
+                };
             };
             
             document.getElementById('share-back-btn').onclick = showMain;
@@ -4369,7 +4631,7 @@
             if (!el) return;
             const cur = document.body.dataset.theme || 'light';
             const opts = sysDark ? ['dark', 'spotify'] : ['light', 'dark', 'spotify'];
-            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'on':''}" data-t="${t}"></div>`).join('');
+            el.innerHTML = opts.map(t => `<div class="theme-btn ${t===cur?'on':''}" data-t="${t}"><span class="material-symbols-outlined">format_paint</span></div>`).join('');
             el.querySelectorAll('.theme-btn').forEach(btn => {
                 btn.onclick = (e) => {
                     e.stopPropagation();
