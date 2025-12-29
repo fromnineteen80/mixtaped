@@ -13,11 +13,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&icon_names=add,check,content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,format_paint,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300..500,0,0&icon_names=add,check,content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,format_paint,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
     
     <style>
         /* ============================================
-           MIXTAPED - Spotify Playlist Collector PWA
+           MIXTAPED - Spotify Playlist Curator PWA
            © 2025 fromnineteen80. All rights reserved.
            ============================================ */
 
@@ -2264,6 +2264,10 @@
         .mobile-top-item:active {
             opacity: 0.5;
         }
+        .mobile-top-item.active {
+            color: var(--text);
+            font-weight: 600;
+        }
         
         /* Mobile Bottom Tray */
         body.mobile-phone .mobile-bottom-tray {
@@ -2271,14 +2275,14 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: calc(56px + var(--safe-b));
+            height: calc(48px + var(--safe-b));
             padding-bottom: var(--safe-b);
             background: var(--card);
-            align-items: flex-start;
-            justify-content: space-around;
-            padding-left: var(--safe-l);
-            padding-right: var(--safe-r);
-            padding-top: 0;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding-left: calc(var(--safe-l) + 13px);
+            padding-right: calc(var(--safe-r) + 13px);
             z-index: 200;
             box-shadow: 0 -1px 3px rgba(0,0,0,0.12);
         }
@@ -2293,7 +2297,7 @@
             align-items: center;
             justify-content: center;
             gap: 2px;
-            padding: 6px 12px;
+            padding: 6px 11px;
             background: none;
             border: none;
             color: var(--text3);
@@ -2307,12 +2311,11 @@
             opacity: 0.5;
         }
         .mobile-bottom-item.active {
-            color: var(--text2);
+            color: var(--text);
         }
         
         .mobile-bottom-label {
-            font-size: 10px;
-            font-weight: 500;
+            display: none;
         }
         
         /* Mobile More Menu */
@@ -2372,7 +2375,7 @@
         /* Adjust app layout for mobile phone */
         body.mobile-phone .app {
             padding-top: calc(48px + var(--safe-t)) !important;
-            padding-bottom: calc(56px + var(--safe-b)) !important;
+            padding-bottom: calc(48px + var(--safe-b)) !important;
         }
         
         body.mobile-phone .wrapper {
@@ -2400,6 +2403,12 @@
         body.mobile-phone .footer-txt,
         body.mobile-phone .footer {
             font-size: 11px;
+        }
+        
+        /* Weight 500 for tray icons on mobile */
+        body.mobile-phone .mobile-top-icon .material-symbols-outlined,
+        body.mobile-phone .mobile-bottom-item .material-symbols-outlined {
+            font-weight: 500;
         }
         
         /* Ensure bottom tray is always visible and fixed */
@@ -3748,7 +3757,7 @@
             // Render Mixtapes section (curated only)
             if (mixtapesEl) {
                 if (curated.length === 0) {
-                    mixtapesEl.innerHTML = '<div class="no-mixtapes">Save music here</div>';
+                    mixtapesEl.innerHTML = '<div class="no-mixtapes">Save mixtapes here</div>';
                 } else {
                     mixtapesEl.innerHTML = curated.map((m) => {
                         const idx = mixtapes.indexOf(m);
@@ -4834,17 +4843,19 @@
                 // Show curated mixtapes (ones with template, no name)
                 const curated = mixtapes.filter(m => m.template && !m.name);
                 if (curated.length === 0) {
-                    contentEl.innerHTML = '<span class="mobile-top-placeholder">Save music here</span>';
+                    contentEl.innerHTML = '<span class="mobile-top-placeholder">Save mixtapes here</span>';
                 } else {
                     contentEl.innerHTML = curated.map((m, i) => {
                         const idx = mixtapes.indexOf(m);
                         const label = m.title || 'My Mixtape';
-                        return `<button class="mobile-top-item" data-idx="${idx}">${esc(label)}</button>`;
+                        const isActive = currentFriendIdx === idx ? ' active' : '';
+                        return `<button class="mobile-top-item${isActive}" data-idx="${idx}">${esc(label)}</button>`;
                     }).join('');
                     contentEl.querySelectorAll('.mobile-top-item').forEach(btn => {
                         btn.onclick = () => {
                             showFriend(parseInt(btn.dataset.idx));
                             updateMobileBottomActive(null);
+                            updateMobileTopContent();
                         };
                     });
                 }
@@ -4857,12 +4868,14 @@
                     contentEl.innerHTML = friends.map((m, i) => {
                         const idx = mixtapes.indexOf(m);
                         const label = m.title ? `${m.name}: ${m.title}` : m.name;
-                        return `<button class="mobile-top-item" data-idx="${idx}">${esc(label)}</button>`;
+                        const isActive = currentFriendIdx === idx ? ' active' : '';
+                        return `<button class="mobile-top-item${isActive}" data-idx="${idx}">${esc(label)}</button>`;
                     }).join('');
                     contentEl.querySelectorAll('.mobile-top-item').forEach(btn => {
                         btn.onclick = () => {
                             showFriend(parseInt(btn.dataset.idx));
                             updateMobileBottomActive(null);
+                            updateMobileTopContent();
                         };
                     });
                 }
