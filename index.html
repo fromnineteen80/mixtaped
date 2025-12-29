@@ -1888,7 +1888,11 @@
             height: 48px;
             background: var(--card);
             z-index: 200;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        
+        body.mobile-phone[data-theme="dark"] .mobile-top-tray {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.25);
         }
         
         .mobile-top-scroll {
@@ -1981,7 +1985,11 @@
             padding-left: var(--safe-l);
             padding-right: var(--safe-r);
             z-index: 200;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 -1px 3px rgba(0,0,0,0.12);
+        }
+        
+        body.mobile-phone[data-theme="dark"] .mobile-bottom-tray {
+            box-shadow: 0 -1px 3px rgba(0,0,0,0.25);
         }
         
         .mobile-bottom-item {
