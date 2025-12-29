@@ -2076,18 +2076,29 @@
         
         /* Adjust app layout for mobile phone */
         body.mobile-phone .app {
-            padding-top: calc(32px + 48px + var(--safe-t) + var(--gap));
-            padding-bottom: calc(56px + var(--safe-b) + var(--gap));
+            padding-top: calc(32px + 48px + var(--safe-t));
+            padding-bottom: calc(56px + var(--safe-b));
         }
         
         body.mobile-phone .wrapper {
             height: 100%;
         }
         
-        /* Add spacing above main content on mobile */
+        /* Add spacing above main content on mobile - this scrolls with content */
         body.mobile-phone .grid,
         body.mobile-phone .dive-list {
-            margin-top: 8px;
+            padding-top: 16px;
+        }
+        
+        body.mobile-phone #main,
+        body.mobile-phone #dive,
+        body.mobile-phone #edit,
+        body.mobile-phone #share,
+        body.mobile-phone #recover,
+        body.mobile-phone #about,
+        body.mobile-phone #help,
+        body.mobile-phone #friend {
+            padding-top: 16px;
         }
         
         /* Ensure bottom tray is always visible and fixed */
