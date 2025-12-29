@@ -2432,10 +2432,13 @@
             align-items: center;
             justify-content: space-evenly;
             height: 48px;
+            min-height: 48px;
+            max-height: 48px;
+            flex-shrink: 0;
         }
         
         body.mobile-phone .mobile-bottom-tray-safe {
-            height: var(--safe-b);
+            flex: 1;
             background: var(--card);
         }
         
