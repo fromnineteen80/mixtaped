@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200..500,0,0&icon_names=add,check,content_copy,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,format_paint,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200..500,0,0&icon_names=add,check,content_copy,dashboard_customize,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,format_paint,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,phone_iphone,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
     
     <style>
         /* ============================================
@@ -683,13 +683,55 @@
         }
         
         .widget-generate-card {
-            max-width: 580px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
         
+        .widget-generate-card .pl-item {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .widget-generate-card .widget-select-group {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .widget-generate-card .custom-select.inline {
+            width: 100%;
+        }
+        
+        .widget-generate-card .custom-select-btn {
+            width: 100%;
+            justify-content: space-between;
+        }
+        
+        .widget-generate-card .action-btn {
+            width: 100%;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 767px) {
+            .widget-generate-card {
+                max-width: 100%;
+            }
+            
+            .widget-generate-card .pl-item {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .widget-generate-card .widget-select-group {
+                width: 100%;
+            }
+        }
+        
         #widget .widget-info {
-            max-width: 580px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
             text-align: center;
@@ -2721,6 +2763,11 @@
             display: none;
         }
         
+        /* Extra bottom padding for Safari standalone PWA */
+        body.mobile-phone.pwa-standalone .mobile-bottom-tray {
+            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+        }
+        
         body.mobile-phone[data-theme="dark"] .mobile-bottom-tray {
             box-shadow: 0 -1px 3px rgba(0,0,0,0.25);
         }
@@ -2917,7 +2964,7 @@
         <div class="mobile-bottom-tray" id="mobile-bottom-tray">
             <div class="mobile-bottom-tray-inner">
                 <button class="mobile-bottom-item active" id="mobile-grid-btn">
-                    <span class="material-symbols-outlined">grid_view</span>
+                    <span class="material-symbols-outlined">dashboard_customize</span>
                     <span class="mobile-bottom-label">Grid</span>
                 </button>
                 <button class="mobile-bottom-item" id="mobile-dive-btn">
@@ -2968,14 +3015,14 @@
                 </button>
             </div>
             <nav class="sidebar-nav">
-                <button class="sidebar-item active" id="sidebar-grid-btn" data-tooltip="Grid Layout"><span class="material-symbols-outlined">grid_view</span><span class="sidebar-text">Grid Layout</span></button>
+                <button class="sidebar-item active" id="sidebar-grid-btn" data-tooltip="Grid Layout"><span class="material-symbols-outlined">dashboard_customize</span><span class="sidebar-text">Grid Layout</span></button>
                 <button class="sidebar-item" id="sidebar-dive-btn" data-tooltip="Deep Dive"><span class="material-symbols-outlined">format_image_left</span><span class="sidebar-text">Deep Dive</span></button>
                 <div class="sidebar-divider"></div>
                 <button class="sidebar-item" id="sidebar-edit-btn" data-tooltip="Edit"><span class="material-symbols-outlined">edit</span><span class="sidebar-text">Edit</span></button>
                 <button class="sidebar-item" id="sidebar-share-btn" data-tooltip="Share"><span class="material-symbols-outlined">share</span><span class="sidebar-text">Share</span></button>
                 <button class="sidebar-item" id="sidebar-recover-btn" data-tooltip="Recover"><span class="material-symbols-outlined">history</span><span class="sidebar-text">Recover</span></button>
                 <button class="sidebar-item" id="sidebar-about-btn" data-tooltip="About"><span class="material-symbols-outlined">info</span><span class="sidebar-text">About</span></button>
-                <button class="sidebar-item" id="sidebar-widget-btn" data-tooltip="iOS Widget"><span class="material-symbols-outlined">grid_view</span><span class="sidebar-text">iOS Widget</span></button>
+                <button class="sidebar-item" id="sidebar-widget-btn" data-tooltip="iOS Widget"><span class="material-symbols-outlined">phone_iphone</span><span class="sidebar-text">iOS Widget</span></button>
                 <a class="sidebar-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank" data-tooltip="Donate"><span class="material-symbols-outlined">local_cafe</span><span class="sidebar-text">Donate</span></a>
                 <div class="sidebar-divider"></div>
                 <div class="sidebar-dropdown">
@@ -3261,7 +3308,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="action-btn" id="widget-generate-btn" style="margin-left: 8px;">Generate</button>
+                                <button class="action-btn" id="widget-generate-btn">Generate</button>
                             </div>
                         </div>
                         <div class="widget-info" id="widget-info">
@@ -5620,6 +5667,11 @@
             const isIOS = /iPad|iPhone|iPod/.test(ua);
             const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/.test(ua);
             const isStandalone = window.navigator.standalone === true;
+            
+            // Add extra bottom padding for Safari standalone PWA
+            if (isStandalone) {
+                document.body.classList.add('pwa-standalone');
+            }
             
             if (isIOS && !isSafari && !isStandalone) {
                 // Show Safari recommendation
