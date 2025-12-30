@@ -2900,6 +2900,7 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 </head>
 <body>
     <!-- Welcome Popup (first visit only) -->
@@ -5915,10 +5916,16 @@
             async createWidgyBlob(options) {
                 const widget = this.generateWidget(options);
                 const jsonStr = JSON.stringify(widget);
+                
+                // Use pako for raw deflate compression
+                if (typeof pako !== 'undefined') {
+                    const compressed = pako.deflateRaw(jsonStr);
+                    return new Blob([compressed], { type: 'application/octet-stream' });
+                }
+                
+                // Fallback to CompressionStream if pako not available
                 const encoder = new TextEncoder();
                 const data = encoder.encode(jsonStr);
-                
-                // Use CompressionStream for raw deflate
                 const cs = new CompressionStream('deflate-raw');
                 const writer = cs.writable.getWriter();
                 writer.write(data);
