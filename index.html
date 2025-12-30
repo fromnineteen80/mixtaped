@@ -706,6 +706,24 @@
             margin-top: 4px;
         }
         
+        @media (max-width: 767px) {
+            .widget-generate-card .pl-item {
+                display: grid !important;
+                grid-template-columns: auto auto;
+                gap: 16px;
+                justify-content: space-evenly;
+            }
+            
+            .widget-generate-card .widget-select-group {
+                width: auto;
+            }
+            
+            .widget-generate-card .action-btn {
+                grid-column: 1 / -1;
+                width: 100%;
+            }
+        }
+        
         #widget .widget-info {
             max-width: 700px;
             margin-left: auto;
@@ -2726,7 +2744,7 @@
             display: flex !important;
             align-items: center;
             justify-content: space-evenly;
-            height: 48px;
+            height: calc(48px + env(safe-area-inset-bottom, 0px));
             padding-bottom: env(safe-area-inset-bottom, 0px);
             z-index: 200;
             box-shadow: 0 -1px 3px rgba(0,0,0,0.12);
@@ -2742,6 +2760,7 @@
         
         /* Extra bottom padding for Safari standalone PWA */
         body.mobile-phone.pwa-standalone .mobile-bottom-tray {
+            height: calc(48px + env(safe-area-inset-bottom, 0px) + 12px);
             padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
         }
         
