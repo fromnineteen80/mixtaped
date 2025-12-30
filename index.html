@@ -782,6 +782,26 @@
             justify-content: center;
         }
         
+        .widget-success {
+            margin-top: 16px;
+            text-align: center;
+        }
+        
+        .widget-success .widget-qr-code {
+            display: inline-block;
+            padding: 12px;
+            background: #fff;
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+        }
+        
+        .widget-success .action-btn.full {
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+        }
+        
         .widget-sizes-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -5752,9 +5772,9 @@
         const WidgyGenerator = {
             // Widget size configurations (internal Widgy canvas sizes)
             SIZES: {
-                small: { width: 338, height: 338, type: 1 },
-                medium: { width: 1600, height: 744, type: 2 },
-                large: { width: 1600, height: 1552, type: 3 }
+                small: { width: 1600, height: 1600, type: 0 },
+                medium: { width: 1600, height: 1600, type: 1 },
+                large: { width: 1600, height: 1600, type: 2 }
             },
             
             // Density configurations (rows x cols for each size)
@@ -5805,7 +5825,7 @@
             createImageLayer(index, x, y, width, height, imageUrl, cornerRadius = 34) {
                 return {
                     z: "5", s: `Playlist ${index + 1}`, d0: index,
-                    "1": "URL", "2": imageUrl,
+                    "2": imageUrl,
                     b: this.animVal(x), c: this.animVal(y),
                     d: this.animVal(width), e: this.animVal(height),
                     i: this.animVal(cornerRadius), w: this.animVal(2, 1000)
@@ -6122,7 +6142,9 @@
             // Generate button
             document.getElementById('widget-generate-btn').onclick = async () => {
                 const { source, size, style, density } = getWidgetSettings();
+                console.log('Widget settings:', { source, size, style, density });
                 const playlists = getWidgetPlaylists(source);
+                console.log('Playlists count:', playlists.length);
                 
                 if (playlists.length < 3) {
                     showModal('You need at least 3 playlists to create a widget. Add more playlists to your mixtape.');
@@ -6145,35 +6167,16 @@
                     const url = URL.createObjectURL(blob);
                     const filename = `mixtaped_${size}_${density}.widgy`;
                     
-                    // Generate base64 for QR code (Widgy accepts base64 JSON)
-                    const jsonStr = JSON.stringify(widget);
-                    const base64Data = btoa(unescape(encodeURIComponent(jsonStr)));
-                    
-                    // Build output with QR code and download
+                    // Build output with download
                     document.getElementById('widget-output').innerHTML = `
-                        <div class="widget-qr-container">
-                            <div class="widget-qr-code" id="widget-qr"></div>
-                            <p class="section-desc" style="margin: 0; text-align: center;">Scan in Widgy: Create → Import → Scan QR Code</p>
-                            <div class="widget-download-row">
-                                <a href="${url}" download="${filename}" class="action-btn">Download ${filename}</a>
-                            </div>
+                        <div class="widget-success">
+                            <a href="${url}" download="${filename}" class="action-btn full">Download Widget</a>
+                            <p class="section-desc" style="margin: 12px 0 0 0; text-align: center;">Download and import to Widgy</p>
                         </div>
                     `;
                     
-                    // Generate QR code
-                    const qrContainer = document.getElementById('widget-qr');
-                    qrContainer.innerHTML = '';
-                    new QRCode(qrContainer, {
-                        text: base64Data,
-                        width: 200,
-                        height: 200,
-                        colorDark: '#000000',
-                        colorLight: '#ffffff',
-                        correctLevel: QRCode.CorrectLevel.L
-                    });
-                    
                 } catch (err) {
-                    showModal('Could not generate widget. Your browser may not support this feature.');
+                    showModal('Could not generate widget: ' + err.message);
                     console.error(err);
                 }
             };
