@@ -2535,25 +2535,27 @@
             right: 0;
             background: var(--card);
             display: flex !important;
-            align-items: center;
-            justify-content: space-evenly;
-            height: 48px;
+            flex-direction: column;
             z-index: 200;
             box-shadow: 0 -1px 3px rgba(0,0,0,0.12);
         }
         
         body.mobile-phone .mobile-bottom-tray-inner {
-            display: contents;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            height: 48px;
+            width: 100%;
         }
         
         body.mobile-phone .mobile-bottom-tray-safe {
             display: none;
         }
         
-        /* iOS Safari PWA safe area - 24px bottom padding */
+        /* iOS Safari PWA safe area - 36px bottom padding */
         body.mobile-phone.ios-pwa .mobile-bottom-tray-safe {
             display: block;
-            height: 24px;
+            height: 36px;
             width: 100%;
             background: var(--card);
         }
@@ -2723,18 +2725,6 @@
             color: var(--text2);
             margin-bottom: 6px;
         }
-        .widget-step-desc {
-            font-size: var(--font-card);
-            color: var(--text2);
-            line-height: var(--line-height);
-        }
-        .widget-step-desc a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-        .widget-step-desc a:active {
-            opacity: 0.6;
-        }
         
         .widget-sizes {
             display: grid;
@@ -2768,62 +2758,6 @@
         .widget-size-desc {
             font-size: var(--font-small);
             color: var(--text3);
-        }
-        
-        .widget-code-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 14px 20px;
-            font-size: var(--font-button);
-            font-family: inherit;
-            font-weight: 500;
-            color: #fff;
-            background: var(--accent);
-            border: none;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            margin: 24px 0;
-        }
-        .widget-code-btn:active {
-            opacity: 0.8;
-            transform: scale(0.98);
-        }
-        .widget-code-btn .material-symbols-outlined {
-            font-size: 20px;
-        }
-        [data-theme="dark"] .widget-code-btn {
-            background: var(--text);
-            color: var(--bg);
-        }
-        
-        .widget-tip {
-            background: var(--card);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-top: 24px;
-            box-shadow: var(--shadow);
-        }
-        .widget-tip-title {
-            font-size: var(--font-card);
-            font-weight: 600;
-            color: var(--text2);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .widget-tip-title .material-symbols-outlined {
-            font-size: 18px;
-            color: var(--accent);
-        }
-        .widget-tip-text {
-            font-size: var(--font-card);
-            color: var(--text2);
-            line-height: var(--line-height);
         }
         
         /* Code Modal */
@@ -2896,25 +2830,47 @@
             overflow-y: auto;
             padding: 0;
         }
+        .code-modal-section {
+            border-bottom: 1px solid var(--input);
+        }
+        .code-modal-section:last-child {
+            border-bottom: none;
+        }
+        .code-modal-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px 0;
+        }
+        .code-modal-section-title {
+            font-size: var(--font-card);
+            font-weight: 600;
+            color: var(--text2);
+        }
+        .code-modal-section-hint {
+            font-size: var(--font-small);
+            color: var(--text3);
+            padding: 4px 20px 0;
+        }
         .code-modal-code {
             font-family: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             font-size: 11px;
             line-height: 1.5;
             color: var(--text2);
             white-space: pre;
-            padding: 16px 20px;
+            padding: 12px 20px 16px;
             margin: 0;
             overflow-x: auto;
+            max-height: 200px;
         }
-        .code-modal-footer {
-            padding: 12px 20px;
-            border-top: 1px solid var(--input);
-            flex-shrink: 0;
-        }
-        .code-modal-hint {
-            font-size: var(--font-small);
-            color: var(--text3);
-            text-align: center;
+        .code-modal-share {
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 80px;
+            background: var(--input);
+            margin: 8px 20px 16px;
+            padding: 12px;
+            border-radius: var(--radius-xs);
         }
     </style>
 </head>
@@ -3465,44 +3421,40 @@
                 <!-- Widget View -->
                 <div class="view" id="widget">
                     <div class="section">
-                        <div class="about-hero">
-                            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1200&auto=format&fit=crop" alt="iPhone on desk">
-                            <div class="about-hero-overlay">
-                                <h1 class="about-hero-title">Widget For &nbsp;<span>MIXTAPED</span></h1>
-                            </div>
+                        <div class="edit-toolbar">
+                            <div class="section-hd">iOS Widget</div>
                         </div>
-                        
-                        <div class="about-intro">
-                            <p>Put your <span class="brand">Mixtaped</span> playlists right on your iPhone home screen. Tap any playlist artwork to open it directly in Spotify. No digging through apps or menus. Your music, one tap away.</p>
-                        </div>
+                        <p class="section-desc">Put your <span class="brand">Mixtaped</span> playlists right on your iPhone home screen. Tap any playlist artwork to open it directly in Spotify. No digging through apps or menus. Your music, one tap away.</p>
                         
                         <div class="widget-sizes">
                             <div class="widget-size-card">
                                 <div class="widget-size-icon">▪️</div>
                                 <div class="widget-size-name">Small</div>
-                                <div class="widget-size-desc">1 playlist with full artwork</div>
+                                <div class="widget-size-desc">1 playlist</div>
                             </div>
                             <div class="widget-size-card">
                                 <div class="widget-size-icon">▬</div>
                                 <div class="widget-size-name">Medium</div>
-                                <div class="widget-size-desc">4 playlists in a row</div>
+                                <div class="widget-size-desc">4 playlists</div>
                             </div>
                             <div class="widget-size-card">
                                 <div class="widget-size-icon">▢</div>
                                 <div class="widget-size-name">Large</div>
-                                <div class="widget-size-desc">6 or 9 playlists in a grid</div>
+                                <div class="widget-size-desc">6 or 9 playlists</div>
                             </div>
                         </div>
-                        
-                        <div class="about-divider"></div>
-                        
-                        <div class="about-section-title">How to Set Up Your Widget</div>
+                    </div>
+                    
+                    <div class="section" style="margin-top: 48px;">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Setup Instructions</div>
+                        </div>
                         
                         <div class="widget-step">
                             <div class="widget-step-num">1</div>
                             <div class="widget-step-content">
                                 <div class="widget-step-title">Download Scriptable</div>
-                                <div class="widget-step-desc">Install the free <a href="https://apps.apple.com/app/scriptable/id1405459188" target="_blank">Scriptable app</a> from the App Store. This app lets you run custom JavaScript widgets on your iPhone home screen.</div>
+                                <p class="section-desc" style="margin: 0;">Install the free <a href="https://apps.apple.com/app/scriptable/id1405459188" target="_blank" style="color: var(--accent);">Scriptable app</a> from the App Store. This app lets you run custom JavaScript widgets on your iPhone home screen.</p>
                             </div>
                         </div>
                         
@@ -3510,75 +3462,70 @@
                             <div class="widget-step-num">2</div>
                             <div class="widget-step-content">
                                 <div class="widget-step-title">Copy the Widget Code</div>
-                                <div class="widget-step-desc">Tap the button below to open the widget code. Tap the copy icon in the top right corner to copy all the code to your clipboard.</div>
+                                <p class="section-desc" style="margin: 0;">Select a mixtape and tap the button to get the code for your widget.</p>
                             </div>
                         </div>
                         
-                        <button class="widget-code-btn" id="show-widget-code-btn">
-                            <span class="material-symbols-outlined">content_copy</span>
-                            View Widget Code
-                        </button>
+                        <div class="card has-dropdown">
+                            <div class="pl-item" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                <div class="custom-select inline" id="widget-mixtape-wrap">
+                                    <div class="custom-select-btn" id="widget-mixtape-btn">
+                                        <span id="widget-mixtape-label">Your Mixtape</span>
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                                    </div>
+                                    <div class="custom-select-options" id="widget-mixtape-options"></div>
+                                </div>
+                                <button class="action-btn" id="show-widget-code-btn">View Code</button>
+                            </div>
+                        </div>
                         
-                        <div class="widget-step">
+                        <div class="widget-step" style="margin-top: 24px;">
                             <div class="widget-step-num">3</div>
                             <div class="widget-step-content">
                                 <div class="widget-step-title">Create a New Script in Scriptable</div>
-                                <div class="widget-step-desc">Open Scriptable. Tap the <strong>+</strong> button in the top right to create a new script. Tap in the editor area and paste the code you copied. Tap <strong>Done</strong> to save. You can rename the script to "Mixtaped" by tapping the title at the top.</div>
+                                <p class="section-desc" style="margin: 0;">Open Scriptable. Tap the <strong>+</strong> button in the top right to create a new script. Tap in the editor area and paste the code you copied. Tap <strong>Done</strong> to save. You can rename the script to "Mixtaped" by tapping the title at the top.</p>
                             </div>
                         </div>
                         
                         <div class="widget-step">
                             <div class="widget-step-num">4</div>
                             <div class="widget-step-content">
-                                <div class="widget-step-title">Get Your Mixtaped Share Code</div>
-                                <div class="widget-step-desc">In <span class="brand">Mixtaped</span>, go to <strong>Share</strong>, enter your name and a title, then tap <strong>Generate</strong>. Copy the <strong>Backup Code</strong> (the long string of characters). This contains all your playlist data.</div>
+                                <div class="widget-step-title">Add the Widget to Your Home Screen</div>
+                                <p class="section-desc" style="margin: 0;">Long press on your home screen and tap the <strong>+</strong> button. Search for <strong>Scriptable</strong> and choose your preferred widget size (small, medium, or large). Tap <strong>Add Widget</strong>.</p>
                             </div>
                         </div>
                         
                         <div class="widget-step">
                             <div class="widget-step-num">5</div>
                             <div class="widget-step-content">
-                                <div class="widget-step-title">Add the Widget to Your Home Screen</div>
-                                <div class="widget-step-desc">Long press on your home screen and tap the <strong>+</strong> button. Search for <strong>Scriptable</strong> and choose your preferred widget size (small, medium, or large). Tap <strong>Add Widget</strong>.</div>
-                            </div>
-                        </div>
-                        
-                        <div class="widget-step">
-                            <div class="widget-step-num">6</div>
-                            <div class="widget-step-content">
                                 <div class="widget-step-title">Configure the Widget</div>
-                                <div class="widget-step-desc">Long press on the new widget and tap <strong>Edit Widget</strong>. Set <strong>Script</strong> to your Mixtaped script. In the <strong>Parameter</strong> field, paste your Mixtaped share code (the backup code from step 4). Tap outside the menu to save.</div>
+                                <p class="section-desc" style="margin: 0;">Long press on the new widget and tap <strong>Edit Widget</strong>. Set <strong>Script</strong> to your Mixtaped script. In the <strong>Parameter</strong> field, paste the share code you copied in step 2. Tap outside the menu to save.</p>
                             </div>
                         </div>
                         
-                        <div class="widget-tip">
-                            <div class="widget-tip-title">
-                                <span class="material-symbols-outlined">info</span>
-                                Want a Different Mixtape?
+                        <p class="section-desc" style="margin-top: 24px;"><span style="font-weight: 600;">Tip:</span> You can use any mixtape share code in the widget parameter. Use your own mixtape, a friend's mixtape, or a collaboration. Each widget can show a different mixtape.</p>
+                    </div>
+                    
+                    <div class="section" style="margin-top: 48px;">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Advanced Options</div>
+                        </div>
+                        
+                        <p class="section-desc"><strong>Change the layout for large widgets:</strong> By default, large widgets show 6 playlists (2 rows of 3). To show 9 playlists (3 rows of 3), use a JSON parameter instead of the plain share code:</p>
+                        <div class="card">
+                            <div class="pl-item">
+                                <code style="font-size: 11px; color: var(--text2); word-break: break-all;">{"code":"YOUR_SHARE_CODE","layout":"3x3"}</code>
                             </div>
-                            <div class="widget-tip-text">You can use any mixtape share code in the widget parameter. Use your own mixtape, a friend's mixtape, or a collaboration. Each widget can show a different mixtape. Just paste a different share code in each widget's parameter.</div>
                         </div>
                         
-                        <div class="about-divider"></div>
-                        
-                        <div class="about-section-title">Advanced Options</div>
-                        
-                        <div class="help-section">
-                            <div class="help-q">Change the layout for large widgets</div>
-                            <p class="help-a">By default, large widgets show 6 playlists (2 rows of 3). To show 9 playlists (3 rows of 3), use a JSON parameter instead of the plain share code:</p>
-                            <p class="help-a" style="margin-top: 8px; font-family: monospace; font-size: 11px; background: var(--input); padding: 8px; border-radius: 6px;">{"code":"YOUR_SHARE_CODE","layout":"3x3"}</p>
+                        <p class="section-desc" style="margin-top: 24px;"><strong>Switch between glass and solid backgrounds:</strong> The widget uses a semi-transparent "glass" style by default. For a solid dark background, add the style option:</p>
+                        <div class="card">
+                            <div class="pl-item">
+                                <code style="font-size: 11px; color: var(--text2); word-break: break-all;">{"code":"YOUR_SHARE_CODE","style":"solid"}</code>
+                            </div>
                         </div>
                         
-                        <div class="help-section">
-                            <div class="help-q">Switch between glass and solid backgrounds</div>
-                            <p class="help-a">The widget uses a semi-transparent "glass" style by default that works well with iOS 18. For a solid dark background, add the style option:</p>
-                            <p class="help-a" style="margin-top: 8px; font-family: monospace; font-size: 11px; background: var(--input); padding: 8px; border-radius: 6px;">{"code":"YOUR_SHARE_CODE","style":"solid"}</p>
-                        </div>
-                        
-                        <div class="help-section">
-                            <div class="help-q" style="font-size: 13px;">Widget not updating?</div>
-                            <p class="help-a" style="font-size: 13px;">iOS controls when widgets refresh. To force an update, open Scriptable and run the script manually, or remove and re-add the widget. If playlist images aren't loading, check that you have an internet connection and that the playlists are public on Spotify.</p>
-                        </div>
+                        <p class="section-desc" style="margin-top: 24px; font-size: 13px;"><strong>Widget not updating?</strong> iOS controls when widgets refresh. To force an update, open Scriptable and run the script manually, or remove and re-add the widget. If playlist images aren't loading, check that you have an internet connection and that the playlists are public on Spotify.</p>
                     </div>
                     <div class="share-back">
                         <button class="txt-btn" id="widget-back-btn">Back</button>
@@ -3654,21 +3601,34 @@
     <div class="code-modal-overlay" id="code-modal-overlay">
         <div class="code-modal">
             <div class="code-modal-header">
-                <div class="code-modal-title">Mixtaped Widget Code</div>
+                <div class="code-modal-title">Widget Setup</div>
                 <div class="code-modal-actions">
-                    <button class="code-modal-btn" id="copy-widget-code-btn" title="Copy code">
-                        <span class="material-symbols-outlined">content_copy</span>
-                    </button>
                     <button class="code-modal-btn" id="close-code-modal-btn" title="Close">
                         <span class="material-symbols-outlined">close</span>
                     </button>
                 </div>
             </div>
             <div class="code-modal-body">
-                <pre class="code-modal-code" id="widget-code-display"></pre>
-            </div>
-            <div class="code-modal-footer">
-                <div class="code-modal-hint">Tap the copy icon above, then paste into Scriptable</div>
+                <div class="code-modal-section">
+                    <div class="code-modal-section-header">
+                        <span class="code-modal-section-title">1. Widget Code</span>
+                        <button class="code-modal-btn" id="copy-widget-code-btn" title="Copy widget code">
+                            <span class="material-symbols-outlined">content_copy</span>
+                        </button>
+                    </div>
+                    <div class="code-modal-section-hint">Copy and paste into Scriptable</div>
+                    <pre class="code-modal-code" id="widget-code-display"></pre>
+                </div>
+                <div class="code-modal-section">
+                    <div class="code-modal-section-header">
+                        <span class="code-modal-section-title">2. Share Code</span>
+                        <button class="code-modal-btn" id="copy-share-code-btn" title="Copy share code">
+                            <span class="material-symbols-outlined">content_copy</span>
+                        </button>
+                    </div>
+                    <div class="code-modal-section-hint">Paste into widget Parameter field</div>
+                    <pre class="code-modal-code code-modal-share" id="widget-share-code"></pre>
+                </div>
             </div>
         </div>
     </div>
@@ -4628,6 +4588,67 @@
         function showWidget() {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
             document.getElementById('widget').classList.add('on');
+            renderWidgetMixtapeOptions();
+        }
+        
+        let selectedWidgetMixtape = 'your'; // 'your' or index into mixtapes array
+        
+        function renderWidgetMixtapeOptions() {
+            const optionsEl = document.getElementById('widget-mixtape-options');
+            const curated = mixtapes.filter(m => m.template && !m.name);
+            const friends = mixtapes.filter(m => !m.template || m.name);
+            
+            let html = '<div class="custom-select-option selected" data-value="your">Your Mixtape</div>';
+            
+            if (curated.length > 0) {
+                html += '<div class="custom-select-divider" style="height: 1px; background: var(--input); margin: 4px 0;"></div>';
+                curated.forEach(m => {
+                    const idx = mixtapes.indexOf(m);
+                    const label = m.title || 'My Mixtape';
+                    html += `<div class="custom-select-option" data-value="${idx}">${esc(label)}</div>`;
+                });
+            }
+            
+            if (friends.length > 0) {
+                html += '<div class="custom-select-divider" style="height: 1px; background: var(--input); margin: 4px 0;"></div>';
+                friends.forEach(m => {
+                    const idx = mixtapes.indexOf(m);
+                    const label = m.title ? `${m.name}: ${m.title}` : m.name;
+                    html += `<div class="custom-select-option" data-value="${idx}">${esc(label)}</div>`;
+                });
+            }
+            
+            optionsEl.innerHTML = html;
+            
+            // Attach click handlers
+            optionsEl.querySelectorAll('.custom-select-option').forEach(opt => {
+                opt.onclick = (e) => {
+                    e.stopPropagation();
+                    optionsEl.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    document.getElementById('widget-mixtape-label').textContent = opt.textContent;
+                    selectedWidgetMixtape = opt.dataset.value;
+                    optionsEl.classList.remove('open');
+                };
+            });
+        }
+        
+        function getSelectedMixtapeCode() {
+            if (selectedWidgetMixtape === 'your') {
+                const filled = items.filter(it => it.url && getID(it.url));
+                if (filled.length < 3) return null;
+                return generateMixtapeString('Widget', 'My Mixtape');
+            } else {
+                const idx = parseInt(selectedWidgetMixtape);
+                const m = mixtapes[idx];
+                if (!m) return null;
+                const data = {
+                    n: m.name || 'Widget',
+                    t: m.title || '',
+                    p: m.playlists.map(p => ({ u: p.url, t: p.title, i: p.img, d: p.desc }))
+                };
+                return btoa(encodeURIComponent(JSON.stringify(data)));
+            }
         }
         
         // Widget code for Scriptable
@@ -4899,7 +4920,17 @@ if (config.runsInWidget) {
 Script.complete();`;
         
         function showCodeModal() {
+            const shareCode = getSelectedMixtapeCode();
+            if (!shareCode) {
+                showModal('You need at least 3 playlists in your mixtape to create a widget.');
+                return;
+            }
+            
+            // Show the share code that user needs to paste into widget parameter
+            const codeWithParameter = WIDGET_CODE + '\n\n// ═══════════════════════════════════════════════════════════════\n// YOUR MIXTAPE SHARE CODE (paste this into the widget Parameter field):\n// ═══════════════════════════════════════════════════════════════\n// ' + shareCode;
+            
             document.getElementById('widget-code-display').textContent = WIDGET_CODE;
+            document.getElementById('widget-share-code').textContent = shareCode;
             document.getElementById('code-modal-overlay').classList.add('open');
         }
         
@@ -4918,7 +4949,23 @@ Script.complete();`;
                     btn.innerHTML = '<span class="material-symbols-outlined">content_copy</span>';
                 }, 2000);
             } catch (e) {
-                alert('Could not copy to clipboard');
+                showModal('Could not copy to clipboard');
+            }
+        }
+        
+        async function copyShareCode() {
+            try {
+                const shareCode = getSelectedMixtapeCode();
+                await navigator.clipboard.writeText(shareCode);
+                const btn = document.getElementById('copy-share-code-btn');
+                btn.classList.add('copied');
+                btn.innerHTML = '<span class="material-symbols-outlined">check</span>';
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '<span class="material-symbols-outlined">content_copy</span>';
+                }, 2000);
+            } catch (e) {
+                showModal('Could not copy to clipboard');
             }
         }
         
@@ -5549,9 +5596,21 @@ Script.complete();`;
             document.getElementById('show-widget-code-btn').onclick = showCodeModal;
             document.getElementById('close-code-modal-btn').onclick = hideCodeModal;
             document.getElementById('copy-widget-code-btn').onclick = copyWidgetCode;
+            document.getElementById('copy-share-code-btn').onclick = copyShareCode;
             document.getElementById('code-modal-overlay').onclick = (e) => {
                 if (e.target.id === 'code-modal-overlay') hideCodeModal();
             };
+            
+            // Widget mixtape dropdown
+            const widgetMixtapeBtn = document.getElementById('widget-mixtape-btn');
+            const widgetMixtapeOptions = document.getElementById('widget-mixtape-options');
+            widgetMixtapeBtn.onclick = (e) => {
+                e.stopPropagation();
+                widgetMixtapeOptions.classList.toggle('open');
+            };
+            document.addEventListener('click', () => {
+                widgetMixtapeOptions.classList.remove('open');
+            });
             
             // Collaboration copy handler
             document.getElementById('collab-copy-btn').onclick = async function() {
