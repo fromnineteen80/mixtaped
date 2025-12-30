@@ -683,51 +683,27 @@
         }
         
         .widget-generate-card {
-            max-width: 700px;
+            max-width: 100%;
             margin-left: auto;
             margin-right: auto;
         }
         
         .widget-generate-card .pl-item {
-            display: flex;
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
             gap: 16px;
             align-items: center;
-            flex-wrap: wrap;
-            justify-content: center;
+            justify-content: space-evenly;
         }
         
         .widget-generate-card .widget-select-group {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .widget-generate-card .custom-select.inline {
-            width: 100%;
-        }
-        
-        .widget-generate-card .custom-select-btn {
-            width: 100%;
-            justify-content: space-between;
+            flex: 0 0 auto;
         }
         
         .widget-generate-card .action-btn {
-            width: 100%;
+            flex: 0 0 100%;
             margin-top: 4px;
-        }
-        
-        @media (max-width: 767px) {
-            .widget-generate-card {
-                max-width: 100%;
-            }
-            
-            .widget-generate-card .pl-item {
-                flex-direction: column;
-                gap: 12px;
-            }
-            
-            .widget-generate-card .widget-select-group {
-                width: 100%;
-            }
         }
         
         #widget .widget-info {
@@ -2751,6 +2727,7 @@
             align-items: center;
             justify-content: space-evenly;
             height: 48px;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
             z-index: 200;
             box-shadow: 0 -1px 3px rgba(0,0,0,0.12);
         }
@@ -3255,7 +3232,7 @@
                             <div class="section-hd">Generate <span class="brand">Widget</span></div>
                         </div>
                         <div class="card has-dropdown widget-generate-card">
-                            <div class="pl-item" style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center;">
+                            <div class="pl-item">
                                 <div class="widget-select-group">
                                     <label class="widget-select-label">Source</label>
                                     <div class="custom-select inline" id="widget-source-wrap">
