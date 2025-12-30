@@ -2917,6 +2917,7 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
     <!-- Welcome Popup (first visit only) -->
@@ -5821,15 +5822,70 @@
                 return match ? match[1] : null;
             },
             
-            // Create an image layer for a playlist cover
-            createImageLayer(index, x, y, width, height, imageUrl, cornerRadius = 34) {
+            // Create an image layer for a playlist cover with embedded image
+            createImageLayer(index, x, y, width, height, imageId, cornerRadius = 34) {
                 return {
                     z: "5", s: `Playlist ${index + 1}`, d0: index,
-                    "2": imageUrl,
+                    "1": "Embedded",
+                    "2": imageId,
                     b: this.animVal(x), c: this.animVal(y),
                     d: this.animVal(width), e: this.animVal(height),
                     i: this.animVal(cornerRadius), w: this.animVal(2, 1000)
                 };
+            },
+            
+            // Create a widgy blob with embedded images as a ZIP archive
+            async createWidgyBlobWithImages(options) {
+                const { playlists, images, size = 'medium', density = 'min', style = 'glass', name = 'Mixtaped', author = 'Mixtaped' } = options;
+                const sizeConfig = this.SIZES[size];
+                const layout = this.calculateLayout(size, density, playlists.length);
+                const imageLayers = [];
+                const tapLayers = [];
+                
+                for (let i = 0; i < layout.itemCount; i++) {
+                    const playlist = playlists[i];
+                    if (!playlist) continue;
+                    const row = Math.floor(i / layout.cols);
+                    const col = i % layout.cols;
+                    const x = layout.startX + (col * (layout.tileSizeW + layout.gapW));
+                    const y = layout.startY + (row * (layout.tileSizeH + layout.gapH));
+                    
+                    if (playlist.imageRef) {
+                        imageLayers.push(this.createImageLayer(i, x, y, layout.tileSizeW, layout.tileSizeH, playlist.imageRef, layout.cornerRadius));
+                    }
+                    if (playlist.url) {
+                        tapLayers.push(this.createTapAction(i, x, y, layout.tileSizeW, layout.tileSizeH, playlist.url));
+                    }
+                }
+                
+                const layers = [];
+                if (tapLayers.length > 0) {
+                    layers.push(this.createGroup("Tap Actions", tapLayers, 0, 0, layout.canvasW, layout.canvasH, 150));
+                }
+                layers.push(this.createGroup("Playlists", imageLayers, 0, 0, layout.canvasW, layout.canvasH, 50));
+                layers.push(this.createBackground(layout.canvasW, layout.canvasH, style));
+                
+                const widgetJson = {
+                    "0": 24, "1": layers, "3": name, "5": author, "6": sizeConfig.type,
+                    "9": Date.now() % 10000, "20": false, "21": false, "28": true, "a2": 27,
+                    "l2": "", "m2": "", "n2": "", "o2": "", "p2": "", "q2": "",
+                    "zzz": `mtpd_${size[0]}${density[0]}_${Date.now().toString(36)}`
+                };
+                
+                // Create ZIP archive with JSON and images
+                const zip = new JSZip();
+                
+                // Add widget.json
+                zip.file("widget.json", JSON.stringify(widgetJson));
+                
+                // Add images folder with actual image files
+                const imagesFolder = zip.folder("images");
+                for (const img of images) {
+                    imagesFolder.file(`${img.id}.jpg`, img.data);
+                }
+                
+                // Generate ZIP blob
+                return await zip.generateAsync({ type: "blob" });
             },
             
             // Create a tap action layer
@@ -5876,19 +5932,40 @@
                 const itemCount = Math.min(playlistCount, max);
                 const canvasW = sizeConfig.width;
                 const canvasH = sizeConfig.height;
+                
+                // For medium widgets, the 1600x1600 canvas displays as 2:1
+                // So we need to account for horizontal squish by making tiles and gaps wider
+                const aspectRatio = size === 'medium' ? 2 : 1;
+                
                 const padding = size === 'small' ? 20 : 40;
-                const gap = size === 'small' ? 10 : 20;
-                const availW = canvasW - (padding * 2);
+                const baseGap = size === 'small' ? 10 : 20;
+                const gapH = baseGap; // Vertical gap stays normal
+                const gapW = baseGap * aspectRatio; // Horizontal gap needs to be wider for medium
+                
+                const availW = canvasW - (padding * 2 * aspectRatio);
                 const availH = canvasH - (padding * 2);
-                const tileW = (availW - (gap * (cols - 1))) / cols;
-                const tileH = (availH - (gap * (rows - 1))) / rows;
-                const tileSize = Math.min(tileW, tileH);
-                const gridW = (tileSize * cols) + (gap * (cols - 1));
-                const gridH = (tileSize * rows) + (gap * (rows - 1));
+                
+                // Calculate tile size based on available space
+                const tileW = (availW - (gapW * (cols - 1))) / cols;
+                const tileH = (availH - (gapH * (rows - 1))) / rows;
+                
+                // For medium, tiles are wider to appear square when squished
+                let tileSizeW, tileSizeH;
+                if (size === 'medium') {
+                    tileSizeH = Math.min(tileH, tileW / aspectRatio);
+                    tileSizeW = tileSizeH * aspectRatio;
+                } else {
+                    const tileSize = Math.min(tileW, tileH);
+                    tileSizeW = tileSize;
+                    tileSizeH = tileSize;
+                }
+                
+                const gridW = (tileSizeW * cols) + (gapW * (cols - 1));
+                const gridH = (tileSizeH * rows) + (gapH * (rows - 1));
                 const startX = (canvasW - gridW) / 2;
                 const startY = (canvasH - gridH) / 2;
-                const cornerRadius = Math.round(tileSize * 0.15);
-                return { canvasW, canvasH, tileSize, rows, cols, gap, startX, startY, cornerRadius, maxItems: max, itemCount };
+                const cornerRadius = Math.round(tileSizeH * 0.15 * aspectRatio);
+                return { canvasW, canvasH, tileSizeW, tileSizeH, rows, cols, gapW, gapH, startX, startY, cornerRadius, maxItems: max, itemCount };
             },
             
             // Generate the complete Widgy widget JSON
@@ -5904,12 +5981,14 @@
                     if (!playlist) continue;
                     const row = Math.floor(i / layout.cols);
                     const col = i % layout.cols;
-                    const x = layout.startX + (col * (layout.tileSize + layout.gap));
-                    const y = layout.startY + (row * (layout.tileSize + layout.gap));
-                    const imageUrl = playlist.img || 'https://via.placeholder.com/300?text=Playlist';
-                    imageLayers.push(this.createImageLayer(i, x, y, layout.tileSize, layout.tileSize, imageUrl, layout.cornerRadius));
+                    const x = layout.startX + (col * (layout.tileSizeW + layout.gapW));
+                    const y = layout.startY + (row * (layout.tileSizeH + layout.gapH));
+                    // Use embedded base64 image data
+                    if (playlist.base64) {
+                        imageLayers.push(this.createImageLayer(i, x, y, layout.tileSizeW, layout.tileSizeH, playlist.base64, layout.cornerRadius));
+                    }
                     if (playlist.url) {
-                        tapLayers.push(this.createTapAction(i, x, y, layout.tileSize, layout.tileSize, playlist.url));
+                        tapLayers.push(this.createTapAction(i, x, y, layout.tileSizeW, layout.tileSizeH, playlist.url));
                     }
                 }
                 
@@ -6144,40 +6223,78 @@
                 const { source, size, style, density } = getWidgetSettings();
                 console.log('Widget settings:', { source, size, style, density });
                 const playlists = getWidgetPlaylists(source);
-                console.log('Playlists count:', playlists.length);
+                console.log('Playlists:', playlists);
                 
                 if (playlists.length < 3) {
                     showModal('You need at least 3 playlists to create a widget. Add more playlists to your mixtape.');
                     return;
                 }
                 
+                // Show loading state
+                const btn = document.getElementById('widget-generate-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Fetching images...';
+                btn.disabled = true;
+                
                 try {
-                    // Generate widget data
-                    const widget = WidgyGenerator.generateWidget({
-                        playlists, size, style, density,
-                        name: 'Mixtaped', author: 'Mixtaped'
-                    });
+                    // Fetch all images as binary data
+                    const images = [];
+                    const playlistsWithRefs = [];
                     
-                    // Create compressed blob for download
-                    const blob = await WidgyGenerator.createWidgyBlob({
-                        playlists, size, style, density,
+                    for (let i = 0; i < playlists.length; i++) {
+                        const playlist = playlists[i];
+                        if (!playlist.img) {
+                            playlistsWithRefs.push({ ...playlist, imageRef: null });
+                            continue;
+                        }
+                        
+                        try {
+                            console.log(`Fetching image ${i}: ${playlist.img}`);
+                            const response = await fetch(playlist.img);
+                            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                            
+                            const arrayBuffer = await response.arrayBuffer();
+                            const imageData = new Uint8Array(arrayBuffer);
+                            const imageId = `img_${i}`;
+                            
+                            images.push({ id: imageId, data: imageData });
+                            playlistsWithRefs.push({ ...playlist, imageRef: imageId });
+                            console.log(`Image ${i} fetched: ${imageData.length} bytes`);
+                        } catch (e) {
+                            console.error(`Failed to fetch image ${i}:`, e);
+                            playlistsWithRefs.push({ ...playlist, imageRef: null });
+                        }
+                    }
+                    
+                    console.log(`Fetched ${images.length} images`);
+                    btn.textContent = 'Building widget...';
+                    
+                    // Create widget blob with embedded images
+                    const blob = await WidgyGenerator.createWidgyBlobWithImages({
+                        playlists: playlistsWithRefs,
+                        images: images,
+                        size, style, density,
                         name: 'Mixtaped', author: 'Mixtaped'
                     });
                     
                     const url = URL.createObjectURL(blob);
                     const filename = `mixtaped_${size}_${density}.widgy`;
                     
-                    // Build output with download
-                    document.getElementById('widget-output').innerHTML = `
-                        <div class="widget-success">
-                            <a href="${url}" download="${filename}" class="action-btn full">Download Widget</a>
-                            <p class="section-desc" style="margin: 12px 0 0 0; text-align: center;">Download and import to Widgy</p>
+                    // Show download in modal popup
+                    showModal(`
+                        <div style="text-align: center;">
+                            <p style="margin-bottom: 16px;">Your widget is ready!</p>
+                            <a href="${url}" download="${filename}" class="action-btn full" style="display: inline-block; margin-bottom: 12px;">Download ${filename}</a>
+                            <p class="section-desc">Import the file into Widgy</p>
                         </div>
-                    `;
+                    `);
                     
                 } catch (err) {
                     showModal('Could not generate widget: ' + err.message);
                     console.error(err);
+                } finally {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
                 }
             };
             
