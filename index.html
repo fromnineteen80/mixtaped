@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200..500,0,0&icon_names=add,check,content_copy,dashboard_customize,dining,directions_car,directions_run,drag_indicator,edit,first_page,format_image_left,format_paint,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,phone_iphone,play_arrow,podcasts,radio,share,star,thumbnail_bar,tooltip_2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200..500,0,0&icon_names=add,bookmark_heart,check,content_copy,dashboard_customize,dining,directions_car,directions_run,drag_indicator,edit_square,first_page,format_image_left,format_paint,grid_view,headphones,history,info,local_cafe,lock,mail,menu,mindfulness,music_note_2,person_heart,phone_iphone,play_arrow,podcasts,radio,star,thumbnail_bar,tooltip_2">
     
     <style>
         /* ============================================
@@ -365,9 +365,12 @@
 
         .theme-btn:active { opacity: 0.6; }
         .theme-btn.on { border-color: var(--accent); }
-        .theme-btn[data-t="dark"] { background: #161616; color: var(--bg); }
-        .theme-btn[data-t="light"] { background: #F5F5F4; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); color: var(--text2); }
-        .theme-btn[data-t="spotify"] { background: #1DB954; color: var(--bg); }
+        .theme-btn[data-t="dark"] { background: #161616; }
+        .theme-btn[data-t="dark"] .material-symbols-outlined { color: #8C8C8C; }
+        .theme-btn[data-t="light"] { background: #F5F5F4; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); }
+        .theme-btn[data-t="light"] .material-symbols-outlined { color: #6B6B6B; }
+        .theme-btn[data-t="spotify"] { background: #1DB954; }
+        .theme-btn[data-t="spotify"] .material-symbols-outlined { color: #ECECEB; }
 
         /* --------------------------------------------
            CONTENT AREA & VIEWS
@@ -622,18 +625,40 @@
             margin-bottom: 32px;
         }
         /* --------------------------------------------
-           HELP PAGE
+           SHARED PAGE STYLES (About, Help, Share, Recover, Widget)
            -------------------------------------------- */
-        #help {
+        #about,
+        #help,
+        #share,
+        #recover,
+        #widget {
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            padding-top: 8px;
+            padding-bottom: 24px;
         }
         
-        #help .section {
+        #about .section,
+        #help .section,
+        #share .section,
+        #recover .section,
+        #widget .section {
             max-width: none;
         }
         
+        #about .share-back,
+        #help .share-back,
+        #share .share-back,
+        #recover .share-back,
+        #widget .share-back {
+            padding-top: 32px;
+            padding-bottom: 8px;
+        }
+        
+        /* --------------------------------------------
+           HELP PAGE
+           -------------------------------------------- */
         #help .about-hero img {
             object-position: center top;
         }
@@ -668,20 +693,6 @@
         /* --------------------------------------------
            WIDGET PAGE
            -------------------------------------------- */
-        #widget {
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        #widget .about-hero {
-            margin-bottom: 24px;
-        }
-        
-        #widget .about-intro {
-            margin-bottom: 32px;
-        }
-        
         .widget-generate-card {
             max-width: 100%;
             margin-left: auto;
@@ -809,12 +820,6 @@
             margin-top: 16px;
         }
         
-        @media (max-width: 500px) {
-            .widget-sizes-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
         .widget-size-card {
             background: var(--card);
             border-radius: var(--radius-md);
@@ -895,19 +900,13 @@
         /* --------------------------------------------
            ABOUT PAGE
            -------------------------------------------- */
-        #about {
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
         .about-hero {
             position: relative;
             width: 100%;
             height: 385px;
             border-radius: var(--radius-lg);
             overflow: hidden;
-            margin-bottom: 24px;
+            margin-bottom: 48px;
             transform: translateZ(0);
         }
         .about-hero img {
@@ -2762,9 +2761,10 @@
             right: 0;
             background: var(--card);
             display: flex !important;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-evenly;
             height: calc(48px + env(safe-area-inset-bottom, 0px));
+            padding-top: 6px;
             padding-bottom: env(safe-area-inset-bottom, 0px);
             z-index: 200;
             box-shadow: 0 -1px 3px rgba(0,0,0,0.12);
@@ -2782,7 +2782,6 @@
         body.mobile-phone.pwa-standalone .mobile-bottom-tray {
             height: calc(48px + 16px);
             padding-bottom: 8px;
-            padding-top: 8px;
         }
         
         body.mobile-phone[data-theme="dark"] .mobile-bottom-tray {
@@ -2793,8 +2792,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 8px 0;
+            justify-content: flex-start;
+            padding: 0;
             background: none;
             border: none;
             color: var(--text3);
@@ -2834,7 +2833,7 @@
         .mobile-more-item {
             display: block;
             width: 100%;
-            padding: 12px 16px;
+            padding: 6px 16px;
             text-align: left;
             font-size: var(--font-menu);
             font-family: inherit;
@@ -2849,7 +2848,9 @@
         }
         
         .mobile-more-themes {
-            padding: 12px 16px;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: center;
         }
         
         .mobile-more-label {
@@ -2861,6 +2862,7 @@
         .mobile-themes {
             display: flex;
             gap: 8px;
+            justify-content: center;
         }
         
         .mobile-more-divider {
@@ -2887,6 +2889,7 @@
         body.mobile-phone #recover,
         body.mobile-phone #about,
         body.mobile-phone #help,
+        body.mobile-phone #widget,
         body.mobile-phone #friend {
             padding-top: 16px;
             padding-bottom: 16px;
@@ -2935,7 +2938,7 @@
                     </div>
                 </div>
                 <div class="welcome-feature">
-                    <div class="welcome-feature-icon"><span class="material-symbols-outlined">share</span></div>
+                    <div class="welcome-feature-icon"><span class="material-symbols-outlined">bookmark_heart</span></div>
                     <div class="welcome-feature-text">
                         <div class="welcome-feature-title">Share</div>
                         <div class="welcome-feature-desc">Send your entire collection with a single code.</div>
@@ -2991,16 +2994,12 @@
                     <span class="mobile-bottom-label">Deep</span>
                 </button>
                 <button class="mobile-bottom-item" id="mobile-edit-btn">
-                    <span class="material-symbols-outlined">edit</span>
+                    <span class="material-symbols-outlined">edit_square</span>
                     <span class="mobile-bottom-label">Edit</span>
                 </button>
                 <button class="mobile-bottom-item" id="mobile-share-btn">
-                    <span class="material-symbols-outlined">share</span>
+                    <span class="material-symbols-outlined">bookmark_heart</span>
                     <span class="mobile-bottom-label">Share</span>
-                </button>
-                <button class="mobile-bottom-item" id="mobile-recover-btn">
-                    <span class="material-symbols-outlined">history</span>
-                    <span class="mobile-bottom-label">Recover</span>
                 </button>
                 <button class="mobile-bottom-item" id="mobile-more-btn">
                     <span class="material-symbols-outlined">menu</span>
@@ -3013,14 +3012,14 @@
         <!-- Mobile More Menu -->
         <div class="mobile-more-menu" id="mobile-more-menu">
             <div class="mobile-more-themes">
-                <div class="mobile-more-label">Theme</div>
                 <div class="mobile-themes" id="mobile-themes"></div>
             </div>
             <div class="mobile-more-divider"></div>
             <a class="mobile-more-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank">Donate</a>
             <a class="mobile-more-item" href="/cdn-cgi/l/email-protection#86e5e9eaefe8c6e5e9eaefe8ebe7ffe8e7f4e2a8e8e3f2b9f5f3e4ece3e5f2bbcbcfded2c7d6c3c2e3f4f6d7f3e3f5f2efe9e8">Email</a>
-            <button class="mobile-more-item" id="mobile-about-btn">About</button>
             <button class="mobile-more-item" id="mobile-help-btn">Help</button>
+            <button class="mobile-more-item" id="mobile-about-btn">About</button>
+            <button class="mobile-more-item" id="mobile-recover-btn">Recover</button>
             <button class="mobile-more-item" id="mobile-widget-btn">iOS Widget</button>
         </div>
         
@@ -3037,8 +3036,8 @@
                 <button class="sidebar-item active" id="sidebar-grid-btn" data-tooltip="Grid Layout"><span class="material-symbols-outlined">dashboard_customize</span><span class="sidebar-text">Grid Layout</span></button>
                 <button class="sidebar-item" id="sidebar-dive-btn" data-tooltip="Deep Dive"><span class="material-symbols-outlined">format_image_left</span><span class="sidebar-text">Deep Dive</span></button>
                 <div class="sidebar-divider"></div>
-                <button class="sidebar-item" id="sidebar-edit-btn" data-tooltip="Edit"><span class="material-symbols-outlined">edit</span><span class="sidebar-text">Edit</span></button>
-                <button class="sidebar-item" id="sidebar-share-btn" data-tooltip="Share"><span class="material-symbols-outlined">share</span><span class="sidebar-text">Share</span></button>
+                <button class="sidebar-item" id="sidebar-edit-btn" data-tooltip="Edit"><span class="material-symbols-outlined">edit_square</span><span class="sidebar-text">Edit</span></button>
+                <button class="sidebar-item" id="sidebar-share-btn" data-tooltip="Share"><span class="material-symbols-outlined">bookmark_heart</span><span class="sidebar-text">Share</span></button>
                 <button class="sidebar-item" id="sidebar-recover-btn" data-tooltip="Recover"><span class="material-symbols-outlined">history</span><span class="sidebar-text">Recover</span></button>
                 <button class="sidebar-item" id="sidebar-about-btn" data-tooltip="About"><span class="material-symbols-outlined">info</span><span class="sidebar-text">About</span></button>
                 <button class="sidebar-item" id="sidebar-widget-btn" data-tooltip="iOS Widget"><span class="material-symbols-outlined">phone_iphone</span><span class="sidebar-text">iOS Widget</span></button>
@@ -3148,9 +3147,16 @@
 
                 <!-- Share View -->
                 <div class="view" id="share">
+                    <div class="about-hero">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1200&auto=format&fit=crop" alt="Concert crowd">
+                        <div class="about-hero-overlay">
+                            <h1 class="about-hero-title">Share Your <span>MIXTAPED</span></h1>
+                        </div>
+                    </div>
+                    
                     <div class="section">
                         <div class="edit-toolbar">
-                            <div class="section-hd">Share Your <span class="brand">Mixtape</span></div>
+                            <div class="section-hd">Generate Code</div>
                         </div>
                         <p class="section-desc">Remember making mixtapes for your friends? Here we are in the future sharing Spotify playlists. But the vibe is so much more than one playlist. It can be a season, a theme, your favorite genres. Whatever you want it to be or say about you. Generate a code and share your favorite playlists with someone who needs to hear what you've been listening to. They will see your mixtape in the Deep Dive format so adding descriptions to each of your playlists will add helpful context.</p>
                         <p class="section-desc" style="margin-top: 12px;"><span style="font-weight: 600;">Tip:</span> To backup everything including your collected and collaborated mixtapes, go to Recover and generate a full backup code.</p>
@@ -3224,6 +3230,13 @@
 
                 <!-- Recover View -->
                 <div class="view" id="recover">
+                    <div class="about-hero">
+                        <img src="https://images.unsplash.com/photo-1461360228754-6e81c478b882?q=80&w=1200&auto=format&fit=crop" alt="Vinyl records">
+                        <div class="about-hero-overlay">
+                            <h1 class="about-hero-title">Recover Your <span>MIXTAPED</span></h1>
+                        </div>
+                    </div>
+                    
                     <div class="section">
                         <div class="edit-toolbar">
                             <div class="section-hd">Create Backup</div>
@@ -3264,11 +3277,62 @@
                         </div>
                     </div>
                     
-                    <div class="about-intro">
-                        <p>Put your mixtape on your iPhone home screen. Each playlist cover is tappable and opens directly in Spotify. Requires the free <a href="https://apps.apple.com/app/widgy/id1524540481" target="_blank" style="color: var(--text); text-decoration: none;">Widgy app</a> from the App Store.</p>
+                    <div class="section">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Widget Sizes</div>
+                        </div>
+                        <p class="section-desc">Put your mixtape on your iPhone home screen. Each playlist cover is tappable and opens directly in Spotify. Requires the free <a href="https://apps.apple.com/app/widgy/id1524540481" target="_blank" style="color: var(--text); text-decoration: none;">Widgy app</a> from the App Store.</p>
+                        <div class="widget-sizes-grid">
+                            <div class="widget-size-card">
+                                <div class="widget-size-preview small-preview">
+                                    <div class="preview-grid" style="grid-template-columns: repeat(2, 1fr);"><span></span><span></span><span></span><span></span></div>
+                                </div>
+                                <div class="widget-size-info">
+                                    <div class="widget-size-name">Small</div>
+                                    <div class="widget-size-desc">1-4 playlists</div>
+                                </div>
+                            </div>
+                            <div class="widget-size-card">
+                                <div class="widget-size-preview medium-preview">
+                                    <div class="preview-grid" style="grid-template-columns: repeat(3, 1fr);"><span></span><span></span><span></span></div>
+                                </div>
+                                <div class="widget-size-info">
+                                    <div class="widget-size-name">Medium</div>
+                                    <div class="widget-size-desc">3-4 playlists</div>
+                                </div>
+                            </div>
+                            <div class="widget-size-card">
+                                <div class="widget-size-preview large-preview">
+                                    <div class="preview-grid" style="grid-template-columns: repeat(3, 1fr);"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                </div>
+                                <div class="widget-size-info">
+                                    <div class="widget-size-name">Large</div>
+                                    <div class="widget-size-desc">6-9 playlists</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="section">
+                    <div class="section" style="margin-top: 48px;">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">How to Install</div>
+                        </div>
+                        <div class="help-section" style="margin-bottom: 0;">
+                            <div class="help-q">Step 1: Download Widgy</div>
+                            <p class="help-a">Install the free <a href="https://apps.apple.com/app/widgy/id1524540481" target="_blank" style="color: var(--text); text-decoration: none;">Widgy app</a> from the App Store if you haven't already.</p>
+                            
+                            <div class="help-q">Step 2: Generate Widget</div>
+                            <p class="help-a">Choose your size, style, and density below, then tap Generate. You'll get a downloadable file.</p>
+                            
+                            <div class="help-q">Step 3: Import to Widgy</div>
+                            <p class="help-a">Tap the downloaded .widgy file to open it directly in Widgy.</p>
+                            
+                            <div class="help-q">Step 4: Add to Home Screen</div>
+                            <p class="help-a">In Widgy, go to the Manage tab and assign your widget to a slot. Then add the Widgy widget to your home screen through iOS's normal widget picker.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section" style="margin-top: 48px;">
                         <div class="edit-toolbar">
                             <div class="section-hd">Generate <span class="brand">Widget</span></div>
                         </div>
@@ -3336,60 +3400,6 @@
                         <div class="share-output" id="widget-output"></div>
                     </div>
                     
-                    <div class="section" style="margin-top: 48px;">
-                        <div class="edit-toolbar">
-                            <div class="section-hd">How to Install</div>
-                        </div>
-                        <div class="help-section" style="margin-bottom: 0;">
-                            <div class="help-q">Step 1: Download Widgy</div>
-                            <p class="help-a">Install the free <a href="https://apps.apple.com/app/widgy/id1524540481" target="_blank" style="color: var(--text); text-decoration: none;">Widgy app</a> from the App Store if you haven't already.</p>
-                            
-                            <div class="help-q">Step 2: Generate Widget</div>
-                            <p class="help-a">Choose your size, style, and density above, then tap Generate. You'll get both a downloadable file and a QR code.</p>
-                            
-                            <div class="help-q">Step 3: Import to Widgy</div>
-                            <p class="help-a"><strong>Option A:</strong> Tap the downloaded .widgy file to open it directly in Widgy.<br><strong>Option B:</strong> In Widgy, go to Create → Import → Scan QR Code and scan the generated code.</p>
-                            
-                            <div class="help-q">Step 4: Add to Home Screen</div>
-                            <p class="help-a">In Widgy, go to the Manage tab and assign your widget to a slot. Then add the Widgy widget to your home screen through iOS's normal widget picker.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="section" style="margin-top: 48px;">
-                        <div class="edit-toolbar">
-                            <div class="section-hd">Widget Sizes</div>
-                        </div>
-                        <div class="widget-sizes-grid">
-                            <div class="widget-size-card">
-                                <div class="widget-size-preview small-preview">
-                                    <div class="preview-grid" style="grid-template-columns: repeat(2, 1fr);"><span></span><span></span><span></span><span></span></div>
-                                </div>
-                                <div class="widget-size-info">
-                                    <div class="widget-size-name">Small</div>
-                                    <div class="widget-size-desc">1-4 playlists</div>
-                                </div>
-                            </div>
-                            <div class="widget-size-card">
-                                <div class="widget-size-preview medium-preview">
-                                    <div class="preview-grid" style="grid-template-columns: repeat(3, 1fr);"><span></span><span></span><span></span></div>
-                                </div>
-                                <div class="widget-size-info">
-                                    <div class="widget-size-name">Medium</div>
-                                    <div class="widget-size-desc">3-4 playlists</div>
-                                </div>
-                            </div>
-                            <div class="widget-size-card">
-                                <div class="widget-size-preview large-preview">
-                                    <div class="preview-grid" style="grid-template-columns: repeat(3, 1fr);"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-                                </div>
-                                <div class="widget-size-info">
-                                    <div class="widget-size-name">Large</div>
-                                    <div class="widget-size-desc">6-9 playlists</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div class="share-back">
                         <button class="txt-btn" id="widget-back-btn">Back</button>
                     </div>
@@ -3416,7 +3426,7 @@
                         </div>
                         
                         <div class="about-card">
-                            <div class="about-card-icon"><span class="material-symbols-outlined">share</span></div>
+                            <div class="about-card-icon"><span class="material-symbols-outlined">bookmark_heart</span></div>
                             <div class="about-card-title">Sharing Made Easy</div>
                             <p class="about-card-desc">Generate a single link that contains your entire collection. Send it to a friend, post it anywhere. They don't need an account or an app. Just click and discover what you've been listening to.</p>
                         </div>
@@ -3497,14 +3507,14 @@
 
                 <!-- Help View -->
                 <div class="view" id="help">
-                    <div class="section">
-                        <div class="about-hero">
-                            <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=2969&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Help">
-                            <div class="about-hero-overlay">
-                                <h1 class="about-hero-title">Help With &nbsp;<span>MIXTAPED</span></h1>
-                            </div>
+                    <div class="about-hero">
+                        <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=2969&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Help">
+                        <div class="about-hero-overlay">
+                            <h1 class="about-hero-title">Help With &nbsp;<span>MIXTAPED</span></h1>
                         </div>
-                        
+                    </div>
+                    
+                    <div class="section">
                         <div class="help-section">
                             <div class="help-title">Getting Started</div>
                             <div class="help-q">What is <span class="brand">Mixtaped</span>?</div>
@@ -4192,10 +4202,56 @@
         /* --------------------------------------------
            VIEW NAVIGATION
            -------------------------------------------- */
-        function updateMobileHomeActive(isHome) {
+        function updateMobileTopTray(context) {
+            // context can be: 'home', 'home-related' (edit/share for your mixtape), 'other' (help/about/recover/widget), or 'friend'
             const homeBtn = document.getElementById('mobile-home-btn');
-            if (homeBtn) {
-                homeBtn.classList.toggle('active', isHome);
+            const addBtn = document.getElementById('mobile-add-btn');
+            const mixtapesBtn = document.getElementById('mobile-mixtapes-btn');
+            const collabBtn = document.getElementById('mobile-collab-btn');
+            
+            if (!homeBtn) return;
+            
+            if (context === 'home' || context === 'home-related') {
+                // Viewing your own mixtape content - home active, others inactive
+                homeBtn.classList.add('active');
+                addBtn.classList.remove('active');
+                mixtapesBtn.classList.remove('active');
+                collabBtn.classList.remove('active');
+                // Clear the add input if it was open and reset mode to home
+                if (mobileTopMode === 'add') {
+                    mobileTopMode = 'home';
+                    renderMobileTopScroll();
+                } else if (mobileTopMode !== 'home') {
+                    // If we were in mixtapes/collab mode, switch back to home mode
+                    mobileTopMode = 'home';
+                    renderMobileTopScroll();
+                }
+                // Clear current friend selection
+                currentFriendIdx = null;
+            } else if (context === 'other') {
+                // Viewing help/about/recover/widget - deactivate home and add
+                homeBtn.classList.remove('active');
+                addBtn.classList.remove('active');
+                // If add was active, clear it but keep mixtapes/collab state
+                if (mobileTopMode === 'add') {
+                    mobileTopMode = 'home';
+                    renderMobileTopScroll();
+                }
+                // mixtapes/collab icons persist if they were set from tray
+            } else if (context === 'friend') {
+                // Viewing a friend/collected mixtape
+                homeBtn.classList.remove('active');
+                addBtn.classList.remove('active');
+                // mixtapes or collab icon will be set by showFriend based on mixtape type
+            }
+        }
+        
+        // Legacy function for backward compatibility
+        function updateMobileHomeActive(isHome) {
+            if (isHome) {
+                updateMobileTopTray('home');
+            } else {
+                updateMobileTopTray('other');
             }
         }
         
@@ -4224,7 +4280,7 @@
             document.getElementById('edit').classList.add('on');
             renderForm();
             updateCols();
-            updateMobileHomeActive(false);
+            updateMobileTopTray('home-related');
         }
 
         function showDive() {
@@ -4610,7 +4666,7 @@
             document.getElementById('share-output').innerHTML = '';
             document.getElementById('import-string').value = '';
             renderCollectedList();
-            updateMobileHomeActive(false);
+            updateMobileTopTray('home-related');
         }
         
         function showRecover() {
@@ -4670,6 +4726,18 @@
             
             document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
             document.getElementById('friend').classList.add('on');
+            
+            // Update mobile top tray - activate the appropriate icon based on mixtape type
+            updateMobileTopTray('friend');
+            const mixtapesBtn = document.getElementById('mobile-mixtapes-btn');
+            const collabBtn = document.getElementById('mobile-collab-btn');
+            if (mixtapesBtn && collabBtn) {
+                // Curated/saved mixtapes have template and no name
+                // Collab/friend mixtapes have name (and possibly no template)
+                const isCuratedMixtape = mixtape.template && !mixtape.name;
+                mixtapesBtn.classList.toggle('active', isCuratedMixtape);
+                collabBtn.classList.toggle('active', !isCuratedMixtape);
+            }
             
             renderFriendView();
         }
@@ -5490,15 +5558,30 @@
             };
             
             document.getElementById('mobile-add-btn').onclick = () => {
-                setMobileTopMode('add');
+                // Toggle off if already in add mode
+                if (mobileTopMode === 'add') {
+                    setMobileTopMode('home');
+                } else {
+                    setMobileTopMode('add');
+                }
             };
             
             document.getElementById('mobile-mixtapes-btn').onclick = () => {
-                setMobileTopMode('mixtapes');
+                // Toggle off if already in mixtapes mode AND no mixtape is selected
+                if (mobileTopMode === 'mixtapes' && currentFriendIdx === null) {
+                    setMobileTopMode('home');
+                } else {
+                    setMobileTopMode('mixtapes');
+                }
             };
             
             document.getElementById('mobile-collab-btn').onclick = () => {
-                setMobileTopMode('collab');
+                // Toggle off if already in collab mode AND no mixtape is selected
+                if (mobileTopMode === 'collab' && currentFriendIdx === null) {
+                    setMobileTopMode('home');
+                } else {
+                    setMobileTopMode('collab');
+                }
             };
             
             // Bottom tray buttons
@@ -5522,11 +5605,6 @@
                 showShare();
             };
             
-            document.getElementById('mobile-recover-btn').onclick = () => {
-                updateMobileBottomActive('mobile-recover-btn');
-                showRecover();
-            };
-            
             document.getElementById('mobile-more-btn').onclick = (e) => {
                 e.stopPropagation();
                 document.getElementById('mobile-more-menu').classList.toggle('open');
@@ -5543,6 +5621,12 @@
                 closeMobileMoreMenu();
                 updateMobileBottomActive(null);
                 showAbout();
+            };
+            
+            document.getElementById('mobile-recover-btn').onclick = () => {
+                closeMobileMoreMenu();
+                updateMobileBottomActive(null);
+                showRecover();
             };
             
             document.getElementById('mobile-widget-btn').onclick = () => {
@@ -5698,7 +5782,7 @@
                 banner.className = 'safari-banner';
                 banner.innerHTML = `
                     <span>For the best experience, open in Safari and add to your home screen.</span>
-                    <button class="safari-close">âœ•</button>
+                    <button class="safari-close">&times;</button>
                 `;
                 document.body.prepend(banner);
                 banner.querySelector('.safari-close').onclick = () => banner.remove();
