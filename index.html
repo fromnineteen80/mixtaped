@@ -5919,18 +5919,24 @@
             },
             
             // Create an image layer for a playlist cover with embedded image
-            createImageLayer(index, x, y, width, height, imageId, cornerRadius = 34) {
+            // Widgy format: z="5" is image layer, "1" is source (0=URL, 1=file), "2" is the reference
+            createImageLayer(index, x, y, width, height, imageFilename, cornerRadius = 34) {
                 return {
-                    z: "5", s: `Playlist ${index + 1}`, d0: index,
-                    "1": "Embedded",
-                    "2": imageId,
-                    b: this.animVal(x), c: this.animVal(y),
-                    d: this.animVal(width), e: this.animVal(height),
-                    i: this.animVal(cornerRadius), w: this.animVal(2, 1000)
+                    z: "5", 
+                    s: `Playlist ${index + 1}`, 
+                    d0: index,
+                    "1": 1,  // 1 = local/embedded file
+                    "2": `images/${imageFilename}.jpg`,  // path to image in archive
+                    b: this.animVal(x), 
+                    c: this.animVal(y),
+                    d: this.animVal(width), 
+                    e: this.animVal(height),
+                    i: this.animVal(cornerRadius), 
+                    w: this.animVal(2, 1000)
                 };
             },
             
-            // Create a widgy blob with embedded images as a ZIP archive
+            // Create a widgy blob with embedded images as a ZIP archive (Widgy v1.5 format)
             async createWidgyBlobWithImages(options) {
                 const { playlists, images, size = 'medium', density = 'min', style = 'glass', name = 'Mixtaped', author = 'Mixtaped' } = options;
                 const sizeConfig = this.SIZES[size];
@@ -5947,6 +5953,7 @@
                     const y = layout.startY + (row * (layout.tileSizeH + layout.gapH));
                     
                     if (playlist.imageRef) {
+                        // Reference the image filename (without extension for Widgy)
                         imageLayers.push(this.createImageLayer(i, x, y, layout.tileSizeW, layout.tileSizeH, playlist.imageRef, layout.cornerRadius));
                     }
                     if (playlist.url) {
@@ -5962,8 +5969,16 @@
                 layers.push(this.createBackground(layout.canvasW, layout.canvasH, style));
                 
                 const widgetJson = {
-                    "0": 24, "1": layers, "3": name, "5": author, "6": sizeConfig.type,
-                    "9": Date.now() % 10000, "20": false, "21": false, "28": true, "a2": 27,
+                    "0": 24,
+                    "1": layers,
+                    "3": name,
+                    "5": author,
+                    "6": sizeConfig.type,
+                    "9": Date.now() % 10000,
+                    "20": false,
+                    "21": false,
+                    "28": true,
+                    "a2": 27,
                     "l2": "", "m2": "", "n2": "", "o2": "", "p2": "", "q2": "",
                     "zzz": `mtpd_${size[0]}${density[0]}_${Date.now().toString(36)}`
                 };
@@ -5974,14 +5989,16 @@
                 // Add widget.json
                 zip.file("widget.json", JSON.stringify(widgetJson));
                 
-                // Add images folder with actual image files
+                // Add images folder with actual image files (jpg format)
                 const imagesFolder = zip.folder("images");
                 for (const img of images) {
+                    // Widgy expects images without extension in the JSON reference
+                    // but the actual files need .jpg extension
                     imagesFolder.file(`${img.id}.jpg`, img.data);
                 }
                 
                 // Generate ZIP blob
-                return await zip.generateAsync({ type: "blob" });
+                return await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
             },
             
             // Create a tap action layer
