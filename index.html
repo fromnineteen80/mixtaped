@@ -2778,6 +2778,7 @@
             padding-bottom: env(safe-area-inset-bottom, 0px);
             z-index: 200;
             box-shadow: 0 -1px 3px rgba(0,0,0,0.12);
+            box-sizing: content-box;
         }
         
         body.mobile-phone .mobile-bottom-tray-inner {
@@ -2790,7 +2791,7 @@
         
         /* Safari standalone PWA */
         body.mobile-phone.pwa-standalone .mobile-bottom-tray {
-            padding-bottom: 12px;
+            padding-bottom: 16px;
         }
         
         body.mobile-phone[data-theme="dark"] .mobile-bottom-tray {
