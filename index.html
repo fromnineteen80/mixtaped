@@ -4508,7 +4508,7 @@
                         <div class="profile-field-col">
                             <label class="profile-field-label">Spotify Username</label>
                             <input class="pl-input" type="text" id="profile-spotify-username" placeholder="@username">
-                            <span class="profile-field-meta">Fills name & photo</span>
+                            <span class="profile-field-meta">Fills photo</span>
                         </div>
                         <div class="profile-field-col">
                             <label class="profile-field-label">Your Name <span class="required">*</span></label>
@@ -5105,45 +5105,25 @@
             if (!username) return null;
             try {
                 const targetUrl = `https://open.spotify.com/user/${encodeURIComponent(username)}`;
+                const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
                 
-                // Try multiple proxies in case one fails
-                const proxies = [
-                    `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
-                    `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`
-                ];
+                const response = await fetch(proxyUrl);
+                if (!response.ok) return null;
                 
-                let html = null;
-                for (const proxyUrl of proxies) {
-                    try {
-                        const response = await fetch(proxyUrl);
-                        if (response.ok) {
-                            html = await response.text();
-                            break;
-                        }
-                    } catch(e) {
-                        continue;
-                    }
-                }
-                
-                if (!html) return null;
+                const html = await response.text();
+                if (!html || html.includes('error')) return null;
                 
                 const result = {};
                 
-                // Extract profile image from the HTML
-                const imgMatch = html.match(/https:\/\/i\.scdn\.co\/image\/[a-zA-Z0-9]+/);
-                if (imgMatch) {
-                    result.photo = imgMatch[0];
-                }
-                
-                // Extract display name from og:title or title tag
-                const titleMatch = html.match(/<meta[^>]*property="og:title"[^>]*content="([^"]+)"/i) ||
-                                   html.match(/<title>([^<|]+)/i);
-                if (titleMatch && titleMatch[1]) {
-                    // Clean up the name (remove " | Spotify" suffix if present)
-                    let name = titleMatch[1].trim();
-                    name = name.replace(/\s*\|\s*Spotify.*$/i, '').trim();
-                    if (name && name.toLowerCase() !== username.toLowerCase()) {
-                        result.name = name;
+                // Extract profile image from og:image meta tag
+                const ogImageMatch = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]+)"/i);
+                if (ogImageMatch && ogImageMatch[1]) {
+                    result.photo = ogImageMatch[1];
+                } else {
+                    // Fallback to any Spotify CDN image
+                    const imgMatch = html.match(/https:\/\/i\.scdn\.co\/image\/[a-zA-Z0-9]+/);
+                    if (imgMatch) {
+                        result.photo = imgMatch[0];
                     }
                 }
                 
@@ -7227,16 +7207,11 @@
                             if (spotifyData.photo && profile.photoSource !== 'upload') {
                                 profile.photo = spotifyData.photo;
                                 profile.photoSource = 'spotify';
+                                saveProfile();
+                                renderProfilePhoto();
+                                renderSidebarAvatar();
+                                renderProfileCard();
                             }
-                            // Update name if we don't have one yet
-                            if (spotifyData.name && !profile.name) {
-                                profile.name = spotifyData.name;
-                                document.getElementById('profile-name').value = profile.name;
-                            }
-                            saveProfile();
-                            renderProfilePhoto();
-                            renderSidebarAvatar();
-                            renderProfileCard();
                         }
                     }, 500);
                 }
