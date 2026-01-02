@@ -919,14 +919,14 @@
             white-space: nowrap;
         }
         
-        /* Mobile action buttons and inputs - smaller to prevent wrapping */
+        /* Mobile action buttons and inputs - must match height and font size */
         @media (max-width: 600px) {
             .action-btn {
-                font-size: 12px;
-                padding: 6px 10px;
+                font-size: 14px;
+                padding: 8px 12px;
             }
             .pl-input {
-                font-size: 12px;
+                font-size: 14px;
                 padding: 8px;
             }
             .edit-actions {
@@ -955,6 +955,12 @@
         .card .action-btn,
         .profile-card-edit .action-btn {
             box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+        }
+        
+        /* Dark theme: buttons inside cards need lighter background to stand out */
+        [data-theme="dark"] .card .action-btn,
+        [data-theme="dark"] .profile-card-edit .action-btn {
+            background: var(--input);
         }
 
         .txt-btn {
@@ -5095,26 +5101,63 @@
         }
         
         // Fetch Spotify profile photo from public profile page via CORS proxy
-        async function fetchSpotifyProfilePhoto(username) {
+        async function fetchSpotifyProfile(username) {
             if (!username) return null;
             try {
                 const targetUrl = `https://open.spotify.com/user/${encodeURIComponent(username)}`;
-                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
                 
-                const response = await fetch(proxyUrl);
-                if (!response.ok) return null;
-                const html = await response.text();
+                // Try multiple proxies in case one fails
+                const proxies = [
+                    `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+                    `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`
+                ];
+                
+                let html = null;
+                for (const proxyUrl of proxies) {
+                    try {
+                        const response = await fetch(proxyUrl);
+                        if (response.ok) {
+                            html = await response.text();
+                            break;
+                        }
+                    } catch(e) {
+                        continue;
+                    }
+                }
+                
+                if (!html) return null;
+                
+                const result = {};
                 
                 // Extract profile image from the HTML
                 const imgMatch = html.match(/https:\/\/i\.scdn\.co\/image\/[a-zA-Z0-9]+/);
                 if (imgMatch) {
-                    return imgMatch[0];
+                    result.photo = imgMatch[0];
                 }
-                return null;
+                
+                // Extract display name from og:title or title tag
+                const titleMatch = html.match(/<meta[^>]*property="og:title"[^>]*content="([^"]+)"/i) ||
+                                   html.match(/<title>([^<|]+)/i);
+                if (titleMatch && titleMatch[1]) {
+                    // Clean up the name (remove " | Spotify" suffix if present)
+                    let name = titleMatch[1].trim();
+                    name = name.replace(/\s*\|\s*Spotify.*$/i, '').trim();
+                    if (name && name.toLowerCase() !== username.toLowerCase()) {
+                        result.name = name;
+                    }
+                }
+                
+                return Object.keys(result).length > 0 ? result : null;
             } catch(e) {
                 console.log('Could not fetch Spotify profile:', e);
                 return null;
             }
+        }
+        
+        // Backwards compatibility alias
+        async function fetchSpotifyProfilePhoto(username) {
+            const result = await fetchSpotifyProfile(username);
+            return result ? result.photo : null;
         }
         
         function renderProfileCard() {
@@ -7178,16 +7221,22 @@
                 
                 if (username) {
                     spotifyFetchTimeout = setTimeout(async () => {
-                        const photoUrl = await fetchSpotifyProfilePhoto(username);
-                        if (photoUrl && profile.spotifyUsername === username) {
-                            // Only update if username hasn't changed and we don't have a manual upload
-                            if (profile.photoSource !== 'upload') {
-                                profile.photo = photoUrl;
+                        const spotifyData = await fetchSpotifyProfile(username);
+                        if (spotifyData && profile.spotifyUsername === username) {
+                            // Update photo if we don't have a manual upload
+                            if (spotifyData.photo && profile.photoSource !== 'upload') {
+                                profile.photo = spotifyData.photo;
                                 profile.photoSource = 'spotify';
-                                saveProfile();
-                                renderProfilePhoto();
-                                renderSidebarAvatar();
                             }
+                            // Update name if we don't have one yet
+                            if (spotifyData.name && !profile.name) {
+                                profile.name = spotifyData.name;
+                                document.getElementById('profile-name').value = profile.name;
+                            }
+                            saveProfile();
+                            renderProfilePhoto();
+                            renderSidebarAvatar();
+                            renderProfileCard();
                         }
                     }, 500);
                 }
