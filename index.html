@@ -566,7 +566,7 @@
         }
 
         .theme-btn:active { opacity: 0.6; }
-        .theme-btn.on { border-color: var(--accent); }
+        .theme-btn.on { border-color: #1DB954; }
         .theme-btn[data-t="dark"] { background: #161616; }
         .theme-btn[data-t="dark"] .material-symbols-outlined { color: #BFBFBF; }
         .theme-btn[data-t="light"] { background: #F5F5F4; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.1); }
@@ -588,7 +588,7 @@
             width: 24px;
             height: 24px;
             border-radius: 6px;
-            border: 1px solid transparent;
+            border: 1.5px solid transparent;
             cursor: pointer;
             padding: 0;
             margin: 0;
@@ -606,39 +606,31 @@
             line-height: 1;
         }
         
-        .profile-theme-picker-btn.selected {
-            border-color: var(--text);
-        }
-        
+        /* Light button - always green border */
         .profile-theme-picker-btn[data-theme="light"] {
             background-color: #F5F5F4;
-            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+            border-color: #1DB954;
         }
-        
         .profile-theme-picker-btn[data-theme="light"] .material-symbols-outlined {
             color: #4A4A4A;
         }
         
+        /* Dark button - always light color border */
         .profile-theme-picker-btn[data-theme="dark"] {
             background-color: #161616;
+            border-color: #F5F5F4;
         }
-        
         .profile-theme-picker-btn[data-theme="dark"] .material-symbols-outlined {
             color: #BFBFBF;
         }
         
+        /* Spotify button - always green border */
         .profile-theme-picker-btn[data-theme="spotify"] {
             background-color: #1DB954;
+            border-color: #1DB954;
         }
-        
         .profile-theme-picker-btn[data-theme="spotify"] .material-symbols-outlined {
             color: #ECECEB;
-        }
-        
-        /* Spotify theme: profile picker light button needs green border */
-        [data-theme="spotify"] .profile-theme-picker-btn[data-theme="light"] {
-            box-shadow: none;
-            border-color: #1DB954;
         }
         
         /* Dark theme: all button outlines and dark/spotify icons use appropriate grays */
@@ -733,6 +725,82 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        
+        /* Edit mode for tiles */
+        .tile.edit-mode {
+            position: relative;
+        }
+        
+        .tile-delete {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+        
+        .tile.edit-mode .tile-delete {
+            opacity: 1;
+        }
+        
+        .tile-delete .material-symbols-outlined {
+            font-size: 16px;
+            color: white;
+        }
+        
+        .tile-delete:active {
+            transform: scale(0.9);
+        }
+        
+        /* Edit mode for dive items */
+        .dive-item.edit-mode {
+            position: relative;
+        }
+        
+        .dive-item.edit-mode .dive-img {
+            position: relative;
+        }
+        
+        .dive-delete {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+        
+        .dive-item.edit-mode .dive-delete {
+            opacity: 1;
+        }
+        
+        .dive-delete .material-symbols-outlined {
+            font-size: 18px;
+            color: white;
+        }
+        
+        .dive-delete:active {
+            transform: scale(0.9);
         }
 
         /* --------------------------------------------
@@ -886,6 +954,27 @@
             margin-bottom: 12px;
         }
         
+        @media (max-width: 600px) {
+            .main-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            
+            .main-toolbar .mixtape-title-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+                width: 100%;
+            }
+            
+            .main-toolbar .edit-actions {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 4px;
+            }
+        }
+        
         .main-toolbar .edit-actions {
             display: flex;
             gap: 6px;
@@ -895,7 +984,7 @@
         .main-toolbar .action-btn,
         .mixtape-header .action-btn {
             padding: 8px 14px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            box-shadow: var(--shadow);
         }
         
         .edit-actions {
@@ -922,7 +1011,7 @@
         /* Mobile action buttons and inputs - must match height and font size */
         @media (max-width: 600px) {
             .action-btn {
-                font-size: 14px;
+                font-size: 13px;
                 padding: 8px 12px;
             }
             .pl-input {
@@ -957,9 +1046,10 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
         }
         
-        /* Dark theme: buttons inside cards need lighter background to stand out */
+        /* Dark theme: buttons inside cards and modals need lighter background to stand out */
         [data-theme="dark"] .card .action-btn,
-        [data-theme="dark"] .profile-card-edit .action-btn {
+        [data-theme="dark"] .profile-card-edit .action-btn,
+        [data-theme="dark"] .modal .action-btn {
             background: var(--input);
         }
 
@@ -2416,7 +2506,7 @@
         }
         
         .dropdown-content .mixtape-item {
-            padding: 4px 16px;
+            padding: 4px 16px 4px 24px;
             font-size: 11px;
             white-space: nowrap;
             overflow: hidden;
@@ -2491,7 +2581,8 @@
             color: var(--text2);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            word-break: break-word;
+            word-break: normal;
+            overflow-wrap: break-word;
             line-height: 1.3;
         }
         
@@ -3017,11 +3108,11 @@
             .sidebar-mixtape-item {
                 display: flex;
                 align-items: center;
-                gap: 12px;
+                gap: 10px;
                 width: 100%;
-                padding: 7px 20px;
+                padding: 6px 20px 6px 46px;
                 text-align: left;
-                font-size: var(--font-sidebar);
+                font-size: 12px;
                 color: var(--text2);
                 background: none;
                 border: none;
@@ -3029,7 +3120,7 @@
                 font-family: inherit;
             }
             .sidebar-mixtape-item .material-symbols-outlined {
-                font-size: 18px;
+                font-size: 16px;
             }
             .sidebar-mixtape-item:hover { background: #E6E6E5; }
             .sidebar-mixtape-item:active { background: #E2E2E1; }
@@ -3448,7 +3539,7 @@
         }
         
         .modal-content {
-            font-size: var(--font-body);
+            font-size: var(--font-small);
             color: var(--text2);
             line-height: var(--line-height);
             margin-bottom: 20px;
@@ -3459,19 +3550,6 @@
             gap: 8px;
             margin-top: 16px;
             justify-content: center;
-        }
-        
-        .modal-btn {
-            font-size: var(--font-button);
-            font-family: inherit;
-            font-weight: 500;
-            color: var(--card);
-            background: var(--text2);
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 12px 32px;
-            cursor: pointer;
-            transition: opacity 0.15s ease;
         }
         
         .modal-link {
@@ -3755,10 +3833,6 @@
         .welcome-btn:active {
             transform: scale(0.98);
             box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        }
-        
-        .modal-btn:active {
-            opacity: 0.7;
         }
         
         /* --------------------------------------------
@@ -4160,7 +4234,7 @@
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal">
             <div class="modal-content" id="modal-content"></div>
-            <button class="modal-btn" id="modal-btn">OK</button>
+            <button class="action-btn" id="modal-btn">OK</button>
         </div>
     </div>
     
@@ -4179,11 +4253,11 @@
                     <label class="save-share-label">Occasion</label>
                     <div class="custom-select save-share-select" id="save-share-template-wrap">
                         <div class="custom-select-btn" id="save-share-template-btn">
-                            <span id="save-share-template-label">Favorites</span>
+                            <span id="save-share-template-label">Select</span>
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                         </div>
                         <div class="custom-select-options" id="save-share-template-options">
-                            <div class="custom-select-option selected" data-value="favorites" data-icon="album">Favorites</div>
+                            <div class="custom-select-option" data-value="favorites" data-icon="album">Favorites</div>
                             <div class="custom-select-option" data-value="roadtrip" data-icon="directions_car">Road Trip</div>
                             <div class="custom-select-option" data-value="dinner" data-icon="dining">Dinner Party</div>
                             <div class="custom-select-option" data-value="workout" data-icon="directions_run">Workout</div>
@@ -4199,6 +4273,46 @@
                 <button class="action-btn" id="save-share-confirm">Save & Copy Link</button>
             </div>
             <div class="modal-feedback" id="save-share-feedback"></div>
+        </div>
+    </div>
+    
+    <!-- Mixtape Actions Modal -->
+    <div class="modal-overlay" id="mixtape-actions-modal">
+        <div class="modal save-share-modal-content">
+            <div class="modal-header" id="mixtape-actions-title">Mixtape Actions</div>
+            <p class="modal-desc" id="mixtape-actions-desc">What would you like to do with this mixtape?</p>
+            
+            <div class="save-share-actions" style="flex-direction: column; gap: 10px;">
+                <button class="action-btn" id="mixtape-actions-copy" style="width: 100%;">Copy Link</button>
+                <button class="action-btn" id="mixtape-actions-edit" style="width: 100%;">Edit</button>
+                <button class="action-btn" id="mixtape-actions-delete" style="width: 100%;">Delete</button>
+                <button class="action-btn" id="mixtape-actions-cancel" style="width: 100%;">Cancel</button>
+            </div>
+            <div class="modal-feedback" id="mixtape-actions-feedback"></div>
+        </div>
+    </div>
+    
+    <!-- Playlist Edit Modal -->
+    <div class="modal-overlay" id="playlist-edit-modal">
+        <div class="modal save-share-modal-content" style="max-width: 400px;">
+            <div class="modal-header">Edit Playlist</div>
+            <div class="pl-item" style="border: none; padding: 0; align-items: flex-start;">
+                <div class="pl-preview-wrap" id="playlist-edit-preview-wrap">
+                    <div class="pl-preview" id="playlist-edit-preview">
+                        <span class="material-symbols-outlined">music_note_2</span>
+                    </div>
+                    <button class="pl-delete" id="playlist-edit-delete">Delete</button>
+                </div>
+                <div class="pl-fields" style="flex: 1;">
+                    <input class="pl-input url" type="url" id="playlist-edit-url" placeholder="Add Spotify playlist URL" autocapitalize="off" autocorrect="off" style="margin-bottom: 8px;">
+                    <div class="pl-title" id="playlist-edit-title">Name will fill when you add playlist URL above</div>
+                    <textarea class="pl-input pl-desc" id="playlist-edit-desc" placeholder="Add description" rows="3" style="margin-top: 8px; min-height: 60px;"></textarea>
+                    <div class="playlist-edit-actions" style="display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end;">
+                        <button class="action-btn" id="playlist-edit-cancel">Cancel</button>
+                        <button class="action-btn" id="playlist-edit-save">Save</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -4255,7 +4369,7 @@
             <button class="mobile-more-item" id="mobile-about-btn">About</button>
             <button class="mobile-more-item" id="mobile-widget-btn">iOS Widget</button>
             <button class="mobile-more-item" id="mobile-help-btn">Help</button>
-            <a class="mobile-more-item" href="mailto:mixtaped@gmail.com">Email</a>
+            <a class="mobile-more-item" href="/cdn-cgi/l/email-protection#036e6a7b776273666743646e626a6f2d606c6e">Email</a>
             <a class="mobile-more-item" href="https://buymeacoffee.com/fromnineteen80" target="_blank">Donate</a>
         </div>
         
@@ -4309,7 +4423,7 @@
                     </div>
                     <div class="sidebar-profile-links" id="sidebar-profile-links" style="display: none;">
                         <button class="sidebar-profile-link" id="sidebar-help-btn"><span class="material-symbols-outlined">tooltip_2</span></button>
-                        <a class="sidebar-profile-link" href="mailto:mixtaped@gmail.com"><span class="material-symbols-outlined">mail</span></a>
+                        <a class="sidebar-profile-link" href="/cdn-cgi/l/email-protection#91fcf8e9e5f0e1f4f5d1f6fcf0f8fdbff2fefc"><span class="material-symbols-outlined">mail</span></a>
                         <a class="sidebar-profile-link" href="https://buymeacoffee.com/fromnineteen80" target="_blank"><span class="material-symbols-outlined">local_cafe</span></a>
                     </div>
                 </div>
@@ -4351,7 +4465,7 @@
                             </div>
                             <div class="menu-profile-links" id="menu-profile-links" style="display: none;">
                                 <button class="menu-profile-link" id="menu-help-btn"><span class="material-symbols-outlined">tooltip_2</span></button>
-                                <a class="menu-profile-link" href="mailto:mixtaped@gmail.com"><span class="material-symbols-outlined">mail</span></a>
+                                <a class="menu-profile-link" href="/cdn-cgi/l/email-protection#83eeeafbf7e2f3e6e7c3e4eee2eaefade0ecee"><span class="material-symbols-outlined">mail</span></a>
                                 <a class="menu-profile-link" href="https://buymeacoffee.com/fromnineteen80" target="_blank"><span class="material-symbols-outlined">local_cafe</span></a>
                             </div>
                         </div>
@@ -4366,9 +4480,9 @@
                     <div class="main-toolbar" id="main-toolbar" style="display: none;">
                         <div class="mixtape-title-info">
                             <span class="mixtape-title" id="main-title"></span>
-                            <span class="mixtape-occasion" id="main-occasion">
-                                <span class="material-symbols-outlined" id="main-occasion-icon">album</span>
-                                <span id="main-occasion-label">Favorites</span>
+                            <span class="mixtape-occasion" id="main-occasion" style="display: none;">
+                                <span class="material-symbols-outlined" id="main-occasion-icon"></span>
+                                <span id="main-occasion-label"></span>
                             </span>
                         </div>
                         <div class="edit-actions">
@@ -4394,9 +4508,9 @@
                     <div class="main-toolbar" id="dive-toolbar" style="display: none;">
                         <div class="mixtape-title-info">
                             <span class="mixtape-title" id="dive-title"></span>
-                            <span class="mixtape-occasion" id="dive-occasion">
-                                <span class="material-symbols-outlined" id="dive-occasion-icon">album</span>
-                                <span id="dive-occasion-label">Favorites</span>
+                            <span class="mixtape-occasion" id="dive-occasion" style="display: none;">
+                                <span class="material-symbols-outlined" id="dive-occasion-icon"></span>
+                                <span id="dive-occasion-label"></span>
                             </span>
                         </div>
                         <div class="edit-actions">
@@ -4454,11 +4568,11 @@
                             <div class="pl-item" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                                 <div class="custom-select inline" id="template-select-wrap">
                                     <div class="custom-select-btn" id="template-select-btn">
-                                        <span id="template-select-label">Favorites</span>
+                                        <span id="template-select-label">Select</span>
                                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                                     </div>
                                     <div class="custom-select-options" id="template-select-options">
-                                        <div class="custom-select-option selected" data-value="favorites" data-icon="album">Favorites</div>
+                                        <div class="custom-select-option" data-value="favorites" data-icon="album">Favorites</div>
                                         <div class="custom-select-option" data-value="roadtrip" data-icon="directions_car">Road Trip</div>
                                         <div class="custom-select-option" data-value="dinner" data-icon="dining">Dinner Party</div>
                                         <div class="custom-select-option" data-value="workout" data-icon="directions_run">Workout</div>
@@ -4952,11 +5066,7 @@
                             </span>
                         </div>
                         <div class="edit-actions" id="mixtape-actions">
-                            <button class="action-btn" id="mixtape-delete-btn">Delete</button>
-                            <button class="action-btn" id="mixtape-edit-btn">Edit</button>
-                            <button class="action-btn" id="mixtape-save-btn">Save</button>
-                            <button class="action-btn" id="mixtape-share-btn">Share</button>
-                            <button class="action-btn" id="mixtape-new-btn">New</button>
+                            <button class="action-btn" id="mixtape-options-btn">Options</button>
                         </div>
                     </div>
                     <div class="collab-header" id="collab-header" style="display: none;">
@@ -5008,11 +5118,11 @@
                                     <label class="edit-header-label">Occasion</label>
                                     <div class="custom-select edit-occasion-select" id="edit-occasion-wrap">
                                         <div class="custom-select-btn" id="edit-occasion-btn">
-                                            <span id="edit-occasion-label">Favorites</span>
+                                            <span id="edit-occasion-label">Select</span>
                                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                                         </div>
                                         <div class="custom-select-options" id="edit-occasion-options">
-                                            <div class="custom-select-option selected" data-value="favorites" data-icon="album">Favorites</div>
+                                            <div class="custom-select-option" data-value="favorites" data-icon="album">Favorites</div>
                                             <div class="custom-select-option" data-value="roadtrip" data-icon="directions_car">Road Trip</div>
                                             <div class="custom-select-option" data-value="dinner" data-icon="dining">Dinner Party</div>
                                             <div class="custom-select-option" data-value="workout" data-icon="directions_run">Workout</div>
@@ -5041,7 +5151,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         /* ============================================
            JAVASCRIPT
            ============================================ */
@@ -5050,14 +5160,24 @@
            STATE & STORAGE
            -------------------------------------------- */
         const K = { i: 'mixtaped_items', s: 'mixtaped_settings', t: 'mixtaped_theme', m: 'mixtaped_mixtapes', p: 'mixtaped_profile', c: 'mixtaped_playlist_cache' };
-        let items = [], cfg = { cols: 2, workingTitle: '', workingOccasion: 'favorites', workingOccasionIcon: 'album' }, work = [], mixtapes = [];
+        let items = [], cfg = { cols: 2, workingTitle: '', workingOccasion: '', workingOccasionIcon: '', workingMixtapeIdx: null }, work = [], mixtapes = [];
         let profile = { name: '', spotifyUsername: '', photo: '', photoSource: '' };
         let playlistCache = {};
         let sysDark = matchMedia('(prefers-color-scheme:dark)').matches;
 
         function load() {
             try { let d = localStorage.getItem(K.i); if (d) items = JSON.parse(d); } catch(e) {}
-            try { let d = localStorage.getItem(K.s); if (d) cfg = JSON.parse(d); } catch(e) {}
+            try { 
+                let d = localStorage.getItem(K.s); 
+                if (d) {
+                    const loaded = JSON.parse(d);
+                    // Merge with defaults, but reset occasion to empty if it was 'favorites' from old default
+                    cfg = { ...cfg, ...loaded };
+                    // Ensure workingOccasion is empty string not undefined
+                    if (!cfg.workingOccasion) cfg.workingOccasion = '';
+                    if (!cfg.workingOccasionIcon) cfg.workingOccasionIcon = '';
+                }
+            } catch(e) {}
             try { let d = localStorage.getItem(K.m); if (d) mixtapes = JSON.parse(d); } catch(e) {}
             try { let d = localStorage.getItem(K.p); if (d) profile = { ...profile, ...JSON.parse(d) }; } catch(e) {}
             try { let d = localStorage.getItem(K.c); if (d) playlistCache = JSON.parse(d); } catch(e) {}
@@ -5423,7 +5543,10 @@
 
         function setTheme(t) {
             document.body.dataset.theme = t;
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
+            document.querySelectorAll('.theme-btn').forEach(b => {
+                b.classList.toggle('on', b.dataset.t === t);
+                b.classList.toggle('active', b.dataset.t === t);
+            });
             document.getElementById('meta-theme').content = { light: '#F5F5F4', dark: '#161616', spotify: '#1DB954' }[t];
             try { localStorage.setItem(K.t, t); } catch(e) {}
             renderThemes();
@@ -5580,7 +5703,6 @@
                 mainToolbar.style.display = showToolbars ? 'flex' : 'none';
                 // Populate title and occasion from cfg
                 document.getElementById('main-title').textContent = cfg.workingTitle || '';
-                document.getElementById('main-occasion-icon').textContent = cfg.workingOccasionIcon || 'album';
                 const occasionLabels = {
                     'favorites': 'Favorites',
                     'roadtrip': 'Road Trip',
@@ -5589,59 +5711,97 @@
                     'podcast': 'Podcast',
                     'focus': 'Focus'
                 };
-                document.getElementById('main-occasion-label').textContent = occasionLabels[cfg.workingOccasion] || 'Favorites';
+                // Show occasion only if set
+                const mainOccasion = document.getElementById('main-occasion');
+                if (cfg.workingOccasion && occasionLabels[cfg.workingOccasion]) {
+                    mainOccasion.style.display = '';
+                    document.getElementById('main-occasion-icon').textContent = cfg.workingOccasionIcon || '';
+                    document.getElementById('main-occasion-label').textContent = occasionLabels[cfg.workingOccasion];
+                } else {
+                    mainOccasion.style.display = 'none';
+                }
             }
             
             // If less than 3 filled, show all slots (with placeholders)
             // If 3+ filled, only show the filled ones
             const displayItems = filled.length >= 3 ? filled : items;
             
-            // Can add more playlists if under 14
-            const canAdd = filled.length >= 3 && filled.length < 14;
+            // Can add more playlists if under 14 (only show add tile in edit mode or when fewer than 3)
+            const canAdd = isEditMode ? (filled.length < 14) : (filled.length >= 3 && filled.length < 14);
             
-            const { cols, size } = calcGrid(displayItems.length + (canAdd ? 1 : 0));
+            // Calculate grid based on display items only, don't count add tile for size calculation
+            const { cols, size } = calcGrid(displayItems.length);
             const g = document.getElementById('grid');
             
             document.documentElement.style.setProperty('--tile-size', size + 'px');
             g.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
             
-            g.innerHTML = displayItems.map((it, i) => `
-                <div class="tile" data-i="${i}">
+            g.innerHTML = displayItems.map((it, i) => {
+                const actualIndex = filled.length >= 3 ? items.indexOf(it) : i;
+                return `
+                <div class="tile ${isEditMode ? 'edit-mode' : ''}" data-i="${actualIndex}">
+                    ${isEditMode && it.url ? `<button class="tile-delete" data-i="${actualIndex}"><span class="material-symbols-outlined">close</span></button>` : ''}
                     <div class="tile-img">
                         ${it.img ? `<img src="${esc(it.img)}" alt="">` : `<div class="tile-ph"><span class="material-symbols-outlined">music_note_2</span></div>`}
                     </div>
                     <div class="tile-title">${esc(it.title) || 'Add playlist'}</div>
                 </div>
-            `).join('') + (canAdd ? `
-                <div class="tile" id="main-add-tile">
+            `}).join('') + (canAdd ? `
+                <div class="tile ${isEditMode ? 'edit-mode' : ''}" id="main-add-tile">
                     <div class="tile-img">
-                        <div class="tile-ph"><span class="material-symbols-outlined">music_note_2</span></div>
+                        <div class="tile-ph"><span class="material-symbols-outlined">add</span></div>
                     </div>
                     <div class="tile-title">Add playlist</div>
                 </div>
             ` : '');
             
+            // Delete button handlers (edit mode)
+            g.querySelectorAll('.tile-delete').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.dataset.i);
+                    items[idx] = { url: '', title: '', img: '', desc: '' };
+                    items.sort((a, b) => (a.url ? 0 : 1) - (b.url ? 0 : 1));
+                    save();
+                    renderGrid();
+                    renderDive();
+                };
+            });
+            
             g.querySelectorAll('.tile:not(#main-add-tile)').forEach(t => {
                 t.onclick = () => {
-                    const it = displayItems[t.dataset.i];
-                    const id = getID(it.url);
-                    if (id) {
-                        // Try deep link first, fallback to web URL
-                        window.location.href = 'spotify:playlist:' + id;
+                    const idx = parseInt(t.dataset.i);
+                    const it = items[idx];
+                    
+                    if (isEditMode) {
+                        // Open playlist edit modal
+                        openPlaylistEditModal(idx, it);
                     } else {
-                        // No URL - go to Edit
-                        updateSidebarActive('sidebar-edit-btn');
-                        showEdit();
+                        const id = getID(it.url);
+                        if (id) {
+                            // Try deep link first, fallback to web URL
+                            window.location.href = 'spotify:playlist:' + id;
+                        } else {
+                            // No URL - open edit modal to add
+                            openPlaylistEditModal(idx, it);
+                        }
                     }
                 };
             });
             
-            // Add tile click handler - go to Edit
+            // Add tile click handler
             const addTile = document.getElementById('main-add-tile');
             if (addTile) {
                 addTile.onclick = () => {
-                    updateSidebarActive('sidebar-edit-btn');
-                    showEdit();
+                    // Find first empty slot or add new one
+                    let emptyIndex = items.findIndex(it => !it.url);
+                    if (emptyIndex === -1 && items.length < 14) {
+                        items.push({ url: '', title: '', img: '', desc: '' });
+                        emptyIndex = items.length - 1;
+                    }
+                    if (emptyIndex !== -1) {
+                        openPlaylistEditModal(emptyIndex, items[emptyIndex]);
+                    }
                 };
             }
             
@@ -5918,6 +6078,8 @@
         }
         
         function showMain() {
+            isEditMode = false;
+            document.getElementById('main-edit-btn').textContent = 'Edit';
             document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
             document.getElementById('main').classList.add('on');
             renderGrid();
@@ -5926,6 +6088,39 @@
 
         // Track if we're editing a saved mixtape
         let editingMixtapeIdx = null;
+        let isEditMode = false;
+        let currentEditIndex = null; // Index of playlist being edited in modal
+        
+        // Open playlist edit modal
+        function openPlaylistEditModal(index, playlist) {
+            currentEditIndex = index;
+            
+            const urlInput = document.getElementById('playlist-edit-url');
+            const descInput = document.getElementById('playlist-edit-desc');
+            const titleEl = document.getElementById('playlist-edit-title');
+            const preview = document.getElementById('playlist-edit-preview');
+            
+            urlInput.value = playlist.url || '';
+            urlInput.dataset.title = playlist.title || '';
+            urlInput.dataset.img = playlist.img || '';
+            descInput.value = playlist.desc || '';
+            
+            if (playlist.title) {
+                titleEl.textContent = playlist.title;
+            } else {
+                titleEl.textContent = 'Name will fill when you add playlist URL above';
+            }
+            
+            if (playlist.img) {
+                preview.innerHTML = `<img src="${esc(playlist.img)}" alt="">`;
+                preview.classList.remove('empty');
+            } else {
+                preview.innerHTML = '<span class="material-symbols-outlined">music_note_2</span>';
+                preview.classList.add('empty');
+            }
+            
+            document.getElementById('playlist-edit-modal').classList.add('open');
+        }
         
         function showEdit(fromMixtape = false) {
             if (!fromMixtape) {
@@ -5946,25 +6141,44 @@
                 editingMixtapeIdx = null;
                 // Load title/occasion from cfg (working state)
                 document.getElementById('edit-title').value = cfg.workingTitle || '';
-                const workingOccasion = cfg.workingOccasion || 'roadtrip';
+                // Note: empty string means user needs to select; don't pre-select anything
+                const workingOccasion = cfg.workingOccasion || '';
+                // Clear any previous selection first
                 document.getElementById('edit-occasion-options').querySelectorAll('.custom-select-option').forEach(o => {
-                    o.classList.toggle('selected', o.dataset.value === workingOccasion);
-                    if (o.dataset.value === workingOccasion) {
-                        document.getElementById('edit-occasion-label').textContent = o.textContent;
-                    }
+                    o.classList.remove('selected');
                 });
+                // Only select if there's a valid occasion set
+                if (workingOccasion) {
+                    document.getElementById('edit-occasion-options').querySelectorAll('.custom-select-option').forEach(o => {
+                        if (o.dataset.value === workingOccasion) {
+                            o.classList.add('selected');
+                            document.getElementById('edit-occasion-label').textContent = o.textContent;
+                        }
+                    });
+                } else {
+                    document.getElementById('edit-occasion-label').textContent = 'Select';
+                }
             } else {
                 // Editing a mixtape - populate title and occasion
                 if (editingMixtapeIdx !== null && mixtapes[editingMixtapeIdx]) {
                     const m = mixtapes[editingMixtapeIdx];
                     document.getElementById('edit-title').value = m.title || '';
-                    const occasion = m.template || 'roadtrip';
+                    const occasion = m.template || '';
+                    // Clear any previous selection first
                     document.getElementById('edit-occasion-options').querySelectorAll('.custom-select-option').forEach(o => {
-                        o.classList.toggle('selected', o.dataset.value === occasion);
-                        if (o.dataset.value === occasion) {
-                            document.getElementById('edit-occasion-label').textContent = o.textContent;
-                        }
+                        o.classList.remove('selected');
                     });
+                    // Only select if there's a valid occasion set
+                    if (occasion) {
+                        document.getElementById('edit-occasion-options').querySelectorAll('.custom-select-option').forEach(o => {
+                            if (o.dataset.value === occasion) {
+                                o.classList.add('selected');
+                                document.getElementById('edit-occasion-label').textContent = o.textContent;
+                            }
+                        });
+                    } else {
+                        document.getElementById('edit-occasion-label').textContent = 'Select';
+                    }
                 }
             }
             
@@ -5977,6 +6191,8 @@
         }
 
         function showDive() {
+            isEditMode = false;
+            document.getElementById('dive-edit-btn').textContent = 'Edit';
             document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
             document.getElementById('dive').classList.add('on');
             renderDive();
@@ -5994,7 +6210,6 @@
                 diveToolbar.style.display = showToolbars ? 'flex' : 'none';
                 // Populate title and occasion from cfg
                 document.getElementById('dive-title').textContent = cfg.workingTitle || '';
-                document.getElementById('dive-occasion-icon').textContent = cfg.workingOccasionIcon || 'album';
                 const occasionLabels = {
                     'favorites': 'Favorites',
                     'roadtrip': 'Road Trip',
@@ -6003,15 +6218,26 @@
                     'podcast': 'Podcast',
                     'focus': 'Focus'
                 };
-                document.getElementById('dive-occasion-label').textContent = occasionLabels[cfg.workingOccasion] || 'Favorites';
+                // Show occasion only if set
+                const diveOccasion = document.getElementById('dive-occasion');
+                if (cfg.workingOccasion && occasionLabels[cfg.workingOccasion]) {
+                    diveOccasion.style.display = '';
+                    document.getElementById('dive-occasion-icon').textContent = cfg.workingOccasionIcon || '';
+                    document.getElementById('dive-occasion-label').textContent = occasionLabels[cfg.workingOccasion];
+                } else {
+                    diveOccasion.style.display = 'none';
+                }
             }
             
             const displayItems = filled.length >= 3 ? filled : items;
             
             const list = document.getElementById('dive-list');
-            list.innerHTML = displayItems.map((it, i) => `
-                <div class="dive-item" data-i="${i}">
+            list.innerHTML = displayItems.map((it, i) => {
+                const actualIndex = filled.length >= 3 ? items.indexOf(it) : i;
+                return `
+                <div class="dive-item ${isEditMode ? 'edit-mode' : ''}" data-i="${actualIndex}">
                     <div class="dive-img">
+                        ${isEditMode && it.url ? `<button class="dive-delete" data-i="${actualIndex}"><span class="material-symbols-outlined">close</span></button>` : ''}
                         ${it.img ? `<img src="${esc(it.img)}" alt="">` : `<div class="dive-ph"><span class="material-symbols-outlined">music_note_2</span></div>`}
                     </div>
                     <div class="dive-info">
@@ -6019,18 +6245,37 @@
                         ${it.desc ? `<div class="dive-desc">${esc(it.desc)}</div>` : ''}
                     </div>
                 </div>
-            `).join('') + `<div class="dive-back"><button class="txt-btn" id="back-grid-btn">Back to Grid</button></div>`;
+            `}).join('') + `<div class="dive-back"><button class="txt-btn" id="back-grid-btn">Back to Grid</button></div>`;
+            
+            // Delete button handlers (edit mode)
+            list.querySelectorAll('.dive-delete').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.dataset.i);
+                    items[idx] = { url: '', title: '', img: '', desc: '' };
+                    items.sort((a, b) => (a.url ? 0 : 1) - (b.url ? 0 : 1));
+                    save();
+                    renderGrid();
+                    renderDive();
+                };
+            });
             
             list.querySelectorAll('.dive-item').forEach(item => {
                 item.onclick = () => {
-                    const idx = item.dataset.i;
-                    const id = getID(displayItems[idx].url);
-                    if (id) {
-                        window.location.href = 'spotify:playlist:' + id;
+                    const idx = parseInt(item.dataset.i);
+                    const it = items[idx];
+                    
+                    if (isEditMode) {
+                        // Open playlist edit modal
+                        openPlaylistEditModal(idx, it);
                     } else {
-                        // No URL - go to Edit
-                        updateSidebarActive('sidebar-edit-btn');
-                        showEdit();
+                        const id = getID(it.url);
+                        if (id) {
+                            window.location.href = 'spotify:playlist:' + id;
+                        } else {
+                            // No URL - open edit modal to add
+                            openPlaylistEditModal(idx, it);
+                        }
                     }
                 };
             });
@@ -6432,6 +6677,8 @@
             const mixtape = mixtapes[idx];
             if (!mixtape) return;
             
+            isEditMode = false;
+            
             currentFriendMixtape = mixtape;
             currentFriendIdx = idx;
             
@@ -6515,17 +6762,18 @@
             
             // Check if this is a collab mixtape and can add more
             const isCollab = mixtape.name && !mixtape.template && !mixtape.templateIcon;
-            const canAdd = isCollab && mixtape.playlists.length < 14;
+            const canAdd = (isCollab || isEditMode) && mixtape.playlists.length < 14;
             
             grid.innerHTML = mixtape.playlists.map((it, i) => `
-                <div class="tile" data-i="${i}">
+                <div class="tile ${isEditMode ? 'edit-mode' : ''}" data-i="${i}">
+                    ${isEditMode && it.url ? `<button class="tile-delete" data-i="${i}"><span class="material-symbols-outlined">close</span></button>` : ''}
                     <div class="tile-img">
                         ${it.img ? `<img src="${esc(it.img)}" alt="">` : `<div class="tile-ph"><span class="material-symbols-outlined">music_note_2</span></div>`}
                     </div>
                     <div class="tile-title">${esc(it.title) || 'Playlist'}</div>
                 </div>
             `).join('') + (canAdd ? `
-                <div class="tile tile-add" id="collab-add-tile">
+                <div class="tile ${isEditMode ? 'edit-mode' : ''} tile-add" id="collab-add-tile">
                     <div class="tile-img">
                         <div class="tile-ph tile-add-icon"><span class="material-symbols-outlined">add</span></div>
                     </div>
@@ -6533,12 +6781,32 @@
                 </div>
             ` : '');
             
+            // Delete button handlers (edit mode)
+            grid.querySelectorAll('.tile-delete').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.dataset.i);
+                    currentFriendMixtape.playlists.splice(idx, 1);
+                    mixtapes[currentFriendIdx] = currentFriendMixtape;
+                    saveMixtapes();
+                    renderFriendView();
+                    renderSidebarMixtapes();
+                };
+            });
+            
             grid.querySelectorAll('.tile:not(.tile-add)').forEach(item => {
                 item.onclick = () => {
-                    const pl = mixtape.playlists[item.dataset.i];
-                    const id = getID(pl.url);
-                    if (id) {
-                        window.location.href = 'spotify:playlist:' + id;
+                    const idx = parseInt(item.dataset.i);
+                    const pl = mixtape.playlists[idx];
+                    
+                    if (isEditMode) {
+                        // Open playlist edit modal
+                        openPlaylistEditModal(idx, pl);
+                    } else {
+                        const id = getID(pl.url);
+                        if (id) {
+                            window.location.href = 'spotify:playlist:' + id;
+                        }
                     }
                 };
             });
@@ -6546,7 +6814,16 @@
             // Add tile click handler
             const addTile = document.getElementById('collab-add-tile');
                 if (addTile) {
-                    addTile.onclick = () => showCollabAddForm();
+                    addTile.onclick = () => {
+                        if (isEditMode) {
+                            // Add empty playlist and open modal
+                            const newIdx = currentFriendMixtape.playlists.length;
+                            currentFriendMixtape.playlists.push({ url: '', title: '', img: '', desc: '' });
+                            openPlaylistEditModal(newIdx, currentFriendMixtape.playlists[newIdx]);
+                        } else {
+                            showCollabAddForm();
+                        }
+                    };
                 }
                 
                 // Show embed section for grid view
@@ -6738,6 +7015,9 @@
             
             // Render sidebar themes
             renderSidebarThemes();
+            
+            // Initialize profile theme picker
+            initProfileThemePicker();
             
             // Share view buttons
             document.getElementById('generate-btn').onclick = async () => {
@@ -6963,16 +7243,19 @@
                     return;
                 }
                 
-                // Check for duplicates by comparing playlists
+                // Get selected template
+                const selectedOpt = templateOptions.querySelector('.custom-select-option.selected');
+                if (!selectedOpt) {
+                    showModal('Please select an occasion for your mixtape');
+                    return;
+                }
+                
+                // Check for duplicates by comparing playlist URLs
+                const newPlaylistUrls = data.playlists.map(p => getID(p.url)).sort().join(',');
                 const isDuplicate = mixtapes.some(m => {
-                    if (!m.playlists && m.template) {
-                        // Parse template to get playlists
-                        const parsed = parseMixtapeString(m.template);
-                        if (parsed && parsed.playlists) {
-                            return JSON.stringify(parsed.playlists.sort()) === JSON.stringify(data.playlists.sort());
-                        }
-                    }
-                    return m.playlists && JSON.stringify(m.playlists.sort()) === JSON.stringify(data.playlists.sort());
+                    if (!m.playlists || m.playlists.length === 0) return false;
+                    const existingUrls = m.playlists.map(p => getID(p.url)).sort().join(',');
+                    return existingUrls === newPlaylistUrls;
                 });
                 
                 if (isDuplicate) {
@@ -6980,10 +7263,8 @@
                     return;
                 }
                 
-                // Get selected template
-                const selectedOpt = templateOptions.querySelector('.custom-select-option.selected');
-                const template = selectedOpt ? selectedOpt.dataset.value : 'roadtrip';
-                const templateIcon = selectedOpt ? selectedOpt.dataset.icon : 'directions_car';
+                const template = selectedOpt.dataset.value;
+                const templateIcon = selectedOpt.dataset.icon;
                 
                 // Add to mixtapes with template info (no name shown)
                 mixtapes.unshift({
@@ -7000,6 +7281,9 @@
                 renderCollectedList();
                 renderSidebarMixtapes();
                 document.getElementById('curate-string').value = '';
+                // Reset template dropdown
+                templateOptions.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+                document.getElementById('template-select-label').textContent = 'Select';
                 showModal('Saved "' + (data.title || 'My Mixtape') + '" to your mixtapes!');
             };
             
@@ -7284,48 +7568,33 @@
             document.getElementById('help-back-btn').onclick = showMain;
             
             // Mixtape action buttons
-            document.getElementById('mixtape-delete-btn').onclick = function() {
-                if (!currentFriendMixtape || currentFriendIdx === null) return;
-                showModalConfirm('Are you sure you want to delete this mixtape?', () => {
-                    mixtapes.splice(currentFriendIdx, 1);
-                    currentFriendMixtape = null;
-                    currentFriendIdx = null;
-                    saveMixtapes();
-                    renderMixtapesList();
-                    renderCollectedList();
-                    renderSidebarMixtapes();
-                    // Return to home grid with proper active state
-                    updateSidebarActive('sidebar-grid-btn');
-                    showMain();
-                });
+            // Mixtape Actions Modal
+            document.getElementById('mixtape-options-btn').onclick = function() {
+                if (!currentFriendMixtape) return;
+                
+                // Set modal title to mixtape name
+                document.getElementById('mixtape-actions-title').textContent = currentFriendMixtape.title || 'Mixtape';
+                document.getElementById('mixtape-actions-desc').textContent = 'What would you like to do with this mixtape?';
+                document.getElementById('mixtape-actions-feedback').innerHTML = '';
+                document.getElementById('mixtape-actions-feedback').classList.remove('success');
+                
+                document.getElementById('mixtape-actions-modal').classList.add('open');
             };
             
-            document.getElementById('mixtape-edit-btn').onclick = function() {
-                if (!currentFriendMixtape) return;
-                // Load mixtape playlists into work array for editing
-                work = currentFriendMixtape.playlists.map(p => ({
-                    url: p.url || '',
-                    title: p.title || '',
-                    img: p.img || '',
-                    desc: p.desc || ''
-                }));
-                // Ensure minimum 3 slots
-                while (work.length < 3) {
-                    work.push({ url: '', title: '', img: '', desc: '' });
+            document.getElementById('mixtape-actions-cancel').onclick = function() {
+                document.getElementById('mixtape-actions-modal').classList.remove('open');
+            };
+            
+            document.getElementById('mixtape-actions-modal').onclick = function(e) {
+                if (e.target === this) {
+                    this.classList.remove('open');
                 }
-                editingMixtapeIdx = currentFriendIdx;
-                showEdit(true); // true = from mixtape, don't overwrite work
             };
             
-            document.getElementById('mixtape-save-btn').onclick = function() {
-                if (!currentFriendMixtape || currentFriendIdx === null) return;
-                saveMixtapes();
-                showModal('Mixtape saved!');
-            };
-            
-            document.getElementById('mixtape-share-btn').onclick = function() {
+            document.getElementById('mixtape-actions-copy').onclick = async function() {
                 if (!currentFriendMixtape) return;
-                // Generate share code and copy to clipboard
+                
+                // Generate share code
                 const data = {
                     n: '',
                     t: currentFriendMixtape.title || '',
@@ -7337,30 +7606,58 @@
                     }))
                 };
                 const str = btoa(encodeURIComponent(JSON.stringify(data)));
-                navigator.clipboard.writeText(str).then(() => {
-                    showModal('Share code copied to clipboard!');
-                });
+                
+                await navigator.clipboard.writeText(str);
+                
+                // Show success feedback
+                const feedback = document.getElementById('mixtape-actions-feedback');
+                feedback.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Copied to clipboard!';
+                feedback.classList.add('success');
+                
+                document.getElementById('mixtape-actions-desc').textContent = 'Share code has been copied to your clipboard.';
+                
+                // Close modal after delay
+                setTimeout(() => {
+                    document.getElementById('mixtape-actions-modal').classList.remove('open');
+                }, 2000);
             };
             
-            document.getElementById('mixtape-new-btn').onclick = function() {
-                // Clear current mixtape state
-                currentFriendMixtape = null;
-                currentFriendIdx = null;
-                editingMixtapeIdx = null;
-                // Reset items to empty
-                items = [];
-                for (let i = 0; i < 9; i++) {
-                    items.push({ url: '', title: '', img: '', desc: '' });
-                }
-                // Reset working title and occasion
-                cfg.workingTitle = '';
-                cfg.workingOccasion = 'favorites';
-                cfg.workingOccasionIcon = 'album';
-                save();
-                renderGrid();
-                // Go to home with proper active state
-                updateSidebarActive('sidebar-grid-btn');
-                showMain();
+            document.getElementById('mixtape-actions-edit').onclick = function() {
+                if (!currentFriendMixtape) return;
+                
+                document.getElementById('mixtape-actions-modal').classList.remove('open');
+                
+                // Toggle edit mode for the friend view
+                isEditMode = !isEditMode;
+                renderFriendView();
+            };
+            
+            document.getElementById('mixtape-actions-delete').onclick = function() {
+                if (!currentFriendMixtape || currentFriendIdx === null) return;
+                
+                document.getElementById('mixtape-actions-desc').textContent = 'Are you sure you want to delete this mixtape?';
+                
+                // Change delete button to confirm
+                const deleteBtn = document.getElementById('mixtape-actions-delete');
+                deleteBtn.textContent = 'Confirm Delete';
+                deleteBtn.onclick = function() {
+                    mixtapes.splice(currentFriendIdx, 1);
+                    currentFriendMixtape = null;
+                    currentFriendIdx = null;
+                    saveMixtapes();
+                    renderMixtapesList();
+                    renderCollectedList();
+                    renderSidebarMixtapes();
+                    
+                    document.getElementById('mixtape-actions-modal').classList.remove('open');
+                    
+                    // Reset delete button for next time
+                    deleteBtn.textContent = 'Delete';
+                    
+                    // Return to home grid
+                    updateSidebarActive('sidebar-grid-btn');
+                    showMain();
+                };
             };
             
             // Collaboration copy handler
@@ -7528,7 +7825,9 @@
             }
             
             // Grid Layout toolbar buttons
-            document.getElementById('main-edit-btn').onclick = function() { showEdit(); };
+            document.getElementById('main-edit-btn').onclick = function() { 
+                toggleEditMode('main');
+            };
             document.getElementById('main-copy-btn').onclick = function() {
                 const filled = items.filter(it => it.url && getID(it.url));
                 if (filled.length < 3) {
@@ -7544,7 +7843,9 @@
             document.getElementById('main-new-btn').onclick = function() { checkUnsavedAndNew(); };
             
             // Deep Dive toolbar buttons
-            document.getElementById('dive-edit-btn').onclick = function() { showEdit(); };
+            document.getElementById('dive-edit-btn').onclick = function() { 
+                toggleEditMode('dive');
+            };
             document.getElementById('dive-copy-btn').onclick = function() {
                 const filled = items.filter(it => it.url && getID(it.url));
                 if (filled.length < 3) {
@@ -7558,6 +7859,122 @@
             };
             document.getElementById('dive-save-btn').onclick = function() { openSaveShareModal(); };
             document.getElementById('dive-new-btn').onclick = function() { checkUnsavedAndNew(); };
+            
+            // Toggle edit mode for inline editing
+            function toggleEditMode(view) {
+                isEditMode = !isEditMode;
+                const editBtn = document.getElementById(view + '-edit-btn');
+                if (isEditMode) {
+                    editBtn.textContent = 'Done';
+                } else {
+                    editBtn.textContent = 'Edit';
+                }
+                if (view === 'main') {
+                    renderGrid();
+                } else if (view === 'dive') {
+                    renderDive();
+                }
+            }
+            
+            // Playlist Edit Modal handlers
+            document.getElementById('playlist-edit-cancel').onclick = function() {
+                document.getElementById('playlist-edit-modal').classList.remove('open');
+                currentEditIndex = null;
+            };
+            
+            document.getElementById('playlist-edit-modal').onclick = function(e) {
+                if (e.target === this) {
+                    this.classList.remove('open');
+                    currentEditIndex = null;
+                }
+            };
+            
+            document.getElementById('playlist-edit-url').oninput = async function() {
+                const url = this.value.trim();
+                if (getID(url)) {
+                    try {
+                        const data = await fetchSpotify(url);
+                        document.getElementById('playlist-edit-title').textContent = data.title || 'Unknown';
+                        const preview = document.getElementById('playlist-edit-preview');
+                        if (data.thumbnail_url) {
+                            preview.innerHTML = `<img src="${esc(data.thumbnail_url)}" alt="">`;
+                            preview.classList.remove('empty');
+                        }
+                        // Store fetched data temporarily
+                        document.getElementById('playlist-edit-url').dataset.title = data.title || '';
+                        document.getElementById('playlist-edit-url').dataset.img = data.thumbnail_url || '';
+                    } catch(e) {
+                        document.getElementById('playlist-edit-title').textContent = 'Could not fetch playlist info';
+                    }
+                }
+            };
+            
+            document.getElementById('playlist-edit-delete').onclick = function() {
+                // Clear the fields in the modal
+                document.getElementById('playlist-edit-url').value = '';
+                document.getElementById('playlist-edit-url').dataset.title = '';
+                document.getElementById('playlist-edit-url').dataset.img = '';
+                document.getElementById('playlist-edit-desc').value = '';
+                document.getElementById('playlist-edit-title').textContent = 'Name will fill when you add playlist URL above';
+                const preview = document.getElementById('playlist-edit-preview');
+                preview.innerHTML = '<span class="material-symbols-outlined">music_note_2</span>';
+                preview.classList.add('empty');
+            };
+            
+            document.getElementById('playlist-edit-save').onclick = async function() {
+                const url = document.getElementById('playlist-edit-url').value.trim();
+                const desc = document.getElementById('playlist-edit-desc').value.trim();
+                let title = document.getElementById('playlist-edit-url').dataset.title || '';
+                let img = document.getElementById('playlist-edit-url').dataset.img || '';
+                
+                // If URL is valid but we don't have title/img, fetch it now
+                if (url && getID(url) && !title) {
+                    try {
+                        const data = await fetchSpotify(url);
+                        title = data.title || '';
+                        img = data.thumbnail_url || '';
+                    } catch(e) {
+                        console.error('Could not fetch playlist:', e);
+                    }
+                }
+                
+                if (currentEditIndex !== null) {
+                    // Determine which array to update
+                    if (currentFriendMixtape && currentFriendIdx !== null) {
+                        // Editing a saved mixtape
+                        if (url && getID(url)) {
+                            currentFriendMixtape.playlists[currentEditIndex] = { url, title, img, desc };
+                        } else {
+                            // Delete this playlist
+                            currentFriendMixtape.playlists.splice(currentEditIndex, 1);
+                        }
+                        mixtapes[currentFriendIdx] = currentFriendMixtape;
+                        saveMixtapes();
+                        renderFriendView();
+                    } else {
+                        // Editing working items
+                        if (url && getID(url)) {
+                            items[currentEditIndex] = { url, title, img, desc };
+                        } else {
+                            items[currentEditIndex] = { url: '', title: '', img: '', desc: '' };
+                            // Sort filled items to front
+                            items.sort((a, b) => (a.url ? 0 : 1) - (b.url ? 0 : 1));
+                        }
+                        save();
+                        renderGrid();
+                        renderDive();
+                    }
+                }
+                
+                document.getElementById('playlist-edit-modal').classList.remove('open');
+                currentEditIndex = null;
+            };
+            
+            function renderFriendView() {
+                if (currentFriendMixtape && currentFriendIdx !== null) {
+                    showFriend(currentFriendIdx);
+                }
+            }
             
             // Check for unsaved work before starting new
             function checkUnsavedAndNew() {
@@ -7588,10 +8005,11 @@
                 for (let i = 0; i < 9; i++) {
                     items.push({ url: '', title: '', img: '', desc: '' });
                 }
-                // Reset working title and occasion
+                // Reset working title, occasion, and mixtape link
                 cfg.workingTitle = '';
-                cfg.workingOccasion = 'favorites';
-                cfg.workingOccasionIcon = 'album';
+                cfg.workingOccasion = '';
+                cfg.workingOccasionIcon = '';
+                cfg.workingMixtapeIdx = null;
                 save();
                 renderGrid();
                 updateSidebarActive('sidebar-grid-btn');
@@ -7641,22 +8059,45 @@
                 const saveShareTitle = document.getElementById('save-share-title');
                 const templateOpts = document.getElementById('save-share-template-options');
                 
-                // Clear title
-                saveShareTitle.value = '';
+                // Pre-fill with existing title if set
+                saveShareTitle.value = cfg.workingTitle || '';
                 
-                // Reset template dropdown to Favorites
-                templateOpts.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
-                templateOpts.querySelector('[data-value="favorites"]').classList.add('selected');
-                document.getElementById('save-share-template-label').textContent = 'Favorites';
+                // Clear any previous selection first
+                templateOpts.querySelectorAll('.custom-select-option').forEach(o => {
+                    o.classList.remove('selected');
+                });
+                
+                // Pre-select existing occasion if set, otherwise show Select
+                const currentOccasion = cfg.workingOccasion || '';
+                if (currentOccasion) {
+                    templateOpts.querySelectorAll('.custom-select-option').forEach(o => {
+                        if (o.dataset.value === currentOccasion) {
+                            o.classList.add('selected');
+                            document.getElementById('save-share-template-label').textContent = o.textContent;
+                        }
+                    });
+                } else {
+                    document.getElementById('save-share-template-label').textContent = 'Select';
+                }
                 
                 // Reset feedback and button state
                 document.getElementById('save-share-feedback').innerHTML = '';
+                document.getElementById('save-share-feedback').classList.remove('success');
                 document.getElementById('save-share-confirm').textContent = 'Save & Copy Link';
                 document.getElementById('save-share-confirm').classList.remove('completed');
                 
+                // Reset modal description
+                const modalDesc = document.querySelector('.save-share-modal-content .modal-desc');
+                if (modalDesc) {
+                    modalDesc.textContent = 'Save your mixtape to your collection and share it with friends.';
+                }
+                
                 document.getElementById('save-share-modal').classList.add('open');
                 
-                saveShareTitle.focus();
+                // Only focus title if empty
+                if (!saveShareTitle.value) {
+                    saveShareTitle.focus();
+                }
             }
             
             document.getElementById('save-share-cancel').onclick = function() {
@@ -7681,8 +8122,14 @@
                     // Get selected template from modal dropdown
                     const modalTemplateOptions = document.getElementById('save-share-template-options');
                     const selectedOpt = modalTemplateOptions.querySelector('.custom-select-option.selected');
-                    const templateValue = selectedOpt ? selectedOpt.dataset.value : 'roadtrip';
-                    const templateIcon = selectedOpt ? selectedOpt.dataset.icon : 'directions_car';
+                    
+                    if (!selectedOpt) {
+                        showModal('Please select an occasion for your mixtape');
+                        return;
+                    }
+                    
+                    const templateValue = selectedOpt.dataset.value;
+                    const templateIcon = selectedOpt.dataset.icon;
                     
                     // Use profile name
                     const name = profile.name || '';
@@ -7702,22 +8149,103 @@
                         return;
                     }
                     
-                    // Check for duplicates by comparing playlist IDs
-                    const newPlaylistIds = data.playlists.map(p => p.id).sort().join(',');
-                    const isDuplicate = mixtapes.some(m => {
-                        let existingIds = [];
-                        if (m.playlists) {
-                            existingIds = m.playlists.map(p => p.id || p).sort();
-                        }
-                        return existingIds.join(',') === newPlaylistIds;
-                    });
-                    
-                    if (isDuplicate) {
-                        showModal('This mixtape is already in your collection');
+                    // Check if we're editing an existing mixtape
+                    if (cfg.workingMixtapeIdx !== null && cfg.workingMixtapeIdx !== undefined && mixtapes[cfg.workingMixtapeIdx]) {
+                        // Update existing mixtape
+                        mixtapes[cfg.workingMixtapeIdx].title = title;
+                        mixtapes[cfg.workingMixtapeIdx].playlists = data.playlists;
+                        mixtapes[cfg.workingMixtapeIdx].template = templateValue;
+                        mixtapes[cfg.workingMixtapeIdx].templateIcon = templateIcon;
+                        saveMixtapes();
+                        renderMixtapesList();
+                        renderCollectedList();
+                        renderSidebarMixtapes();
+                        
+                        // Update cfg with new values
+                        cfg.workingTitle = title;
+                        cfg.workingOccasion = templateValue;
+                        cfg.workingOccasionIcon = templateIcon;
+                        save();
+                        
+                        // Copy to clipboard
+                        await navigator.clipboard.writeText(str);
+                        
+                        // Show success feedback
+                        const feedback = document.getElementById('save-share-feedback');
+                        feedback.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Updated & copied to clipboard!';
+                        feedback.classList.add('success');
+                        
+                        // Update button to show success
+                        this.textContent = 'Done!';
+                        this.classList.add('completed');
+                        
+                        // Close modal after delay
+                        setTimeout(() => {
+                            document.getElementById('save-share-modal').classList.remove('open');
+                        }, 2000);
+                        
+                        // Re-render views
+                        renderGrid();
+                        renderDive();
                         return;
                     }
                     
-                    // Save to mixtapes with selected template
+                    // Check for duplicates by comparing playlist URLs (only for new mixtapes)
+                    const newPlaylistUrls = filled.map(p => getID(p.url)).sort().join(',');
+                    const duplicateIdx = mixtapes.findIndex(m => {
+                        if (!m.playlists || m.playlists.length === 0) return false;
+                        const existingUrls = m.playlists.map(p => getID(p.url)).sort().join(',');
+                        return existingUrls === newPlaylistUrls;
+                    });
+                    
+                    if (duplicateIdx !== -1) {
+                        // Found matching mixtape - update it instead of creating duplicate
+                        mixtapes[duplicateIdx].title = title;
+                        mixtapes[duplicateIdx].playlists = data.playlists;
+                        mixtapes[duplicateIdx].template = templateValue;
+                        mixtapes[duplicateIdx].templateIcon = templateIcon;
+                        saveMixtapes();
+                        renderMixtapesList();
+                        renderCollectedList();
+                        renderSidebarMixtapes();
+                        
+                        // Link working items to this mixtape
+                        cfg.workingMixtapeIdx = duplicateIdx;
+                        cfg.workingTitle = title;
+                        cfg.workingOccasion = templateValue;
+                        cfg.workingOccasionIcon = templateIcon;
+                        save();
+                        
+                        // Copy to clipboard
+                        await navigator.clipboard.writeText(str);
+                        
+                        // Update modal description
+                        const modalDesc = document.querySelector('.save-share-modal-content .modal-desc');
+                        if (modalDesc) {
+                            modalDesc.textContent = 'Your mixtape has been updated and copied to your clipboard.';
+                        }
+                        
+                        // Show success feedback
+                        const feedback = document.getElementById('save-share-feedback');
+                        feedback.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Updated & copied to clipboard!';
+                        feedback.classList.add('success');
+                        
+                        // Update button to show success
+                        this.textContent = 'Done!';
+                        this.classList.add('completed');
+                        
+                        // Close modal after delay
+                        setTimeout(() => {
+                            document.getElementById('save-share-modal').classList.remove('open');
+                        }, 2000);
+                        
+                        // Re-render views
+                        renderGrid();
+                        renderDive();
+                        return;
+                    }
+                    
+                    // Save NEW mixtape
                     mixtapes.unshift({
                         name: '',
                         title: title,
@@ -7731,6 +8259,13 @@
                     renderMixtapesList();
                     renderCollectedList();
                     renderSidebarMixtapes();
+                    
+                    // Link working items to this new mixtape (it's at index 0 since we unshifted)
+                    cfg.workingMixtapeIdx = 0;
+                    cfg.workingTitle = title;
+                    cfg.workingOccasion = templateValue;
+                    cfg.workingOccasionIcon = templateIcon;
+                    save();
                     
                     // Pre-fill the Curate section on Share page
                     const curateInput = document.getElementById('curate-string');
@@ -7762,8 +8297,8 @@
                     
                     // Close modal after delay
                     setTimeout(() => {
-                        modal.classList.remove('open');
-                    }, 1500);
+                        document.getElementById('save-share-modal').classList.remove('open');
+                    }, 2000);
                 } catch (err) {
                     console.error('Save & Share error:', err);
                     showModal('Something went wrong. Please try again.');
@@ -7796,8 +8331,19 @@
                 // Get title and occasion from edit inputs
                 const editTitle = document.getElementById('edit-title').value.trim();
                 const editOccasionOpt = document.getElementById('edit-occasion-options').querySelector('.custom-select-option.selected');
-                const editOccasion = editOccasionOpt ? editOccasionOpt.dataset.value : 'roadtrip';
-                const editOccasionIcon = editOccasionOpt ? editOccasionOpt.dataset.icon : 'directions_car';
+                
+                // Validate title and occasion
+                if (!editTitle) {
+                    showModal('Please enter a name for your mixtape');
+                    return;
+                }
+                if (!editOccasionOpt) {
+                    showModal('Please select an occasion for your mixtape');
+                    return;
+                }
+                
+                const editOccasion = editOccasionOpt.dataset.value;
+                const editOccasionIcon = editOccasionOpt.dataset.icon;
                 
                 // If editing a mixtape, save back to that mixtape
                 if (editingMixtapeIdx !== null && mixtapes[editingMixtapeIdx]) {
@@ -7807,8 +8353,8 @@
                         img: it.img,
                         desc: it.desc
                     }));
-                    // Update title and occasion if provided
-                    if (editTitle) mixtapes[editingMixtapeIdx].title = editTitle;
+                    // Update title and occasion
+                    mixtapes[editingMixtapeIdx].title = editTitle;
                     mixtapes[editingMixtapeIdx].template = editOccasion;
                     mixtapes[editingMixtapeIdx].templateIcon = editOccasionIcon;
                     saveMixtapes();
@@ -8725,12 +9271,6 @@
         setupWidgetPage();
         renderGrid();
         checkBrowser();
-        checkUrlImport();
-        updateMobileClass();
-        checkFirstVisit();
-        initProfileThemePicker();
-        renderThemes();
-        window.addEventListener('resize', updateMobileClass);
-    </script>
+     </script>
 </body>
 </html>
