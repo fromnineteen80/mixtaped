@@ -982,9 +982,23 @@
         }
         
         .main-toolbar .action-btn,
-        .mixtape-header .action-btn {
-            padding: 8px 14px;
-            box-shadow: var(--shadow);
+        .mixtape-header .action-btn,
+        .card .action-btn,
+        .profile-card-edit .action-btn,
+        .modal .action-btn,
+        .edit-toolbar .action-btn {
+            padding: 6px 10px;
+            font-size: var(--font-sidebar);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+        }
+        
+        [data-theme="dark"] .main-toolbar .action-btn,
+        [data-theme="dark"] .mixtape-header .action-btn,
+        [data-theme="dark"] .card .action-btn,
+        [data-theme="dark"] .profile-card-edit .action-btn,
+        [data-theme="dark"] .modal .action-btn,
+        [data-theme="dark"] .edit-toolbar .action-btn {
+            background: var(--input);
         }
         
         .edit-actions {
@@ -1041,18 +1055,6 @@
         }
         
         /* Buttons inside cards need more defined shadow */
-        .card .action-btn,
-        .profile-card-edit .action-btn {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
-        }
-        
-        /* Dark theme: buttons inside cards and modals need lighter background to stand out */
-        [data-theme="dark"] .card .action-btn,
-        [data-theme="dark"] .profile-card-edit .action-btn,
-        [data-theme="dark"] .modal .action-btn {
-            background: var(--input);
-        }
-
         .txt-btn {
             font-size: var(--font-button);
             color: var(--text2);
@@ -4276,22 +4278,6 @@
         </div>
     </div>
     
-    <!-- Mixtape Actions Modal -->
-    <div class="modal-overlay" id="mixtape-actions-modal">
-        <div class="modal save-share-modal-content">
-            <div class="modal-header" id="mixtape-actions-title">Mixtape Actions</div>
-            <p class="modal-desc" id="mixtape-actions-desc">What would you like to do with this mixtape?</p>
-            
-            <div class="save-share-actions" style="flex-direction: column; gap: 10px;">
-                <button class="action-btn" id="mixtape-actions-copy" style="width: 100%;">Copy Link</button>
-                <button class="action-btn" id="mixtape-actions-edit" style="width: 100%;">Edit</button>
-                <button class="action-btn" id="mixtape-actions-delete" style="width: 100%;">Delete</button>
-                <button class="action-btn" id="mixtape-actions-cancel" style="width: 100%;">Cancel</button>
-            </div>
-            <div class="modal-feedback" id="mixtape-actions-feedback"></div>
-        </div>
-    </div>
-    
     <!-- Playlist Edit Modal -->
     <div class="modal-overlay" id="playlist-edit-modal">
         <div class="modal save-share-modal-content" style="max-width: 400px;">
@@ -5066,7 +5052,9 @@
                             </span>
                         </div>
                         <div class="edit-actions" id="mixtape-actions">
-                            <button class="action-btn" id="mixtape-options-btn">Options</button>
+                            <button class="action-btn" id="friend-edit-btn">Edit</button>
+                            <button class="action-btn" id="friend-copy-btn">Copy</button>
+                            <button class="action-btn" id="friend-delete-btn">Delete</button>
                         </div>
                     </div>
                     <div class="collab-header" id="collab-header" style="display: none;">
@@ -7567,31 +7555,15 @@
             document.getElementById('about-back-btn').onclick = showMain;
             document.getElementById('help-back-btn').onclick = showMain;
             
-            // Mixtape action buttons
-            // Mixtape Actions Modal
-            document.getElementById('mixtape-options-btn').onclick = function() {
+            // Mixtape action buttons (Edit, Copy, Delete)
+            document.getElementById('friend-edit-btn').onclick = function() {
                 if (!currentFriendMixtape) return;
-                
-                // Set modal title to mixtape name
-                document.getElementById('mixtape-actions-title').textContent = currentFriendMixtape.title || 'Mixtape';
-                document.getElementById('mixtape-actions-desc').textContent = 'What would you like to do with this mixtape?';
-                document.getElementById('mixtape-actions-feedback').innerHTML = '';
-                document.getElementById('mixtape-actions-feedback').classList.remove('success');
-                
-                document.getElementById('mixtape-actions-modal').classList.add('open');
+                isEditMode = !isEditMode;
+                this.textContent = isEditMode ? 'Done' : 'Edit';
+                renderFriendView();
             };
             
-            document.getElementById('mixtape-actions-cancel').onclick = function() {
-                document.getElementById('mixtape-actions-modal').classList.remove('open');
-            };
-            
-            document.getElementById('mixtape-actions-modal').onclick = function(e) {
-                if (e.target === this) {
-                    this.classList.remove('open');
-                }
-            };
-            
-            document.getElementById('mixtape-actions-copy').onclick = async function() {
+            document.getElementById('friend-copy-btn').onclick = async function() {
                 if (!currentFriendMixtape) return;
                 
                 // Generate share code
@@ -7608,56 +7580,30 @@
                 const str = btoa(encodeURIComponent(JSON.stringify(data)));
                 
                 await navigator.clipboard.writeText(str);
-                
-                // Show success feedback
-                const feedback = document.getElementById('mixtape-actions-feedback');
-                feedback.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Copied to clipboard!';
-                feedback.classList.add('success');
-                
-                document.getElementById('mixtape-actions-desc').textContent = 'Share code has been copied to your clipboard.';
-                
-                // Close modal after delay
-                setTimeout(() => {
-                    document.getElementById('mixtape-actions-modal').classList.remove('open');
-                }, 2000);
+                showModal('Share code copied to clipboard!');
             };
             
-            document.getElementById('mixtape-actions-edit').onclick = function() {
-                if (!currentFriendMixtape) return;
-                
-                document.getElementById('mixtape-actions-modal').classList.remove('open');
-                
-                // Toggle edit mode for the friend view
-                isEditMode = !isEditMode;
-                renderFriendView();
-            };
-            
-            document.getElementById('mixtape-actions-delete').onclick = function() {
+            document.getElementById('friend-delete-btn').onclick = function() {
                 if (!currentFriendMixtape || currentFriendIdx === null) return;
                 
-                document.getElementById('mixtape-actions-desc').textContent = 'Are you sure you want to delete this mixtape?';
-                
-                // Change delete button to confirm
-                const deleteBtn = document.getElementById('mixtape-actions-delete');
-                deleteBtn.textContent = 'Confirm Delete';
-                deleteBtn.onclick = function() {
-                    mixtapes.splice(currentFriendIdx, 1);
-                    currentFriendMixtape = null;
-                    currentFriendIdx = null;
-                    saveMixtapes();
-                    renderMixtapesList();
-                    renderCollectedList();
-                    renderSidebarMixtapes();
-                    
-                    document.getElementById('mixtape-actions-modal').classList.remove('open');
-                    
-                    // Reset delete button for next time
-                    deleteBtn.textContent = 'Delete';
-                    
-                    // Return to home grid
-                    updateSidebarActive('sidebar-grid-btn');
-                    showMain();
-                };
+                showModalChoice('Are you sure you want to delete this mixtape?', 
+                    'Delete', 
+                    'Cancel',
+                    () => {
+                        mixtapes.splice(currentFriendIdx, 1);
+                        currentFriendMixtape = null;
+                        currentFriendIdx = null;
+                        saveMixtapes();
+                        renderMixtapesList();
+                        renderCollectedList();
+                        renderSidebarMixtapes();
+                        
+                        // Return to home grid
+                        updateSidebarActive('sidebar-grid-btn');
+                        showMain();
+                    },
+                    () => {}
+                );
             };
             
             // Collaboration copy handler
