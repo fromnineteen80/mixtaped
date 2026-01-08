@@ -1095,6 +1095,26 @@
             overflow: visible;
         }
         
+        .card-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 16px 0;
+        }
+        
+        .card-hint {
+            font-size: 11px;
+            color: var(--text3);
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        .card-hint:empty {
+            display: none;
+        }
+        
         /* --------------------------------------------
            HELP PAGE
            -------------------------------------------- */
@@ -4673,23 +4693,48 @@
                     
                     <div class="section" style="margin-top: 48px;">
                         <div class="edit-toolbar">
-                            <div class="section-hd">Backup & Restore</div>
+                            <div class="section-hd">Backup</div>
                         </div>
-                        <p class="section-desc">Generate a backup code that saves everything: your profile, mixtape, collected mixtapes, and collaborated mixtapes. Save this code in your Notes app or email it to yourself. You can also paste the code into a <a href="https://notepad.cc" target="_blank" style="color: var(--text); text-decoration: none;">notepad.cc</a> entry and bookmark the entry in your browser.</p>
+                        
+                        <div class="card" style="margin-bottom: 16px;">
+                            <div class="card-label">GitHub Gist (Recommended)</div>
+                            <div class="pl-item" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input class="pl-input" type="text" id="gist-url" placeholder="Paste your gist raw URL" style="flex: 1; margin-bottom: 0;">
+                                    <button class="action-btn" id="save-gist-btn">Save</button>
+                                </div>
+                                <p class="card-hint">Don't have a gist? <a href="https://gist.github.com" target="_blank" style="color: var(--accent); text-decoration: none;">Create one here</a>, paste any text, save it, then click "Raw" and copy that URL.</p>
+                            </div>
+                        </div>
+                        
                         <div class="card">
-                            <div class="pl-item" style="display: flex; gap: 8px; align-items: center;">
-                                <button class="action-btn full" id="backup-btn">Generate Backup</button>
+                            <div class="card-label">Manual Backup</div>
+                            <div class="pl-item">
+                                <button class="action-btn full" id="backup-btn">Generate Backup Code</button>
                             </div>
                         </div>
                         <div class="share-output" id="backup-output"></div>
+                    </div>
+                    
+                    <div class="section" style="margin-top: 32px;">
+                        <div class="edit-toolbar">
+                            <div class="section-hd">Restore</div>
+                        </div>
                         
-                        <div style="margin-top: 24px;">
-                            <p class="section-desc">Lost your data? Paste your backup code here to restore everything.</p>
-                            <div class="card">
-                                <div class="pl-item" style="display: flex; gap: 8px; align-items: center;">
-                                    <input class="pl-input" type="text" id="recovery-string" placeholder="Paste your backup code here" style="flex: 1; margin-bottom: 0;">
-                                    <button class="action-btn" id="recovery-btn">Restore</button>
-                                </div>
+                        <div class="card" style="margin-bottom: 16px;">
+                            <div class="card-label">From GitHub Gist</div>
+                            <div class="pl-item" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                                <button class="action-btn full" id="restore-gist-btn">Restore from Gist</button>
+                                <p class="card-hint">Automatically fetches your latest backup from the gist URL saved above.</p>
+                                <p class="card-hint" id="gist-status"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-label">From Backup Code</div>
+                            <div class="pl-item" style="display: flex; gap: 8px; align-items: center;">
+                                <input class="pl-input" type="text" id="recovery-string" placeholder="Paste your backup code" style="flex: 1; margin-bottom: 0;">
+                                <button class="action-btn" id="recovery-btn">Restore</button>
                             </div>
                         </div>
                     </div>
@@ -5157,7 +5202,7 @@
            -------------------------------------------- */
         const K = { i: 'mixtaped_items', s: 'mixtaped_settings', t: 'mixtaped_theme', m: 'mixtaped_mixtapes', p: 'mixtaped_profile', c: 'mixtaped_playlist_cache' };
         let items = [], cfg = { cols: 2, workingTitle: '', workingOccasion: '', workingOccasionIcon: '', workingMixtapeIdx: null }, work = [], mixtapes = [];
-        let profile = { name: '', spotifyUsername: '', photo: '', photoSource: '' };
+        let profile = { name: '', spotifyUsername: '', photo: '', photoSource: '', gistUrl: '' };
         let playlistCache = {};
         let sysDark = matchMedia('(prefers-color-scheme:dark)').matches;
 
@@ -7389,6 +7434,87 @@
                         document.getElementById('copy-backup-btn').classList.add('completed');
                     });
                 };
+            };
+            
+            // GitHub Gist handlers
+            // Load saved gist URL on page load
+            if (profile.gistUrl) {
+                document.getElementById('gist-url').value = profile.gistUrl;
+                document.getElementById('gist-status').textContent = 'Gist URL saved. Click "Restore from Gist" to restore.';
+            }
+            
+            // Save gist URL when input changes
+            document.getElementById('gist-url').onchange = function() {
+                profile.gistUrl = this.value.trim();
+                saveProfile();
+                if (profile.gistUrl) {
+                    document.getElementById('gist-status').textContent = 'Gist URL saved.';
+                } else {
+                    document.getElementById('gist-status').textContent = '';
+                }
+            };
+            
+            document.getElementById('save-gist-btn').onclick = async () => {
+                const gistUrl = document.getElementById('gist-url').value.trim();
+                if (!gistUrl) {
+                    showModal('Please enter your GitHub Gist raw URL first.');
+                    return;
+                }
+                
+                const filled = items.filter(it => it.url && getID(it.url));
+                if (filled.length < 3) {
+                    showModal('You need at least 3 playlists in your mixtape to create a backup');
+                    return;
+                }
+                
+                // Generate backup code
+                const name = profile.name || 'Mixtaped User';
+                const date = new Date();
+                const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const title = profile.spotifyUsername ? '@' + profile.spotifyUsername + ' - ' + dateStr : dateStr;
+                const backupCode = generateFullBackup(name, title);
+                
+                // Copy to clipboard for manual paste
+                await navigator.clipboard.writeText(backupCode);
+                
+                // Save the URL
+                profile.gistUrl = gistUrl;
+                saveProfile();
+                
+                showModal('Backup code copied! Now go to your gist, edit it, paste the code, and save. Your gist URL has been saved for easy restoring later.');
+                document.getElementById('gist-status').textContent = 'Gist URL saved. Update your gist with the copied code.';
+            };
+            
+            document.getElementById('restore-gist-btn').onclick = async () => {
+                const gistUrl = profile.gistUrl || document.getElementById('gist-url').value.trim();
+                if (!gistUrl) {
+                    showModal('Please enter your GitHub Gist raw URL first, or paste your backup code in the manual restore section.');
+                    return;
+                }
+                
+                // Convert to raw URL if needed
+                let rawUrl = gistUrl;
+                if (gistUrl.includes('gist.github.com') && !gistUrl.includes('raw')) {
+                    // Try to convert: https://gist.github.com/user/id -> https://gist.githubusercontent.com/user/id/raw
+                    rawUrl = gistUrl.replace('gist.github.com', 'gist.githubusercontent.com') + '/raw';
+                }
+                
+                try {
+                    document.getElementById('restore-gist-btn').textContent = 'Loading...';
+                    const response = await fetch(rawUrl);
+                    if (!response.ok) throw new Error('Could not fetch gist');
+                    const backupCode = await response.text();
+                    
+                    // Try to restore
+                    document.getElementById('recovery-string').value = backupCode.trim();
+                    document.getElementById('recovery-btn').click();
+                    
+                    document.getElementById('restore-gist-btn').textContent = 'Restore from Gist';
+                    document.getElementById('gist-status').textContent = 'Restored successfully!';
+                } catch (err) {
+                    document.getElementById('restore-gist-btn').textContent = 'Restore from Gist';
+                    showModal('Could not fetch from gist. Make sure you\'re using the raw URL (click "Raw" button on your gist page and copy that URL).');
+                }
             };
             
             // Vestaboard handlers
