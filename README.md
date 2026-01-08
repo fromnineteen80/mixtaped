@@ -10,6 +10,7 @@ Remember making mixtapes? Carefully selecting songs, writing out the tracklist, 
 - **Share** — Send your entire collection with a single code
 - **Collaborate** — Build mixtapes with friends
 - **Grid & Deep Dive views** — See your playlists as album art tiles or detailed cards with descriptions
+- **Inline editing** — Edit playlists directly in Grid or Deep Dive view without switching pages
 - **Embedded player** — Preview playlists without leaving the app (tablet/desktop)
 - **Works offline** — Install as an app on iOS or Android
 - **No account required** — Data stays on your device
@@ -17,6 +18,11 @@ Remember making mixtapes? Carefully selecting songs, writing out the tracklist, 
 
 ## What's New
 
+- **GitHub Gist backup** — Store your backup in a GitHub Gist for easy restore across devices
+- **Inline edit mode** — Toggle edit mode to add, remove, or modify playlists without leaving your current view
+- **Playlist edit modal** — Click any playlist tile in edit mode to update URL, name, or description
+- **Occasion tags** — Label mixtapes with occasions like Road Trip, Workout, Dinner Party, and more
+- **Smart name display** — Long names like "Colin Maynard" automatically display as "Colin M."
 - **Welcome popup** — First-time visitors see a quick intro to the three key features
 - **Mobile navigation** — Top tray for switching between your mixtapes and collaborations, bottom tray for main actions
 - **Full backup system** — Back up everything: your playlists, curated mixtapes, and collected collaborations
@@ -87,18 +93,31 @@ All data is stored in your browser's localStorage. Nothing is sent to a server. 
 
 ## Backup Your Data
 
-Go to **Recover** in the menu to create a full backup code. This saves:
-- Your main playlist collection
-- Curated mixtapes (Road Trip, Workout, etc.)
-- Collected mixtapes from friends
-- Collaboration history
+Go to your **Profile** to back up your data. You have two options:
 
-Save this code somewhere safe (Notes app, email, notepad.cc). You can restore everything from this single code.
+### GitHub Gist (Recommended)
+1. Create a [GitHub Gist](https://gist.github.com) with any placeholder text
+2. Click "Raw" on your gist and copy that URL
+3. Paste the raw URL in the Backup section of your Profile
+4. Click "Save" to copy your backup code
+5. Paste the code into your gist and save it
+6. On any device, enter your gist URL and click "Restore from Gist"
+
+### Manual Backup
+1. Click "Generate Backup Code" in your Profile
+2. Copy the code and save it somewhere safe (Notes app, email, [notepad.cc](https://notepad.cc))
+3. To restore, paste the code and click "Restore"
+
+Your backup includes:
+- Your main playlist collection
+- Saved mixtapes with occasions
+- Collected mixtapes from friends
+- Profile information
 
 ## Limitations
 
 - **Playlists must be public** — Private playlists can't be loaded via the oEmbed API
-- **Local storage only** — Clearing browser data resets the app. Go to Recover to create a backup code and save it somewhere safe like your Notes app, email, or [notepad.cc](https://notepad.cc)
+- **Local storage only** — Clearing browser data resets the app. Use GitHub Gist backup for persistent storage across devices
 - **Short URLs** — The is.gd URL shortener may occasionally be unavailable
 
 ## Credits
