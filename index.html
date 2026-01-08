@@ -956,22 +956,26 @@
         
         @media (max-width: 600px) {
             .main-toolbar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
             }
             
             .main-toolbar .mixtape-title-info {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 4px;
-                width: 100%;
+                gap: 2px;
+                min-width: 0;
+                flex: 1;
+            }
+            
+            .main-toolbar .mixtape-title {
+                font-size: 12px;
             }
             
             .main-toolbar .edit-actions {
-                width: 100%;
-                justify-content: flex-start;
-                margin-top: 4px;
+                flex-shrink: 0;
             }
         }
         
@@ -1047,11 +1051,11 @@
             box-shadow: none;
         }
         .action-btn.square {
-            width: 36px;
-            height: 36px;
+            width: 28px;
+            height: 28px;
             padding: 0;
-            font-size: 20px;
-            font-weight: 300;
+            font-size: 16px;
+            font-weight: 400;
         }
         
         /* Buttons inside cards need more defined shadow */
@@ -1835,12 +1839,16 @@
             }
             
             .profile-card-display {
-                flex-direction: column;
-                gap: 16px;
+                flex-direction: row;
+                align-items: flex-start;
             }
             
             .profile-card-right {
-                align-items: flex-start;
+                align-items: flex-end;
+            }
+            
+            .profile-stat {
+                font-size: 11px;
             }
         }
         
@@ -5282,7 +5290,7 @@
                 const usernameEl = document.getElementById('profile-card-username');
                 
                 if (avatarLarge) avatarLarge.innerHTML = avatarHtml;
-                if (nameEl) nameEl.textContent = getFirstName(profile.name) || 'No name';
+                if (nameEl) nameEl.textContent = getShortName(profile.name) || 'No name';
                 if (usernameEl) usernameEl.textContent = profile.spotifyUsername || '';
                 
                 // Update stats
@@ -5347,6 +5355,15 @@
         function getFirstName(fullName) {
             if (!fullName || !fullName.trim()) return '';
             return fullName.trim().split(/\s+/)[0];
+        }
+        
+        function getShortName(fullName) {
+            if (!fullName || !fullName.trim()) return '';
+            const parts = fullName.trim().split(/\s+/);
+            if (parts.length === 1) return parts[0];
+            const firstName = parts[0];
+            const lastInitial = parts[parts.length - 1].charAt(0).toUpperCase();
+            return `${firstName} ${lastInitial}.`;
         }
         
         function renderAvatarContent(photo, name) {
