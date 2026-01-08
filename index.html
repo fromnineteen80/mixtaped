@@ -9212,6 +9212,8 @@
         /* --------------------------------------------
            INITIALIZE APP
            -------------------------------------------- */
+        updateMobileClass();
+        window.addEventListener('resize', updateMobileClass);
         load();
         setup();
         setupWidgetPage();
