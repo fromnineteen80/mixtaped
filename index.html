@@ -17,7 +17,7 @@
     
     <style>
         /* ============================================
-           MIXTAPED - Spotify Playlist Collector PWA
+           MIXTAPED - Spotify Playlists Shared
            Â© 2025 fromnineteen80. All rights reserved.
            ============================================ */
 
@@ -4000,8 +4000,8 @@
         
         .mobile-top-item {
             display: inline-block;
-            padding: 8px 16px;
-            font-size: var(--font-small);
+            padding: 8px 6px;
+            font-size: 12px;
             color: var(--text2);
             background: none;
             border: none;
@@ -4339,10 +4339,9 @@
         <!-- Mobile Top Tray -->
         <div class="mobile-top-tray" id="mobile-top-tray">
             <div class="mobile-top-scroll" id="mobile-top-scroll">
-                <button class="mobile-top-icon active" id="mobile-home-btn"><span class="material-symbols-outlined">music_note_2</span></button>
-                <button class="mobile-top-icon" id="mobile-add-btn"><span class="material-symbols-outlined">add</span></button>
                 <button class="mobile-top-icon" id="mobile-mixtapes-btn"><span class="material-symbols-outlined">headphones</span></button>
                 <button class="mobile-top-icon" id="mobile-collab-btn"><span class="material-symbols-outlined">person_heart</span></button>
+                <button class="mobile-top-icon" id="mobile-add-btn"><span class="material-symbols-outlined">add</span></button>
                 <div class="mobile-top-divider"></div>
                 <span class="mobile-top-content" id="mobile-top-content"></span>
             </div>
@@ -8499,15 +8498,8 @@
         let mobileTopMode = 'home'; // 'home', 'add', 'mixtapes', 'collab'
         
         function setupMobileTrays() {
-            // Top tray icons
-            document.getElementById('mobile-home-btn').onclick = () => {
-                setMobileTopMode('home');
-                showMain();
-                updateMobileBottomActive('mobile-grid-btn');
-            };
-            
+            // Top tray icons - clicking toggles that mode, clicking different icon switches to that mode
             document.getElementById('mobile-add-btn').onclick = () => {
-                // Toggle off if already in add mode
                 if (mobileTopMode === 'add') {
                     setMobileTopMode('home');
                 } else {
@@ -8516,8 +8508,7 @@
             };
             
             document.getElementById('mobile-mixtapes-btn').onclick = () => {
-                // Toggle off if already in mixtapes mode AND no mixtape is selected
-                if (mobileTopMode === 'mixtapes' && currentFriendIdx === null) {
+                if (mobileTopMode === 'mixtapes') {
                     setMobileTopMode('home');
                 } else {
                     setMobileTopMode('mixtapes');
@@ -8525,8 +8516,7 @@
             };
             
             document.getElementById('mobile-collab-btn').onclick = () => {
-                // Toggle off if already in collab mode AND no mixtape is selected
-                if (mobileTopMode === 'collab' && currentFriendIdx === null) {
+                if (mobileTopMode === 'collab') {
                     setMobileTopMode('home');
                 } else {
                     setMobileTopMode('collab');
@@ -8618,7 +8608,6 @@
             mobileTopMode = mode;
             
             // Update icon active states
-            document.getElementById('mobile-home-btn').classList.toggle('active', mode === 'home');
             document.getElementById('mobile-add-btn').classList.toggle('active', mode === 'add');
             document.getElementById('mobile-mixtapes-btn').classList.toggle('active', mode === 'mixtapes');
             document.getElementById('mobile-collab-btn').classList.toggle('active', mode === 'collab');
