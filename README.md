@@ -22,7 +22,7 @@ Remember making mixtapes? Carefully selecting songs, writing out the tracklist, 
 - **Inline edit mode** — Toggle edit mode to add, remove, or modify playlists without leaving your current view
 - **Playlist edit modal** — Click any playlist tile in edit mode to update URL, name, or description
 - **Occasion tags** — Label mixtapes with occasions like Road Trip, Workout, Dinner Party, and more
-- **Smart name display** — Long names like "Colin Maynard" automatically display as "Colin M."
+- **Smart name display** — Long names like "Jack Smith" automatically display as "Jack S."
 - **Welcome popup** — First-time visitors see a quick intro to the three key features
 - **Mobile navigation** — Top tray for switching between your mixtapes and collaborations, bottom tray for main actions
 - **Full backup system** — Back up everything: your playlists, curated mixtapes, and collected collaborations
